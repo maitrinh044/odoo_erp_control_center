@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_role_preset_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.role.preset.list</field>
+            <field name="model">sgt.erp.role.preset</field>
+            <field name="arch" type="xml">
+                <list string="User &amp; Permission Presets">
+                    <header>
+                        <button name="action_apply_to_users" string="Apply to Users" type="object" class="btn btn-primary" icon="fa-users"/>
+                        <button name="action_auto_map_standard_groups" string="Auto-Detect Standard Groups" type="object" class="btn btn-secondary" icon="fa-magic"/>
+                        <button name="action_sync_record_rules" string="Sync Record Rules" type="object" class="btn btn-secondary" icon="fa-shield"/>
+                    </header>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="data_scope" widget="badge" decoration-success="data_scope == 'all'" decoration-warning="data_scope == 'team'" decoration-info="data_scope == 'own'"/>
+                    <field name="user_count" string="Assigned Users" decoration-bf="1"/>
+                    <field name="matrix_count" string="Quyền đối tượng" widget="badge" decoration-primary="1"/>
+                    <field name="group_ids" widget="many2many_tags"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_sgt_erp_role_preset_form" model="ir.ui.view">
+            <field name="name">sgt.erp.role.preset.form</field>
+            <field name="model">sgt.erp.role.preset</field>
+            <field name="arch" type="xml">
+                <form string="User &amp; Permission Preset">
+                    <header>
+                        <button name="action_open_add_module_wizard" string="Thêm nhanh theo Module" type="object" class="oe_highlight btn-primary" icon="fa-plus-circle"/>
+                        <button name="action_apply_to_users" string="Apply Permissions to Users" type="object" class="btn btn-secondary" icon="fa-users"/>
+                        <button name="action_sync_record_rules" string="Sync Record Rules" type="object" class="btn btn-secondary" icon="fa-shield"/>
+                        <button name="action_auto_map_standard_groups" string="Auto-Detect Groups" type="object" class="btn btn-secondary" icon="fa-magic"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_users" type="object" class="oe_stat_button" icon="fa-users">
+                                <field name="user_count" widget="statinfo" string="Users"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="E.g. Sales Manager"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="data_scope" widget="radio"/>
+                                <field name="sequence"/>
+                                <field name="company_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="security_group_id" readonly="1"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Ma trận Phân quyền (Permission Matrix)" name="permission_matrix">
+                                <field name="permission_matrix_ids">
+                                    <list string="Ma trận Quyền hạn" editable="bottom">
+                                        <field name="module_shortdesc" readonly="1" string="Phân hệ"/>
+                                        <field name="model_id" options="{'no_create': True}" string="Đối tượng (Model)"/>
+                                        <field name="model_name" optional="hide"/>
+                                        <field name="model_type" widget="badge" decoration-success="model_type == 'primary'" decoration-muted="model_type == 'config'"/>
+                                        <field name="perm_read" widget="boolean_toggle"/>
+                                        <field name="perm_create" widget="boolean_toggle"/>
+                                        <field name="perm_write" widget="boolean_toggle"/>
+                                        <field name="perm_unlink" widget="boolean_toggle"/>
+                                        <field name="data_scope" widget="badge" 
+                                               decoration-warning="data_scope == 'own'" 
+                                               decoration-info="data_scope == 'team'" 
+                                               decoration-success="data_scope == 'all'"/>
+                                        <field name="note" optional="show"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Mapped Odoo Groups" name="groups">
+                                <field name="group_ids">
+                                    <list string="Groups">
+                                        <field name="name"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Generated Record Rules (Data Scope)" name="record_rules">
+                                <field name="rule_ids" readonly="1">
+                                    <list string="Record Rules">
+                                        <field name="name"/>
+                                        <field name="model_id"/>
+                                        <field name="domain_force"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Assigned Users" name="users">
+                                <field name="user_ids">
+                                    <list string="Users">
+                                        <field name="name"/>
+                                        <field name="login"/>
+                                        <field name="company_id"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Description" name="desc">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_role_preset" model="ir.actions.act_window">
+            <field name="name">Role Presets</field>
+            <field name="res_model">sgt.erp.role.preset</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Quản lý các mẫu vai trò (Role Preset: ERP Administrator, Manager, Sales Manager, Sales User, HR Manager, HR User, Viewer) và ánh xạ với nhóm quyền Odoo.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

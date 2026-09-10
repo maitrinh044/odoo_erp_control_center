@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sgt_erp_add_module_matrix_wizard_form" model="ir.ui.view">
+        <field name="name">sgt.erp.add.module.matrix.wizard.form</field>
+        <field name="model">sgt.erp.add.module.matrix.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Thêm nhanh Quyền theo Phân hệ / Module">
+                <sheet>
+                    <div class="alert alert-info py-2 mb-3" role="alert">
+                        <strong>Hướng dẫn:</strong> Chọn một hoặc nhiều Module (CRM, Bán hàng, Mua hàng, Nhân sự, Kho...) và chế độ lọc. Hệ thống sẽ tự động quét các đối tượng nghiệp vụ và chuẩn bị quyền xem trước bên dưới.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="role_preset_id" readonly="1"/>
+                            <field name="module_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Chọn một hoặc nhiều module..."/>
+                            <field name="filter_mode" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="data_scope" widget="radio"/>
+                            <label for="perm_read" string="Quyền mặc định"/>
+                            <div class="d-flex gap-3 align-items-center">
+                                <span class="d-flex align-items-center gap-1"><field name="perm_read"/> Xem</span>
+                                <span class="d-flex align-items-center gap-1"><field name="perm_create"/> Tạo</span>
+                                <span class="d-flex align-items-center gap-1"><field name="perm_write"/> Sửa</span>
+                                <span class="d-flex align-items-center gap-1"><field name="perm_unlink"/> Xóa</span>
+                            </div>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Danh sách Đối tượng Xem trước" name="preview_lines">
+                            <field name="line_ids">
+                                <list string="Đối tượng" editable="bottom" create="0">
+                                    <field name="selected" widget="boolean_toggle"/>
+                                    <field name="module_name" readonly="1"/>
+                                    <field name="model_id" readonly="1"/>
+                                    <field name="model_name" readonly="1"/>
+                                    <field name="model_type" widget="badge" 
+                                           decoration-success="model_type == 'primary'" 
+                                           decoration-muted="model_type == 'config'"/>
+                                    <field name="perm_read" widget="boolean_toggle"/>
+                                    <field name="perm_create" widget="boolean_toggle"/>
+                                    <field name="perm_write" widget="boolean_toggle"/>
+                                    <field name="perm_unlink" widget="boolean_toggle"/>
+                                    <field name="data_scope" widget="badge" 
+                                           decoration-warning="data_scope == 'own'" 
+                                           decoration-info="data_scope == 'team'" 
+                                           decoration-success="data_scope == 'all'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_add_to_matrix" string="Thêm vào Ma trận Vai trò" type="object" class="btn btn-primary" icon="fa-plus-circle"/>
+                    <button string="Hủy" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sgt_erp_add_module_matrix_wizard" model="ir.actions.act_window">
+        <field name="name">Thêm nhanh Quyền theo Module</field>
+        <field name="res_model">sgt.erp.add.module.matrix.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+/* Kanban Cards Styling via CSS Variables */
+.o_kanban_view {
+  .o_kanban_record {
+    border-radius: var(--sgt-card-radius) !important;
+    border: 1px solid var(--sgt-border) !important;
+    background-color: var(--sgt-kanban-bg, var(--sgt-card-bg)) !important;
+    box-shadow: var(--sgt-card-shadow) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.1) !important;
+    }
+  }
+
+  .o_kanban_group {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+    border-radius: var(--sgt-card-radius) !important;
+  }
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_inherit_sgt_approval" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.sgt.approval</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <!-- Header buttons -->
+            <xpath expr="//header" position="inside">
+                <button name="action_request_approval" string="Yêu Cầu Phê Duyệt" type="object"
+                        class="btn-secondary"
+                        invisible="state not in ('draft', 'sent') or sgt_approval_state in ('to_approve', 'approved')"/>
+                <button name="action_open_approve_wizard" string="Phê Duyệt Đơn" type="object"
+                        class="btn-success"
+                        invisible="sgt_approval_state != 'to_approve' or not sgt_can_current_user_approve"/>
+                <button name="action_open_reject_wizard" string="Từ Chối" type="object"
+                        class="btn-outline-danger"
+                        invisible="sgt_approval_state != 'to_approve' or not sgt_can_current_user_approve"/>
+            </xpath>
+
+            <!-- Status indicator for approval state -->
+            <xpath expr="//header/field[@name='state']" position="before">
+                <field name="sgt_approval_state" widget="badge"
+                       decoration-warning="sgt_approval_state == 'to_approve'"
+                       decoration-success="sgt_approval_state == 'approved'"
+                       decoration-danger="sgt_approval_state == 'rejected'"
+                       decoration-muted="sgt_approval_state == 'not_required'"
+                       invisible="sgt_approval_state == 'not_required'"/>
+            </xpath>
+
+            <!-- Visual alert banner inside sheet before title -->
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
+                <div class="alert alert-warning mb-3 d-flex align-items-center shadow-sm" role="status" invisible="sgt_approval_state != 'to_approve'">
+                    <i class="fa fa-exclamation-circle fa-2x text-warning me-3" title="Chờ phê duyệt" aria-label="Chờ phê duyệt"/>
+                    <div>
+                        <div class="fw-bold fs-6 mb-1">Đơn mua hàng đang chờ phê duyệt ngân sách</div>
+                        <span>Tổng giá trị đơn mua vượt hạn mức quy định. Cần người có thẩm quyền phê duyệt trước khi đơn có thể được xác nhận.</span>
+                    </div>
+                </div>
+                <div class="alert alert-success mb-3 d-flex align-items-center shadow-sm" role="status" invisible="sgt_approval_state != 'approved'">
+                    <i class="fa fa-check-circle fa-2x text-success me-3" title="Đã phê duyệt" aria-label="Đã phê duyệt"/>
+                    <div>
+                        <div class="fw-bold fs-6 mb-1">Đơn mua hàng đã được phê duyệt</div>
+                        <span>Phê duyệt bởi <field name="sgt_approver_id" readonly="1" class="oe_inline fw-bold"/> vào lúc <field name="sgt_approval_date" readonly="1" class="oe_inline"/>.</span>
+                    </div>
+                </div>
+                <div class="alert alert-danger mb-3 d-flex align-items-center shadow-sm" role="status" invisible="sgt_approval_state != 'rejected'">
+                    <i class="fa fa-times-circle fa-2x text-danger me-3" title="Bị từ chối" aria-label="Bị từ chối"/>
+                    <div>
+                        <div class="fw-bold fs-6 mb-1">Đơn mua hàng đã bị từ chối phê duyệt</div>
+                        <span>Lý do: <field name="sgt_rejection_reason" readonly="1" class="oe_inline"/>.</span>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Workflow Selection Field in Purchase Order Header -->
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="sgt_approval_workflow_id"
+                       string="Quy trình phê duyệt"
+                       placeholder="-- Tự động theo hạn mức hoặc chọn quy trình --"
+                       domain="[('active', '=', True), ('workflow_type', '=', 'purchase'), ('require_approval', '=', True)]"
+                       options="{'no_create': True, 'no_create_edit': True}"
+                       readonly="state not in ('draft', 'sent') or sgt_approval_state in ('to_approve', 'approved')"/>
+            </xpath>
+
+            <!-- Multi-level Approval Progress Notebook Page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Tiến Trình Phê Duyệt Đa Cấp" name="sgt_approval_progress" invisible="sgt_approval_state == 'not_required' and not sgt_approval_line_ids">
+                    <div class="alert alert-info d-flex justify-content-between align-items-center mb-3" role="alert" invisible="sgt_approval_state != 'to_approve'">
+                        <div>
+                            <i class="fa fa-clock-o me-2"/> 
+                            <span>Đang chờ duyệt: <b><field name="sgt_current_approval_line_id" readonly="1" class="d-inline"/></b></span>
+                        </div>
+                        <div invisible="not sgt_can_current_user_approve">
+                            <button name="action_open_approve_wizard" string="Phê Duyệt Cấp Này" type="object" class="btn btn-success btn-sm me-2" icon="fa-check"/>
+                            <button name="action_open_reject_wizard" string="Từ Chối" type="object" class="btn btn-outline-danger btn-sm" icon="fa-times"/>
+                        </div>
+                    </div>
+                    <field name="sgt_approval_line_ids" readonly="1">
+                        <list string="Các Cấp Phê Duyệt" decoration-info="state == 'pending'" decoration-muted="state in ('approved', 'skipped')" decoration-danger="state == 'rejected'">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name" string="Cấp Duyệt"/>
+                            <field name="approver_user_ids" widget="many2many_tags" string="Người Phụ Trách"/>
+                            <field name="approver_group_id" string="Nhóm Quyền"/>
+                            <field name="state" widget="badge" 
+                                   decoration-warning="state == 'waiting'" 
+                                   decoration-info="state == 'pending'" 
+                                   decoration-success="state == 'approved'" 
+                                   decoration-danger="state == 'rejected'"
+                                   decoration-muted="state == 'skipped'"/>
+                            <field name="approved_by_id" string="Người Duyệt"/>
+                            <field name="approved_date" string="Ngày Duyệt"/>
+                            <field name="note" string="Ý Kiến / Lý Do"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

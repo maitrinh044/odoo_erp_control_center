@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Dedicated Health Dashboard Form View for sgt.erp.config (Native Odoo 19 UI) -->
+        <record id="view_sgt_erp_health_dashboard" model="ir.ui.view">
+            <field name="name">sgt.erp.health.dashboard</field>
+            <field name="model">sgt.erp.config</field>
+            <field name="arch" type="xml">
+                <form string="System Health &amp; Telemetry" create="false" edit="false">
+                    <header>
+                        <button name="action_refresh_health" string="Refresh Telemetry" type="object" class="oe_highlight btn-primary" icon="fa-refresh"/>
+                        <button name="action_check_backup_status" string="Verify Backup" type="object" class="btn-secondary" icon="fa-shield"/>
+                    </header>
+                    <sheet>
+                        <!-- Native Odoo Status Ribbon in top right corner -->
+                        <widget name="web_ribbon" title="Operational" bg_color="text-bg-success" invisible="overall_system_status != 'operational'"/>
+                        <widget name="web_ribbon" title="Attention" bg_color="text-bg-warning" invisible="overall_system_status != 'degraded'"/>
+                        <widget name="web_ribbon" title="Critical" bg_color="text-bg-danger" invisible="overall_system_status != 'critical'"/>
+
+                        <!-- Native Odoo Stat Button Box -->
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-database" type="object" name="action_refresh_health">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value"><field name="database_active_connections"/></span>
+                                    <span class="o_stat_text">DB Conns</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-cogs" type="object" name="action_view_failed_crons">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value"><field name="cron_total_count"/></span>
+                                    <span class="o_stat_text">Crons (<field name="cron_failed_count" decoration-danger="cron_failed_count &gt; 0"/> err)</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-envelope" type="object" name="action_view_mail_queue">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value"><field name="mail_queue_count" decoration-warning="mail_queue_count &gt; 0"/></span>
+                                    <span class="o_stat_text">Mail Queue</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-users" type="object" name="action_view_active_users">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value"><field name="active_users_count"/></span>
+                                    <span class="o_stat_text">Active Users</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-shield" type="object" name="action_check_backup_status">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="backup_status" widget="badge" 
+                                               decoration-success="backup_status == 'ok'" 
+                                               decoration-warning="backup_status == 'warning'" 
+                                               decoration-danger="backup_status == 'none'"/>
+                                    </span>
+                                    <span class="o_stat_text">Backup</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Native Odoo Form Title -->
+                        <div class="oe_title">
+                            <span class="o_form_label">System Health &amp; Infrastructure Telemetry</span>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                            <div class="d-flex align-items-center gap-2 mt-1">
+                                <span class="text-muted"><i class="fa fa-server me-1" title="Server"/> <field name="customer_name" readonly="1"/></span>
+                                <span class="text-muted">&#8226;</span>
+                                <field name="environment" widget="badge" 
+                                       decoration-info="environment == 'development'" 
+                                       decoration-warning="environment == 'staging'" 
+                                       decoration-success="environment == 'production'"/>
+                                <span class="text-muted">&#8226;</span>
+                                <field name="overall_system_status" widget="badge" 
+                                       decoration-success="overall_system_status == 'operational'" 
+                                       decoration-warning="overall_system_status == 'degraded'" 
+                                       decoration-danger="overall_system_status == 'critical'"/>
+                            </div>
+                        </div>
+
+                        <!-- Native Odoo Notebook -->
+                        <notebook class="mt-4">
+                            <!-- TAB 1: Compute & Processor Telemetry -->
+                            <page string="Compute &amp; Processor" name="page_compute" icon="fa-tachometer">
+                                <div class="row">
+                                    <div class="col-md-6 border-end">
+                                        <group string="CPU &amp; Processor Capacity">
+                                            <field name="cpu_cores" string="Allocated VCPUs"/>
+                                            <label for="cpu_load_1m" string="System Load Average"/>
+                                            <div class="d-flex gap-2">
+                                                <span>1m: <strong class="o_live_cpu_load_1m"><field name="cpu_load_1m"/></strong></span>
+                                                <span>5m: <strong class="o_live_cpu_load_5m"><field name="cpu_load_5m"/></strong></span>
+                                                <span>15m: <strong class="o_live_cpu_load_15m"><field name="cpu_load_15m"/></strong></span>
+                                            </div>
+                                            <field name="cpu_model" string="Processor Architecture"/>
+                                        </group>
+                                        <div class="mt-2">
+                                            <widget name="sgt_live_cpu_chart"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <group string="Memory (RAM) &amp; System Uptime">
+                                            <label for="ram_used_gb" string="Physical Memory"/>
+                                            <div class="d-flex gap-2">
+                                                <span>Used: <strong class="o_live_ram_used"><field name="ram_used_gb"/></strong> GB</span>
+                                                <span>Free: <strong class="o_live_ram_free"><field name="ram_free_gb"/></strong> GB</span>
+                                                <span>Total: <strong class="o_live_ram_total"><field name="ram_total_gb"/></strong> GB</span>
+                                            </div>
+                                            <field name="server_uptime" string="Server Uptime"/>
+                                            <field name="server_time" string="Server Local Time"/>
+                                        </group>
+                                        <div class="mt-2">
+                                            <widget name="sgt_live_ram_chart"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+
+                            <!-- TAB 2: Disk & Storage Footprint -->
+                            <page string="Disk &amp; Storage Footprint" name="page_storage" icon="fa-hdd-o">
+                                <group>
+                                    <group string="OS Root Partition (/)">
+                                        <field name="os_disk_percentage" widget="progressbar" string="Root Usage"/>
+                                        <label for="os_disk_used_gb" string="Root Capacity"/>
+                                        <div class="d-flex gap-2">
+                                            <span>Used: <strong><field name="os_disk_used_gb"/></strong> GB</span>
+                                            <span>Free: <strong><field name="os_disk_free_gb"/></strong> GB</span>
+                                            <span>Total: <strong><field name="os_disk_total_gb"/></strong> GB</span>
+                                        </div>
+                                    </group>
+                                    <group string="Odoo Data Partition">
+                                        <field name="disk_percentage" widget="progressbar" string="Odoo Data Usage"/>
+                                        <label for="disk_used_gb" string="Odoo Data Capacity"/>
+                                        <div class="d-flex gap-2">
+                                            <span>Used: <strong><field name="disk_used_gb"/></strong> GB</span>
+                                            <span>Free: <strong><field name="disk_free_gb"/></strong> GB</span>
+                                            <span>Total: <strong><field name="disk_total_gb"/></strong> GB</span>
+                                        </div>
+                                    </group>
+                                </group>
+                                <group string="Database &amp; Filestore Footprint">
+                                    <group>
+                                        <field name="database_size_mb" string="PostgreSQL DB Size (MB)"/>
+                                        <field name="filestore_size_mb" string="Filestore Attachments (MB)"/>
+                                    </group>
+                                    <group>
+                                        <field name="storage_limit" string="Contracted Limit (GB)"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- TAB 3: Core Subsystems & Services -->
+                            <page string="Subsystems &amp; Services" name="page_services" icon="fa-cogs">
+                                <group>
+                                    <group string="Database Subsystem">
+                                        <field name="health_database" widget="badge" 
+                                               decoration-success="health_database == 'ok'" 
+                                               decoration-warning="health_database == 'warning'" 
+                                               decoration-danger="health_database == 'error'"/>
+                                        <field name="database_name"/>
+                                        <field name="database_version"/>
+                                        <field name="database_active_connections"/>
+                                    </group>
+                                    <group string="Cron Scheduler">
+                                        <field name="health_cron" widget="badge" 
+                                               decoration-success="health_cron == 'ok'" 
+                                               decoration-warning="health_cron == 'warning'" 
+                                               decoration-danger="health_cron == 'error'"/>
+                                        <field name="cron_total_count"/>
+                                        <field name="cron_failed_count" decoration-danger="cron_failed_count &gt; 0"/>
+                                        <field name="cron_next_call"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Mail Subsystem">
+                                        <field name="health_mail" widget="badge" 
+                                               decoration-success="health_mail == 'ok'" 
+                                               decoration-warning="health_mail == 'warning'" 
+                                               decoration-danger="health_mail == 'error'"/>
+                                        <field name="mail_server_count"/>
+                                        <field name="mail_queue_count" decoration-warning="mail_queue_count &gt; 0"/>
+                                    </group>
+                                    <group string="Integrations &amp; Connectors">
+                                        <field name="health_integration" widget="badge" 
+                                               decoration-success="health_integration == 'ok'" 
+                                               decoration-warning="health_integration == 'warning'" 
+                                               decoration-danger="health_integration == 'error'"/>
+                                        <field name="google_connection_status" widget="badge" 
+                                               decoration-success="google_connection_status == 'connected'" 
+                                               decoration-danger="google_connection_status == 'error'"/>
+                                        <field name="google_sync_mode"/>
+                                        <field name="google_last_test"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- TAB 4: Disaster Recovery & Platform Stack -->
+                            <page string="Disaster Recovery &amp; Stack" name="page_platform" icon="fa-server">
+                                <group>
+                                    <group string="Disaster Recovery &amp; Backup Security">
+                                        <field name="backup_status" widget="badge" 
+                                               decoration-success="backup_status == 'ok'" 
+                                               decoration-warning="backup_status == 'warning'" 
+                                               decoration-danger="backup_status == 'none'"/>
+                                        <field name="backup_last_date"/>
+                                        <field name="deployment_docker_container"/>
+                                    </group>
+                                    <group string="Host Platform Stack">
+                                        <field name="odoo_version"/>
+                                        <field name="deployment_python_version"/>
+                                        <field name="deployment_os_info"/>
+                                        <field name="database_uuid"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Server Action to Open System Health Dashboard -->
+        <record id="action_sgt_erp_system_health_dashboard" model="ir.actions.server">
+            <field name="name">System Health Dashboard</field>
+            <field name="model_id" ref="model_sgt_erp_config"/>
+            <field name="state">code</field>
+            <field name="code">
+action = env['sgt.erp.config'].search([('company_id', '=', env.company.id)], limit=1)
+if not action:
+    action = env['sgt.erp.config'].create({
+        'name': f"{env.company.name} ERP Control Center",
+        'company_id': env.company.id,
+        'customer_name': env.company.name,
+        'product_name': 'SGT ERP',
+    })
+action = {
+    'type': 'ir.actions.act_window',
+    'res_model': 'sgt.erp.config',
+    'view_mode': 'form',
+    'res_id': action.id,
+    'views': [(env.ref('sgt_erp_control_center.view_sgt_erp_health_dashboard').id, 'form')],
+    'target': 'current',
+}
+            </field>
+        </record>
+
+    </data>
+</odoo>

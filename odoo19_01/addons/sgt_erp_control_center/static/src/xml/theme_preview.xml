@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sgt_erp_control_center.ThemeLivePreview">
+        <div class="sgt_preview_wrapper p-3 border rounded">
+            <h6 class="text-muted mb-3">Live Component Preview</h6>
+            <!-- Navbar Preview -->
+            <div class="p-2 mb-3 rounded shadow-sm d-flex justify-content-between align-items-center"
+                 style="background-color: var(--sgt-navbar-bg, #09244B); color: var(--sgt-navbar-text, #FFFFFF);">
+                <div class="fw-bold"><i class="fa fa-th me-2"></i>SGT ERP</div>
+                <div class="d-flex gap-3 small">
+                    <span>Control Center</span>
+                    <span>Apps</span>
+                    <span>Settings</span>
+                </div>
+            </div>
+
+            <!-- Buttons & Badges Preview -->
+            <div class="d-flex gap-2 mb-3 align-items-center">
+                <button type="button" class="btn btn-sm btn-primary">Primary Action</button>
+                <button type="button" class="btn btn-sm btn-secondary">Secondary</button>
+                <span class="badge bg-success">Active</span>
+                <span class="badge bg-warning text-dark">Warning</span>
+            </div>
+
+            <!-- Card & Form Input Preview -->
+            <div class="row g-2">
+                <div class="col-6">
+                    <div class="card p-2 h-100 shadow-sm">
+                        <div class="fw-bold mb-2">Form Elements</div>
+                        <input type="text" class="form-control form-control-sm mb-2" placeholder="Sample Input..."/>
+                        <select class="form-select form-select-sm">
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card p-2 h-100 shadow-sm border-start border-4" style="border-left-color: var(--sgt-primary, #165DFF) !important;">
+                        <div class="fw-bold text-truncate">Kanban Card</div>
+                        <div class="text-muted small">Customer: ABC Industrial</div>
+                        <div class="text-muted small">Stage: In Progress</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

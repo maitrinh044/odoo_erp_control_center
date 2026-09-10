@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Corporate Blue -->
+        <record id="theme_preset_corporate_blue" model="sgt.erp.theme">
+            <field name="name">Corporate Blue</field>
+            <field name="style">corporate</field>
+            <field name="primary_color">#165DFF</field>
+            <field name="secondary_color">#09244B</field>
+            <field name="accent_color">#FFB020</field>
+            <field name="background_color">#F5F7FA</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#1F2937</field>
+            <field name="secondary_text_color">#6B7280</field>
+            <field name="border_color">#E5E7EB</field>
+            <field name="navbar_bg">#09244B</field>
+            <field name="navbar_text_color">#FFFFFF</field>
+            <field name="navbar_hover_color">#165DFF</field>
+            <field name="sidebar_bg">#071A34</field>
+            <field name="sidebar_text_color">#D1D5DB</field>
+            <field name="sidebar_hover_color">#165DFF</field>
+            <field name="sidebar_active_color">#165DFF</field>
+            <field name="btn_primary_color">#165DFF</field>
+            <field name="btn_secondary_color">#4B5563</field>
+            <field name="btn_radius">6</field>
+            <field name="card_radius">10</field>
+            <field name="card_shadow">md</field>
+            <field name="font_family">inter</field>
+        </record>
+
+        <!-- 2. Modern Green -->
+        <record id="theme_preset_modern_green" model="sgt.erp.theme">
+            <field name="name">Modern Green</field>
+            <field name="style">rounded</field>
+            <field name="primary_color">#10B981</field>
+            <field name="secondary_color">#064E3B</field>
+            <field name="accent_color">#F59E0B</field>
+            <field name="background_color">#F9FAFB</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#111827</field>
+            <field name="secondary_text_color">#4B5563</field>
+            <field name="border_color">#E5E7EB</field>
+            <field name="navbar_bg">#064E3B</field>
+            <field name="navbar_text_color">#FFFFFF</field>
+            <field name="navbar_hover_color">#10B981</field>
+            <field name="sidebar_bg">#022C22</field>
+            <field name="sidebar_text_color">#D1D5DB</field>
+            <field name="sidebar_hover_color">#10B981</field>
+            <field name="sidebar_active_color">#10B981</field>
+            <field name="btn_primary_color">#10B981</field>
+            <field name="btn_secondary_color">#6B7280</field>
+            <field name="btn_radius">10</field>
+            <field name="card_radius">14</field>
+            <field name="card_shadow">md</field>
+            <field name="font_family">roboto</field>
+        </record>
+
+        <!-- 3. China Red -->
+        <record id="theme_preset_china_red" model="sgt.erp.theme">
+            <field name="name">China Red</field>
+            <field name="style">corporate</field>
+            <field name="primary_color">#DC2626</field>
+            <field name="secondary_color">#7F1D1D</field>
+            <field name="accent_color">#F59E0B</field>
+            <field name="background_color">#FEF2F2</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#1F2937</field>
+            <field name="secondary_text_color">#6B7280</field>
+            <field name="border_color">#FCA5A5</field>
+            <field name="navbar_bg">#7F1D1D</field>
+            <field name="navbar_text_color">#FFFFFF</field>
+            <field name="navbar_hover_color">#DC2626</field>
+            <field name="sidebar_bg">#450A0A</field>
+            <field name="sidebar_text_color">#FDE8E8</field>
+            <field name="sidebar_hover_color">#DC2626</field>
+            <field name="sidebar_active_color">#DC2626</field>
+            <field name="btn_primary_color">#DC2626</field>
+            <field name="btn_secondary_color">#991B1B</field>
+            <field name="btn_radius">6</field>
+            <field name="card_radius">8</field>
+            <field name="font_family">inter</field>
+        </record>
+
+        <!-- 4. Medical Clean -->
+        <record id="theme_preset_medical_clean" model="sgt.erp.theme">
+            <field name="name">Medical Clean</field>
+            <field name="style">minimal</field>
+            <field name="primary_color">#0284C7</field>
+            <field name="secondary_color">#0E7490</field>
+            <field name="accent_color">#06B6D4</field>
+            <field name="background_color">#F0FDF4</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#0F172A</field>
+            <field name="secondary_text_color">#64748B</field>
+            <field name="border_color">#E2E8F0</field>
+            <field name="navbar_bg">#0E7490</field>
+            <field name="navbar_text_color">#FFFFFF</field>
+            <field name="navbar_hover_color">#06B6D4</field>
+            <field name="sidebar_bg">#164E63</field>
+            <field name="sidebar_text_color">#CFFAFE</field>
+            <field name="sidebar_hover_color">#06B6D4</field>
+            <field name="sidebar_active_color">#06B6D4</field>
+            <field name="btn_primary_color">#0284C7</field>
+            <field name="btn_secondary_color">#64748B</field>
+            <field name="btn_radius">4</field>
+            <field name="card_radius">6</field>
+            <field name="card_shadow">sm</field>
+            <field name="font_family">open_sans</field>
+        </record>
+
+        <!-- 5. Industrial Orange -->
+        <record id="theme_preset_industrial" model="sgt.erp.theme">
+            <field name="name">Industrial Orange</field>
+            <field name="style">industrial</field>
+            <field name="primary_color">#F97316</field>
+            <field name="secondary_color">#374151</field>
+            <field name="accent_color">#EAB308</field>
+            <field name="background_color">#F3F4F6</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#1F2937</field>
+            <field name="secondary_text_color">#4B5563</field>
+            <field name="border_color">#D1D5DB</field>
+            <field name="navbar_bg">#1F2937</field>
+            <field name="navbar_text_color">#FFFFFF</field>
+            <field name="navbar_hover_color">#F97316</field>
+            <field name="sidebar_bg">#111827</field>
+            <field name="sidebar_text_color">#9CA3AF</field>
+            <field name="sidebar_hover_color">#F97316</field>
+            <field name="sidebar_active_color">#F97316</field>
+            <field name="btn_primary_color">#F97316</field>
+            <field name="btn_secondary_color">#4B5563</field>
+            <field name="btn_radius">4</field>
+            <field name="card_radius">6</field>
+            <field name="font_family">roboto</field>
+        </record>
+
+        <!-- 6. Dark Tech -->
+        <record id="theme_preset_dark_tech" model="sgt.erp.theme">
+            <field name="name">Dark Tech</field>
+            <field name="style">dark</field>
+            <field name="primary_color">#3B82F6</field>
+            <field name="secondary_color">#1E293B</field>
+            <field name="accent_color">#06B6D4</field>
+            <field name="background_color">#0F172A</field>
+            <field name="card_background">#1E293B</field>
+            <field name="text_color">#F8FAFC</field>
+            <field name="secondary_text_color">#94A3B8</field>
+            <field name="border_color">#334155</field>
+            <field name="navbar_bg">#0F172A</field>
+            <field name="navbar_text_color">#F8FAFC</field>
+            <field name="navbar_hover_color">#3B82F6</field>
+            <field name="sidebar_bg">#020617</field>
+            <field name="sidebar_text_color">#94A3B8</field>
+            <field name="sidebar_hover_color">#3B82F6</field>
+            <field name="sidebar_active_color">#3B82F6</field>
+            <field name="btn_primary_color">#3B82F6</field>
+            <field name="btn_secondary_color">#475569</field>
+            <field name="btn_radius">6</field>
+            <field name="card_radius">8</field>
+            <field name="card_shadow">lg</field>
+            <field name="font_family">inter</field>
+        </record>
+
+        <!-- 7. Luxury Gold -->
+        <record id="theme_preset_luxury" model="sgt.erp.theme">
+            <field name="name">Luxury Gold</field>
+            <field name="style">luxury</field>
+            <field name="primary_color">#D97706</field>
+            <field name="secondary_color">#18181B</field>
+            <field name="accent_color">#F59E0B</field>
+            <field name="background_color">#FAFAF9</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#18181B</field>
+            <field name="secondary_text_color">#71717A</field>
+            <field name="border_color">#E4E4E7</field>
+            <field name="navbar_bg">#18181B</field>
+            <field name="navbar_text_color">#FEF3C7</field>
+            <field name="navbar_hover_color">#D97706</field>
+            <field name="sidebar_bg">#09090B</field>
+            <field name="sidebar_text_color">#A1A1AA</field>
+            <field name="sidebar_hover_color">#D97706</field>
+            <field name="sidebar_active_color">#D97706</field>
+            <field name="btn_primary_color">#D97706</field>
+            <field name="btn_secondary_color">#27272A</field>
+            <field name="btn_radius">8</field>
+            <field name="card_radius">12</field>
+            <field name="font_family">montserrat</field>
+        </record>
+
+        <!-- 8. Odoo Default -->
+        <record id="theme_preset_odoo_default" model="sgt.erp.theme">
+            <field name="name">Odoo Default</field>
+            <field name="style">default</field>
+            <field name="primary_color">#017E84</field>
+            <field name="secondary_color">#714B67</field>
+            <field name="accent_color">#00A09D</field>
+            <field name="background_color">#F9FAFB</field>
+            <field name="card_background">#FFFFFF</field>
+            <field name="text_color">#212529</field>
+            <field name="secondary_text_color">#6C757D</field>
+            <field name="border_color">#DEE2E6</field>
+            <field name="navbar_bg">#714B67</field>
+            <field name="navbar_text_color">#FFFFFF</field>
+            <field name="navbar_hover_color">#017E84</field>
+            <field name="sidebar_bg">#2E3338</field>
+            <field name="sidebar_text_color">#CED4DA</field>
+            <field name="sidebar_hover_color">#017E84</field>
+            <field name="sidebar_active_color">#017E84</field>
+            <field name="btn_primary_color">#017E84</field>
+            <field name="btn_secondary_color">#6C757D</field>
+            <field name="btn_radius">4</field>
+            <field name="card_radius">6</field>
+            <field name="font_family">system</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,413 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sgt_erp_control_center
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-03 07:00+0000\n"
+"PO-Revision-Date: 2026-09-03 07:00+0000\n"
+"Last-Translator: Saigon Trade Team <support@saigontrade.vn>\n"
+"Language-Team: Vietnamese <vi@li.org>\n"
+"Language: vi_VN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_root
+msgid "SGT ERP"
+msgstr "SGT ERP"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_control_center
+msgid "1. Control Center"
+msgstr "1. Trung tâm điều khiển"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_general_setup
+msgid "2. General Setup"
+msgstr "2. Thiết lập chung"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_theme_manager
+msgid "3. Branding & Theme"
+msgstr "3. Quản lý Giao diện"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_feature_manager
+msgid "4. Features & Packages"
+msgstr "4. Tính năng & Gói"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_feature_sub
+msgid "Features"
+msgstr "Tính năng hệ thống"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_package_manager
+msgid "Packages"
+msgstr "Gói phần mềm"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_workflow_manager
+msgid "5. Workflow"
+msgstr "5. Quy trình & Phê duyệt"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_workflow_builder
+msgid "Workflow Builder"
+msgstr "Trình tạo Quy trình"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_approval_builder
+msgid "Approval Builder"
+msgstr "Trình tạo Phê duyệt"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_integration_manager
+msgid "6. Integrations"
+msgstr "6. Tích hợp"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_role_preset
+msgid "7. User & Permission"
+msgstr "7. Người dùng & Phân quyền"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_role_preset_sub
+msgid "Role Presets"
+msgstr "Vai trò mẫu"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_users
+msgid "Users & Assignments"
+msgstr "Người dùng & Gán vai trò"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_permission_matrix
+msgid "Permission Matrix"
+msgstr "Ma trận phân quyền"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_license_manager
+msgid "8. License"
+msgstr "8. Giấy phép"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_system_health
+msgid "9. System Health"
+msgstr "9. Sức khỏe hệ thống"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_configuration_wizard
+msgid "10. Configuration"
+msgstr "10. Cấu hình"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_setup_wizard_sub
+msgid "Setup Wizard"
+msgstr "Trình hướng dẫn thiết lập"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_update_manager
+msgid "Update Manager"
+msgstr "Quản lý Cập nhật"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_general_settings
+msgid "General Settings"
+msgstr "Cài đặt chung"
+
+#. module: sgt_erp_control_center
+#: model:ir.ui.menu,name:sgt_erp_control_center.menu_sgt_erp_audit_log
+#: model:ir.actions.act_window,name:sgt_erp_control_center.action_sgt_erp_audit_log
+msgid "Audit Logs"
+msgstr "Nhật ký thay đổi cấu hình"
+
+#. module: sgt_erp_control_center
+#: model:ir.actions.act_window,name:sgt_erp_control_center.action_sgt_erp_config
+msgid "General Setup"
+msgstr "Thiết lập chung"
+
+#. module: sgt_erp_control_center
+#: model:ir.actions.act_window,name:sgt_erp_control_center.action_sgt_erp_control_center_dashboard
+msgid "Control Center Dashboard"
+msgstr "Bảng điều khiển trung tâm"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__customer_name
+msgid "Customer Name"
+msgstr "Tên khách hàng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__product_name
+msgid "ERP Product Name"
+msgstr "Tên sản phẩm ERP"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__customer_code
+msgid "Customer Code"
+msgstr "Mã khách hàng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__package_id
+msgid "Selected Package"
+msgstr "Gói giải pháp áp dụng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__theme_id
+msgid "Active Company Theme"
+msgstr "Giao diện công ty áp dụng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__backup_status
+msgid "Backup Status"
+msgstr "Trạng thái sao lưu"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__backup_last_date
+msgid "Last Backup Timestamp"
+msgstr "Thời gian sao lưu gần nhất"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__disk_percentage
+msgid "Disk Usage (%)"
+msgstr "Tỷ lệ ổ đĩa sử dụng (%)"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__disk_used_gb
+msgid "Used Disk (GB)"
+msgstr "Ổ đĩa đã dùng (GB)"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__disk_total_gb
+msgid "Total Disk (GB)"
+msgstr "Tổng dung lượng ổ đĩa (GB)"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__database_size_mb
+msgid "Database Size (MB)"
+msgstr "Dung lượng Database (MB)"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__deployment_docker_container
+msgid "Docker Container"
+msgstr "Container Docker"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__deployment_python_version
+msgid "Python Version"
+msgstr "Phiên bản Python"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_config__deployment_os_info
+msgid "Operating System"
+msgstr "Hệ điều hành máy chủ"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__name
+msgid "Theme Name"
+msgstr "Tên giao diện"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__primary_color
+msgid "Primary Color"
+msgstr "Màu chủ đạo"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__secondary_color
+msgid "Secondary Color"
+msgstr "Màu phụ trợ"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__navbar_bg_color
+msgid "Navbar Background"
+msgstr "Màu thanh điều hướng trên"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__sidebar_bg_color
+msgid "Sidebar Background"
+msgstr "Màu thanh menu bên"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__font_family
+msgid "Font Family"
+msgstr "Phông chữ hệ thống"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__button_radius
+msgid "Button Border Radius"
+msgstr "Độ bo góc nút bấm"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__kanban_bg_color
+msgid "Kanban Background"
+msgstr "Màu nền thẻ Kanban"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_theme__list_alternate_row
+msgid "List Row Striping"
+msgstr "Hiệu ứng dòng so le danh sách"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_feature__name
+msgid "Feature Name"
+msgstr "Tên tính năng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_feature__code
+msgid "Feature Code"
+msgstr "Mã tính năng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_feature__active
+msgid "Enabled"
+msgstr "Đang kích hoạt"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_package__name
+msgid "Package Name"
+msgstr "Tên gói phần mềm"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_package__max_users
+msgid "Max Users"
+msgstr "Số người dùng tối đa"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_package__feature_ids
+msgid "Included Features"
+msgstr "Các tính năng đi kèm"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_workflow__name
+msgid "Workflow Name"
+msgstr "Tên quy trình"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_workflow__require_approval
+msgid "Require Approval"
+msgstr "Yêu cầu phê duyệt"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_workflow__number_of_approvals
+msgid "Required Approvals"
+msgstr "Số cấp phê duyệt"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_workflow__amount_threshold
+msgid "Amount Threshold"
+msgstr "Ngưỡng số tiền duyệt"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_workflow__notification_type
+msgid "Notification Type"
+msgstr "Hình thức thông báo"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_role_preset__name
+msgid "Role Name"
+msgstr "Tên vai trò"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_role_preset__code
+msgid "Role Code"
+msgstr "Mã vai trò"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_role_preset__group_ids
+msgid "Mapped Odoo Groups"
+msgstr "Nhóm quyền Odoo ánh xạ"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_role_preset__user_ids
+msgid "Assigned Users"
+msgstr "Người dùng đã gán"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_role_preset__user_count
+msgid "Users Count"
+msgstr "Số lượng người dùng"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_permission_matrix__perm_read
+msgid "Read"
+msgstr "Đọc"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_permission_matrix__perm_create
+msgid "Create"
+msgstr "Tạo mới"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_permission_matrix__perm_write
+msgid "Write"
+msgstr "Sửa"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_permission_matrix__perm_unlink
+msgid "Delete"
+msgstr "Xóa"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_license__license_key
+msgid "License Key"
+msgstr "Khóa giấy phép"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_license__license_warning
+msgid "License Warning"
+msgstr "Cảnh báo giấy phép"
+
+#. module: sgt_erp_control_center
+#: model:ir.model.fields,field_description:sgt_erp_control_center.field_sgt_erp_license__expiration_date
+msgid "Expiration Date"
+msgstr "Ngày hết hạn"
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_config.py:0
+msgid "Configuration Applied Successfully"
+msgstr "Áp dụng cấu hình thành công"
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_config.py:0
+msgid "All branding, package, theme and feature configurations have been synchronized."
+msgstr "Toàn bộ cấu hình thương hiệu, gói phần mềm, giao diện và tính năng đã được đồng bộ."
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_config.py:0
+msgid "Backup Health Check"
+msgstr "Kiểm tra sức khỏe sao lưu"
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_role_preset.py:0
+msgid "Assigned standard groups to role preset: %s"
+msgstr "Đã tự động ánh xạ các nhóm quyền chuẩn cho vai trò: %s"
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_role_preset.py:0
+msgid "Permissions applied to %d users in %s"
+msgstr "Đã cập nhật phân quyền thành công cho %d người dùng thuộc vai trò %s"
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_permission_matrix.py:0
+msgid "Successfully synchronized %d access control rules to Odoo security groups."
+msgstr "Đã đồng bộ thành công %d quy tắc phân quyền vào hệ thống bảo mật Odoo."
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_license.py:0
+msgid "WARNING: License has expired! Premium features / updates are paused."
+msgstr "CẢNH BÁO: Giấy phép sử dụng đã hết hạn! Các tính năng nâng cao và cập nhật tạm ngừng."
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_license.py:0
+msgid "ATTENTION: License will expire in %d days. Please renew."
+msgstr "CHÚ Ý: Giấy phép sử dụng sẽ hết hạn trong %d ngày nữa. Vui lòng gia hạn."
+
+#. module: sgt_erp_control_center
+#: code:addons/sgt_erp_control_center/models/erp_license.py:0
+msgid "Online license verified successfully."
+msgstr "Xác thực giấy phép trực tuyến thành công."

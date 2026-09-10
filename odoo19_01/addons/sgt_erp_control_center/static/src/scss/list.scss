@@ -1,0 +1,24 @@
+/* List View Styling via CSS Variables */
+.o_list_view {
+  .o_list_table {
+    border-color: var(--sgt-border) !important;
+
+    thead {
+      background-color: var(--sgt-background) !important;
+      color: var(--sgt-text) !important;
+
+      th {
+        border-bottom: 2px solid var(--sgt-border) !important;
+        font-weight: 600 !important;
+      }
+    }
+
+    tbody > tr:nth-of-type(even) {
+      background-color: var(--sgt-list-stripe-bg, transparent);
+    }
+
+    tbody > tr:hover {
+      background-color: rgba(22, 93, 255, 0.04) !important;
+    }
+  }
+}

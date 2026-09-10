@@ -1,0 +1,72 @@
+/* Navbar White-labeling via CSS Variables */
+.o_main_navbar {
+  --NavBar-entry-backgroundColor: var(--sgt-navbar-bg) !important;
+  --NavBar-entry-backgroundColor--hover: var(--sgt-navbar-hover) !important;
+  --NavBar-entry-backgroundColor--focus: var(--sgt-navbar-hover) !important;
+  --NavBar-entry-backgroundColor--active: var(--sgt-navbar-hover) !important;
+  --NavBar-entry-color: var(--sgt-navbar-text) !important;
+  --NavBar-entry-color--hover: #FFFFFF !important;
+  --NavBar-entry-color--active: #FFFFFF !important;
+  --NavBar-brand-color: var(--sgt-navbar-text) !important;
+  background-color: var(--sgt-navbar-bg) !important;
+  background: var(--sgt-navbar-bg) !important;
+  color: var(--sgt-navbar-text) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+  .o_menu_toggle {
+    color: var(--sgt-navbar-text) !important;
+  }
+
+  .o_menu_brand {
+    color: var(--sgt-navbar-text) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+  }
+
+  .o_menu_sections {
+    background-color: transparent !important;
+    background: transparent !important;
+
+    .o_nav_entry,
+    .dropdown-toggle,
+    a,
+    button {
+      background-color: transparent !important;
+      background: transparent !important;
+      color: var(--sgt-navbar-text) !important;
+      font-size: var(--sgt-menu-font-size) !important;
+      border: none !important;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active,
+      &.show {
+        background-color: var(--sgt-navbar-hover) !important;
+        background: var(--sgt-navbar-hover) !important;
+        color: #FFFFFF !important;
+      }
+    }
+
+    .dropdown.show .dropdown-toggle {
+      background-color: var(--sgt-navbar-hover) !important;
+      background: var(--sgt-navbar-hover) !important;
+      color: #FFFFFF !important;
+    }
+  }
+
+  .o_menu_systray {
+    .o_nav_entry,
+    .dropdown-toggle,
+    a,
+    button {
+      color: var(--sgt-navbar-text) !important;
+
+      &:hover,
+      &:focus {
+        background-color: var(--sgt-navbar-hover) !important;
+        color: #FFFFFF !important;
+      }
+    }
+  }
+}

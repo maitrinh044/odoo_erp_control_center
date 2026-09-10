@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_setup_wizard_form" model="ir.ui.view">
+            <field name="name">sgt.erp.setup.wizard.form</field>
+            <field name="model">sgt.erp.setup.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Multi-step Guided ERP Setup Wizard">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="step1,step2,step3,step4,step5"/>
+                    </header>
+                    <sheet>
+                        <!-- STEP 1: BUSINESS & BRAND -->
+                        <div invisible="state != 'step1'">
+                            <h4 class="text-primary mb-3"><i class="fa fa-building me-2"/>Bước 1: Thông Tin Doanh Nghiệp &amp; Nhãn Hiệu</h4>
+                            <p class="text-muted">Nhập thông tin cơ bản của khách hàng và nhận diện thương hiệu.</p>
+                            <group>
+                                <group>
+                                    <field name="company_id" options="{'no_create': True}"/>
+                                    <field name="customer_name" placeholder="Tên Doanh nghiệp / Khách hàng"/>
+                                    <field name="customer_code" placeholder="Mã KH (E.g. SGT-MAIN)"/>
+                                </group>
+                                <group>
+                                    <field name="product_name" placeholder="Tên hệ thống ERP (E.g. SGT ERP)"/>
+                                    <field name="industry"/>
+                                    <field name="logo" widget="image" class="oe_avatar" options="{'preview_image': 'logo', 'size': [90, 90]}"/>
+                                </group>
+                            </group>
+                        </div>
+
+                        <!-- STEP 2: PACKAGE SELECTION -->
+                        <div invisible="state != 'step2'">
+                            <h4 class="text-primary mb-3"><i class="fa fa-cubes me-2"/>Bước 2: Lựa Chọn Gói Giải Pháp ERP</h4>
+                            <p class="text-muted">Chọn gói giải pháp phù hợp với quy mô và yêu cầu vận hành của doanh nghiệp.</p>
+                            <group>
+                                <field name="package_id" options="{'no_create': True}" required="state == 'step2'"/>
+                            </group>
+                            <div class="alert alert-info" role="status" invisible="not package_features_summary">
+                                <strong><i class="fa fa-info-circle me-1"/>Tính năng đi kèm gói:</strong>
+                                <p class="mb-0 mt-1"><field name="package_features_summary" readonly="1"/></p>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: THEME & APPEARANCE -->
+                        <div invisible="state != 'step3'">
+                            <h4 class="text-primary mb-3"><i class="fa fa-paint-brush me-2"/>Bước 3: Giao Diện &amp; Theme Trực Quan</h4>
+                            <p class="text-muted">Chọn bộ màu sắc và kiểu dáng hiển thị cho hệ thống ERP.</p>
+                            <group>
+                                <field name="theme_id" options="{'no_create': True}" required="state == 'step3'"/>
+                            </group>
+                            <p class="small text-muted mt-2">
+                                <i class="fa fa-magic me-1"/>Hệ thống hỗ trợ 8 bộ phối màu doanh nghiệp chuẩn (Corporate Blue, Modern Green, China Red, Medical Clean, Dark Tech,...).
+                            </p>
+                        </div>
+
+                        <!-- STEP 4: INTEGRATION & SECURITY -->
+                        <div invisible="state != 'step4'">
+                            <h4 class="text-primary mb-3"><i class="fa fa-shield me-2"/>Bước 4: Tích Hợp Dịch Vụ &amp; Phân Quyền</h4>
+                            <p class="text-muted">Cấu hình kết nối ngoại vi và vai trò quản trị ban đầu.</p>
+                            <group>
+                                <group string="Kết Nối Ngoài">
+                                    <field name="enable_google_calendar" widget="boolean_toggle"/>
+                                </group>
+                                <group string="Vai Trò Quản Trị Mặc Định">
+                                    <field name="role_preset_id" options="{'no_create': True}"/>
+                                </group>
+                            </group>
+                        </div>
+
+                        <!-- STEP 5: SUMMARY & LAUNCH -->
+                        <div invisible="state != 'step5'">
+                            <h4 class="text-success mb-3"><i class="fa fa-check-circle me-2"/>Bước 5: Tổng Kết &amp; Kích Hoạt Hệ Thống</h4>
+                            <div class="alert alert-success" role="status">
+                                <h5>Sẵn sàng kích hoạt hệ thống ERP!</h5>
+                                <p class="mb-0">Các cấu hình Doanh nghiệp, Gói tính năng, Giao diện và Quyền quản trị đã sẵn sàng. Nhấn nút <strong>"Kích Hoạt &amp; Áp Dụng Ngay"</strong> để hệ thống tự động đồng bộ và mở Bảng điều khiển Control Center.</p>
+                            </div>
+                            <group>
+                                <group string="Thông Tin Tóm Tắt">
+                                    <field name="customer_name" readonly="1"/>
+                                    <field name="product_name" readonly="1"/>
+                                    <field name="industry" readonly="1"/>
+                                </group>
+                                <group string="Cấu Hình Đã Chọn">
+                                    <field name="package_id" readonly="1"/>
+                                    <field name="theme_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <!-- Navigation Buttons -->
+                        <button name="action_goto_step1" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step2'"/>
+                        <button name="action_goto_step2" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step3'"/>
+                        <button name="action_goto_step3" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step4'"/>
+                        <button name="action_goto_step4" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step5'"/>
+
+                        <button name="action_goto_step2" string="Tiếp Tục &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step1'"/>
+                        <button name="action_goto_step3" string="Tiếp Tục &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step2'"/>
+                        <button name="action_goto_step4" string="Tiếp Tục &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step3'"/>
+                        <button name="action_goto_step5" string="Xem Tổng Kết &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step4'"/>
+
+                        <!-- Final Action on Step 5 -->
+                        <button name="action_apply_quick_setup" string="Kích Hoạt &amp; Áp Dụng Ngay" type="object" class="oe_highlight btn-success" invisible="state != 'step5'"/>
+                        <button string="Đóng" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_setup_wizard" model="ir.actions.act_window">
+            <field name="name">ERP Setup Wizard</field>
+            <field name="res_model">sgt.erp.setup.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

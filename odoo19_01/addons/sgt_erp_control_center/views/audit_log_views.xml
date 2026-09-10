@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Audit Log List View -->
+        <record id="view_sgt_erp_audit_log_list" model="ir.ui.view">
+            <field name="name">sgt.erp.audit.log.list</field>
+            <field name="model">sgt.erp.audit.log</field>
+            <field name="arch" type="xml">
+                <list string="Configuration Audit Logs" create="0" delete="0" edit="0" decoration-info="category == 'theme'" decoration-success="category == 'package'" decoration-warning="category == 'license'" decoration-primary="category == 'branding'">
+                    <field name="date"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="category" widget="badge"/>
+                    <field name="field_name"/>
+                    <field name="old_value"/>
+                    <field name="new_value"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Audit Log Form View -->
+        <record id="view_sgt_erp_audit_log_form" model="ir.ui.view">
+            <field name="name">sgt.erp.audit.log.form</field>
+            <field name="model">sgt.erp.audit.log</field>
+            <field name="arch" type="xml">
+                <form string="Audit Log Entry" create="0" delete="0" edit="0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Audit Entry"/>
+                            <h2><field name="name" readonly="1"/></h2>
+                        </div>
+                        <group>
+                            <group string="Metadata">
+                                <field name="date" readonly="1"/>
+                                <field name="user_id" readonly="1"/>
+                                <field name="category" readonly="1"/>
+                                <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                            </group>
+                            <group string="Change Details">
+                                <field name="field_name" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Values Comparison">
+                            <field name="old_value" readonly="1"/>
+                            <field name="new_value" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Audit Log Search View -->
+        <record id="view_sgt_erp_audit_log_search" model="ir.ui.view">
+            <field name="name">sgt.erp.audit.log.search</field>
+            <field name="model">sgt.erp.audit.log</field>
+            <field name="arch" type="xml">
+                <search string="Search Audit Logs">
+                    <field name="field_name"/>
+                    <field name="user_id"/>
+                    <field name="category"/>
+                    <filter string="Branding" name="cat_branding" domain="[('category', '=', 'branding')]"/>
+                    <filter string="Theme" name="cat_theme" domain="[('category', '=', 'theme')]"/>
+                    <filter string="Package" name="cat_package" domain="[('category', '=', 'package')]"/>
+                    <filter string="Feature" name="cat_feature" domain="[('category', '=', 'feature')]"/>
+                    <filter string="License" name="cat_license" domain="[('category', '=', 'license')]"/>
+                    <filter string="Integration" name="cat_integration" domain="[('category', '=', 'integration')]"/>
+                    <group>
+                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                        <filter string="User" name="group_user" context="{'group_by': 'user_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Audit Log Action -->
+        <record id="action_sgt_erp_audit_log" model="ir.actions.act_window">
+            <field name="name">Configuration Audit Logs</field>
+            <field name="res_model">sgt.erp.audit.log</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_sgt_erp_audit_log_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Chưa có nhật ký thay đổi cấu hình nào được ghi nhận.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

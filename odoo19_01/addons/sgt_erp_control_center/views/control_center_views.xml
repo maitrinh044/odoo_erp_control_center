@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Server Action to Open Control Center for Current Company -->
+        <record id="action_sgt_erp_control_center_dashboard" model="ir.actions.server">
+            <field name="name">Control Center</field>
+            <field name="model_id" ref="model_sgt_erp_config"/>
+            <field name="state">code</field>
+            <field name="code">
+action = env['sgt.erp.config'].search([('company_id', '=', env.company.id)], limit=1)
+if not action:
+    action = env['sgt.erp.config'].create({
+        'name': f"{env.company.name} ERP Control Center",
+        'company_id': env.company.id,
+        'customer_name': env.company.name,
+        'product_name': 'SGT ERP',
+    })
+action = {
+    'type': 'ir.actions.act_window',
+    'res_model': 'sgt.erp.config',
+    'view_mode': 'form',
+    'res_id': action.id,
+    'views': [(env.ref('sgt_erp_control_center.view_sgt_erp_control_center_form').id, 'form')],
+    'target': 'current',
+}
+            </field>
+        </record>
+
+        <!-- Control Center Form / Dashboard View -->
+        <record id="view_sgt_erp_control_center_form" model="ir.ui.view">
+            <field name="name">sgt.erp.control.center.form</field>
+            <field name="model">sgt.erp.config</field>
+            <field name="arch" type="xml">
+                <form string="SGT ERP Control Center">
+                    <header>
+                        <button name="action_apply_configuration" string="Apply Configuration" type="object" class="oe_highlight btn-success btn-lg" icon="fa-check-circle"/>
+                        <button name="%(action_sgt_erp_setup_wizard)d" string="Quick Setup Wizard" type="action" class="btn-secondary" icon="fa-magic"/>
+                        <field name="environment" widget="statusbar" statusbar_visible="development,test,demo,production"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1 class="d-flex align-items-center gap-2">
+                                <field name="product_name" placeholder="ERP Product Name (e.g. SGT ERP)"/>
+                            </h1>
+                            <div class="text-muted fw-bold mb-3">
+                                <span>Customer: </span><field name="customer_name" class="oe_inline" placeholder="Company / Client Name"/>
+                                <span class="ms-3">Code: </span><field name="customer_code" class="oe_inline"/>
+                            </div>
+                        </div>
+
+                        <!-- System Overview Metrics Banner -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="sgt_control_card text-center">
+                                    <div class="text-muted small fw-bold">ERP VERSION</div>
+                                    <h4 class="mt-2 text-primary fw-bold"><field name="erp_version" readonly="1"/></h4>
+                                    <div class="small text-muted">Odoo <field name="odoo_version" readonly="1"/></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="sgt_control_card text-center">
+                                    <div class="text-muted small fw-bold">ACTIVE USERS</div>
+                                    <h4 class="mt-2 text-success fw-bold"><field name="active_users_count"/> / <field name="total_users_count"/></h4>
+                                    <div class="small text-muted">Company Users</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="sgt_control_card text-center">
+                                    <div class="text-muted small fw-bold">PACKAGE</div>
+                                    <h4 class="mt-2 text-dark fw-bold"><field name="package_id" options="{'no_create': True}"/></h4>
+                                    <div class="small text-muted"><field name="industry"/></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="sgt_control_card text-center">
+                                    <div class="text-muted small fw-bold">DATABASE</div>
+                                    <h4 class="mt-2 text-info fw-bold text-truncate"><field name="database_name"/></h4>
+                                    <div class="small text-muted text-truncate" title="UUID"><field name="database_uuid"/></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Module Status Cards Section -->
+                        <div class="card p-3 mb-4 shadow-sm border-0 bg-light">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="fa fa-th-large me-2"></i>Chức Năng &amp; Trạng Thái Vận Hành (Quick Status)</h5>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-users text-primary me-2"></i>CRM</span>
+                                        <field name="status_crm" widget="badge" decoration-success="status_crm == 'active'" decoration-muted="status_crm == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-shopping-cart text-info me-2"></i>Sales</span>
+                                        <field name="status_sales" widget="badge" decoration-success="status_sales == 'active'" decoration-muted="status_sales == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-id-card text-success me-2"></i>HR</span>
+                                        <field name="status_hr" widget="badge" decoration-success="status_hr == 'active'" decoration-muted="status_hr == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-calendar text-warning me-2"></i>Calendar</span>
+                                        <field name="status_calendar" widget="badge" decoration-success="status_calendar == 'active'" decoration-muted="status_calendar == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-tasks text-purple me-2"></i>Project</span>
+                                        <field name="status_project" widget="badge" decoration-success="status_project == 'active'" decoration-muted="status_project == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-check-square text-success me-2"></i>Approval</span>
+                                        <field name="status_approval" widget="badge" decoration-success="status_approval == 'active'" decoration-muted="status_approval == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-line-chart text-danger me-2"></i>Dashboard</span>
+                                        <field name="status_dashboard" widget="badge" decoration-success="status_dashboard == 'active'" decoration-muted="status_dashboard == 'disabled'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold"><i class="fa fa-plug text-primary me-2"></i>Integration</span>
+                                        <field name="status_integration" widget="badge" decoration-success="status_integration == 'active'" decoration-danger="status_integration == 'error'" decoration-muted="status_integration == 'disabled'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notebook Configuration Tabs -->
+                        <notebook>
+                            <page string="General Setup" name="general_setup">
+                                <group>
+                                    <group string="Company &amp; Organization">
+                                        <field name="company_id" options="{'no_create': True}"/>
+                                        <field name="industry"/>
+                                        <field name="theme_id" options="{'no_create': True}"/>
+                                        <field name="website" widget="url"/>
+                                    </group>
+                                    <group string="Support &amp; Localization">
+                                        <field name="support_email" widget="email"/>
+                                        <field name="support_phone" widget="phone"/>
+                                        <field name="language_id" options="{'no_create': True}"/>
+                                        <field name="timezone"/>
+                                        <field name="currency_id"/>
+                                        <field name="date_format"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Branding &amp; Logos" name="branding">
+                                <group>
+                                    <group string="Logos">
+                                        <field name="company_logo" widget="image" class="oe_avatar"/>
+                                        <field name="login_logo" widget="image" class="oe_avatar"/>
+                                        <field name="favicon" widget="image" class="oe_avatar"/>
+                                        <field name="report_logo" widget="image" class="oe_avatar"/>
+                                        <field name="email_logo" widget="image" class="oe_avatar"/>
+                                    </group>
+                                    <group string="White-label Text &amp; Identity">
+                                        <field name="browser_title"/>
+                                        <field name="footer_text"/>
+                                        <field name="support_name"/>
+                                        <field name="support_website" widget="url"/>
+                                        <field name="login_background" widget="image"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Google Calendar" name="google_calendar">
+                                <group>
+                                    <group string="Integration Settings">
+                                        <field name="enable_google_calendar"/>
+                                        <field name="central_calendar_email" invisible="not enable_google_calendar"/>
+                                        <field name="google_calendar_id" invisible="not enable_google_calendar"/>
+                                        <field name="google_sync_mode" invisible="not enable_google_calendar"/>
+                                    </group>
+                                    <group string="Google API Credentials">
+                                        <field name="google_client_id" invisible="not enable_google_calendar"/>
+                                        <field name="google_client_secret" password="True" invisible="not enable_google_calendar"/>
+                                        <field name="google_connection_status" widget="badge" decoration-success="google_connection_status == 'connected'" decoration-danger="google_connection_status == 'error'"/>
+                                        <field name="google_last_test" readonly="1"/>
+                                        <field name="google_error_message" readonly="1" invisible="not google_error_message"/>
+                                    </group>
+                                </group>
+                                <button name="action_test_google_connection" string="Test Connection" type="object" class="btn-info mt-2" icon="fa-refresh" invisible="not enable_google_calendar"/>
+                            </page>
+
+                            <page string="Approval Configuration" name="approvals">
+                                <div class="alert alert-info py-2 mb-3" role="status">
+                                    <i class="fa fa-info-circle me-1" title="Info"/> <strong>Khu vực Quản lý Phê duyệt (Mục 15):</strong> Tổng hợp các quy tắc phê duyệt đa cấp, sự kiện kích hoạt (trigger), nhóm duyệt và hạn mức ngân sách áp dụng cho công ty.
+                                </div>
+                                <field name="approval_workflow_ids" readonly="1">
+                                    <list string="Approval Rules" decoration-muted="not active">
+                                        <field name="name"/>
+                                        <field name="workflow_type"/>
+                                        <field name="model_id"/>
+                                        <field name="trigger"/>
+                                        <field name="require_approval" widget="boolean_toggle"/>
+                                        <field name="approver_group_id"/>
+                                        <field name="number_of_approvals"/>
+                                        <field name="amount_threshold"/>
+                                        <field name="notification_type"/>
+                                        <field name="action_after_approval"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="User &amp; Permission" name="user_permissions">
+                                <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+                                    <i class="fa fa-users fa-2x me-3" title="Users"/>
+                                    <div>
+                                        <strong>User &amp; Permission Presets:</strong> Quản lý các vai trò chuẩn (ERP Administrator, Manager, Sales Manager, Sales User, HR Manager, HR User, Viewer) và phân bổ quyền cho người dùng hệ thống.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <button name="action_apply_role_presets" string="Apply All Role Presets to Users" type="object" class="btn btn-primary me-2" icon="fa-users"/>
+                                    <button name="action_open_role_presets" string="Manage Role Presets" type="object" class="btn btn-secondary me-2" icon="fa-cog"/>
+                                    <button name="action_open_permission_matrix" string="Visual Permission Matrix" type="object" class="btn btn-outline-secondary" icon="fa-table"/>
+                                </div>
+                                <field name="role_preset_ids" readonly="1">
+                                    <list string="Role Presets">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="user_count" string="Assigned Users" decoration-bf="1"/>
+                                        <field name="group_ids" widget="many2many_tags"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="System Health &amp; Info" name="system_health">
+                                <group>
+                                    <group string="Health Indicators">
+                                        <field name="health_database" widget="badge" decoration-success="health_database == 'ok'" decoration-warning="health_database == 'warning'" decoration-danger="health_database == 'error'"/>
+                                        <field name="health_cron" widget="badge" decoration-success="health_cron == 'ok'" decoration-warning="health_cron == 'warning'"/>
+                                        <field name="health_mail" widget="badge" decoration-success="health_mail == 'ok'" decoration-warning="health_mail == 'warning'"/>
+                                        <field name="health_integration" widget="badge" decoration-success="health_integration == 'ok'" decoration-warning="health_integration == 'warning'"/>
+                                    </group>
+                                    <group string="CPU &amp; Compute Load (V2)">
+                                        <field name="cpu_percentage" widget="progressbar"/>
+                                        <field name="cpu_cores"/>
+                                        <field name="cpu_load_1m"/>
+                                        <field name="cpu_model"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Storage &amp; Backup (V2)">
+                                        <field name="disk_percentage" widget="progressbar"/>
+                                        <field name="disk_used_gb"/>
+                                        <field name="disk_total_gb"/>
+                                        <field name="os_disk_free_gb"/>
+                                        <field name="database_size_mb"/>
+                                        <field name="backup_status" widget="badge" decoration-success="backup_status == 'ok'" decoration-warning="backup_status == 'warning'"/>
+                                        <field name="backup_last_date"/>
+                                        <div>
+                                            <button name="action_check_backup_status" string="Check Backup Status" type="object" class="btn btn-outline-primary btn-sm mt-2" icon="fa-database"/>
+                                        </div>
+                                    </group>
+                                </group>
+                                <group string="Deployment &amp; Runtime Environment (V2)">
+                                    <group>
+                                        <field name="deployment_docker_container"/>
+                                        <field name="deployment_python_version"/>
+                                        <field name="deployment_os_info"/>
+                                    </group>
+                                    <group>
+                                        <field name="server_time" readonly="1"/>
+                                        <field name="installed_sgt_modules" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

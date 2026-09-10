@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sgt_erp_control_center.LiveThemePreview">
+        <div class="sgt_live_theme_preview_container my-3 p-3 bg-light rounded border shadow-sm">
+            <!-- Toolbar: View Mode & Dark Mode Switcher -->
+            <div class="d-flex justify-content-between align-items-center pb-2 mb-3 border-bottom">
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-primary text-white me-2 pulse-badge">ODOO 19 PREVIEW</span>
+                    <strong class="text-dark"><i class="fa fa-desktop me-1"/>Trực Quan Giao Diện Chuẩn Odoo 19 (Sales Order Form)</strong>
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" 
+                            t-att-class="'btn ' + (state.viewMode === 'desktop' ? 'btn-primary' : 'btn-outline-secondary')"
+                            t-on-click="() => this.toggleViewMode('desktop')">
+                        <i class="fa fa-desktop me-1"/> Desktop
+                    </button>
+                    <button type="button" 
+                            t-att-class="'btn ' + (state.viewMode === 'mobile' ? 'btn-primary' : 'btn-outline-secondary')"
+                            t-on-click="() => this.toggleViewMode('mobile')">
+                        <i class="fa fa-mobile me-1"/> Mobile
+                    </button>
+                    <button type="button" 
+                            t-att-class="'btn ' + (state.isDark ? 'btn-dark' : 'btn-outline-dark')"
+                            t-on-click="() => this.toggleDark()">
+                        <i t-att-class="'fa ' + (state.isDark ? 'fa-sun-o text-warning' : 'fa-moon-o')"/>
+                        <span class="ms-1" t-esc="state.isDark ? 'Dark Mode' : 'Light Mode'"/>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preview Frame (Authentic Miniature Odoo 19 WebClient) -->
+            <div t-att-style="'max-width: ' + (state.viewMode === 'mobile' ? '420px' : '100%') + '; margin: 0 auto; transition: max-width 0.3s ease; font-family: ' + themeData.fontFamily + '; background-color: ' + themeData.bg + '; color: ' + themeData.text + ';'"
+                 class="preview_window rounded shadow border overflow-hidden">
+                
+                <!-- 1. Top Navigation Bar (Odoo 19 App Bar) -->
+                <div t-att-style="'background-color: ' + themeData.navbarBg + '; color: ' + themeData.navbarText + '; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.15); font-size: 13px;'">
+                    <div class="d-flex align-items-center">
+                        <!-- App Drawer (9 dots) -->
+                        <span class="me-3 opacity-75" title="App Drawer" style="cursor: pointer; font-size: 14px;">
+                            <i class="fa fa-th me-1"/>
+                        </span>
+                        <!-- Brand & Active App -->
+                        <span class="fw-bold me-3" style="letter-spacing: 0.5px;">SGT ERP</span>
+                        <span class="fw-bold me-3 d-none d-sm-inline" style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 12px;">Bán hàng</span>
+
+                        <!-- Odoo App Menus (Desktop Mode) -->
+                        <div t-if="state.viewMode === 'desktop'" class="d-none d-md-flex align-items-center">
+                            <span class="px-2 py-1 rounded me-1 fw-bold" t-att-style="'background-color: ' + themeData.navbarHover + '; color: #ffffff; font-size: 12px;'">Đơn bán hàng</span>
+                            <span class="px-2 py-1 rounded me-1 opacity-75" style="font-size: 12px;">Khách hàng</span>
+                            <span class="px-2 py-1 rounded me-1 opacity-75" style="font-size: 12px;">Sản phẩm</span>
+                            <span class="px-2 py-1 rounded me-1 opacity-75" style="font-size: 12px;">Báo cáo</span>
+                            <span class="px-2 py-1 rounded opacity-75" style="font-size: 12px;">Cấu hình</span>
+                        </div>
+                    </div>
+
+                    <!-- Right System Icons & User Avatar -->
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="position-relative me-1" style="font-size: 12px; opacity: 0.85;">
+                            <i class="fa fa-comments-o"/>
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" style="width: 6px; height: 6px;"></span>
+                        </span>
+                        <span class="me-2" style="font-size: 12px; opacity: 0.85;">
+                            <i class="fa fa-clock-o"/>
+                        </span>
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="badge rounded-circle p-1 bg-light text-dark fw-bold" style="width: 24px; height: 24px; font-size: 11px; display: inline-flex; align-items: center; justify-content: center;">ST</span>
+                            <span t-if="state.viewMode === 'desktop'" class="small d-none d-lg-inline opacity-90" style="font-size: 11px;">SaigonTrade</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Control Panel (Odoo 19 View Header & Breadcrumbs) -->
+                <div t-att-style="'background-color: ' + themeData.cardBg + '; border-bottom: 1px solid ' + themeData.border + '; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;'">
+                    <!-- Breadcrumbs & Action Buttons -->
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="d-flex align-items-center">
+                            <span class="text-muted small me-1">Đơn bán hàng</span>
+                            <span class="text-muted small me-1">/</span>
+                            <span class="fw-bold fs-6" t-att-style="'color: ' + themeData.text + ';'">S00042</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 ms-2" style="font-size: 11px;" title="Tạo mới">
+                            <i class="fa fa-plus me-1"/> Mới
+                        </button>
+                        <span class="text-success small ms-1" title="Đã lưu trên đám mây"><i class="fa fa-cloud-upload"/></span>
+                    </div>
+
+                    <!-- Pager -->
+                    <div class="d-flex align-items-center gap-1 text-muted small" style="font-size: 11px;">
+                        <span>1 / 24</span>
+                        <button type="button" class="btn btn-sm btn-link text-muted p-0 ms-1"><i class="fa fa-chevron-left"/></button>
+                        <button type="button" class="btn btn-sm btn-link text-muted p-0 ms-1"><i class="fa fa-chevron-right"/></button>
+                    </div>
+                </div>
+
+                <!-- 3. Form Content Container -->
+                <div class="p-3" t-att-style="'background-color: ' + themeData.bg + ';'">
+                    
+                    <!-- Form Sheet (.o_form_sheet) -->
+                    <div class="border shadow-sm p-3 mb-3"
+                         t-att-style="'background-color: ' + themeData.cardBg + '; border-color: ' + themeData.border + '; border-radius: ' + themeData.cardRadius + ';'">
+                        
+                        <!-- Form Header: Action Buttons & Statusbar -->
+                        <div class="d-flex justify-content-between align-items-center pb-2 mb-3 border-bottom flex-wrap gap-2"
+                             t-att-style="'border-color: ' + themeData.border + ';'">
+                            <!-- Action Buttons -->
+                            <div class="d-flex align-items-center gap-1 flex-wrap">
+                                <button type="button" class="btn btn-sm px-3 fw-bold"
+                                        t-att-style="'background-color: ' + themeData.btnPrimary + '; color: ' + themeData.btnText + '; border-radius: ' + themeData.btnRadius + '; border: none; font-size: 12px;'">
+                                    <i class="fa fa-check me-1"/> Xác nhận
+                                </button>
+                                <button type="button" class="btn btn-sm border"
+                                        t-att-style="'background-color: ' + themeData.cardBg + '; color: ' + themeData.text + '; border-radius: ' + themeData.btnRadius + '; border-color: ' + themeData.border + '; font-size: 12px;'">
+                                    Gửi email
+                                </button>
+                                <button type="button" class="btn btn-sm border d-none d-sm-inline-block"
+                                        t-att-style="'background-color: ' + themeData.cardBg + '; color: ' + themeData.text + '; border-radius: ' + themeData.btnRadius + '; border-color: ' + themeData.border + '; font-size: 12px;'">
+                                    In ấn
+                                </button>
+                                <button type="button" class="btn btn-sm text-muted" style="font-size: 12px;">
+                                    Hủy
+                                </button>
+                            </div>
+
+                            <!-- Odoo 19 Statusbar Arrow Steps -->
+                            <div class="d-flex align-items-center small" style="font-size: 11px;">
+                                <span class="px-2 py-1 text-muted border-end" style="opacity: 0.6;">Báo giá</span>
+                                <span class="px-2 py-1 text-muted border-end" style="opacity: 0.6;">Đã gửi</span>
+                                <span class="px-2 py-1 text-white fw-bold shadow-sm"
+                                      t-att-style="'background-color: ' + themeData.primary + '; border-radius: 4px;'">
+                                    Đơn bán hàng
+                                </span>
+                                <span class="px-2 py-1 text-muted ms-1" style="opacity: 0.6;">Đã khóa</span>
+                            </div>
+                        </div>
+
+                        <!-- Document Title Header -->
+                        <div class="mb-3">
+                            <div class="text-muted small" style="font-size: 11px;">Đơn bán hàng</div>
+                            <h2 class="fw-bold mb-0" t-att-style="'color: ' + themeData.text + '; font-size: 20px;'">S00042</h2>
+                        </div>
+
+                        <!-- 2-Column Fields Grid (Odoo Form Grid) -->
+                        <div class="row g-2 mb-3" style="font-size: 12px;">
+                            <div class="col-12 col-md-6">
+                                <div class="row mb-1">
+                                    <div class="col-4 text-muted fw-semibold">Khách hàng:</div>
+                                    <div class="col-8 fw-bold" t-att-style="'color: ' + themeData.primary + ';'">
+                                        Công ty CP Công Nghệ Sài Gòn
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4 text-muted">Địa chỉ:</div>
+                                    <div class="col-8">123 Nguyễn Huệ, Quận 1, TP.HCM</div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4 text-muted">Bảng giá:</div>
+                                    <div class="col-8">Bảng giá tiêu chuẩn (VND)</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="row mb-1">
+                                    <div class="col-4 text-muted">Ngày hết hạn:</div>
+                                    <div class="col-8">15/09/2026</div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4 text-muted">Thanh toán:</div>
+                                    <div class="col-8">Thanh toán ngay</div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4 text-muted">Trạng thái duyệt:</div>
+                                    <div class="col-8">
+                                        <span class="badge bg-success text-white" style="font-size: 10px;">Đã duyệt vượt hạn mức</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notebook Tabs (Odoo 19 Tabbed Interface) -->
+                        <div class="mb-2">
+                            <ul class="nav nav-tabs border-bottom" style="font-size: 12px;">
+                                <li class="nav-item">
+                                    <span class="nav-link active fw-bold"
+                                          t-att-style="'background-color: transparent; color: ' + themeData.primary + '; border: none; border-bottom: 3px solid ' + themeData.primary + '; padding: 6px 12px; cursor: pointer;'">
+                                        Chi tiết đơn hàng
+                                    </span>
+                                </li>
+                                <li class="nav-item">
+                                    <span class="nav-link text-muted" style="border: none; padding: 6px 12px; cursor: pointer;">
+                                        Thông tin khác
+                                    </span>
+                                </li>
+                                <li class="nav-item">
+                                    <span class="nav-link text-muted" style="border: none; padding: 6px 12px; cursor: pointer;">
+                                        Ghi chú nội bộ
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Order Lines Table (Odoo 19 List Renderer Simulation) -->
+                        <div class="table-responsive mb-3">
+                            <table class="table table-sm mb-0 align-middle" style="font-size: 12px;">
+                                <thead>
+                                    <tr t-att-style="'border-bottom: 2px solid ' + themeData.border + '; color: ' + themeData.text + '; font-size: 11px; opacity: 0.85;'">
+                                        <th>Sản phẩm</th>
+                                        <th class="d-none d-sm-table-cell">Mô tả</th>
+                                        <th class="text-end">Số lượng</th>
+                                        <th class="text-end">Đơn giá</th>
+                                        <th class="text-end d-none d-sm-table-cell">Thuế</th>
+                                        <th class="text-end">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-att-style="'border-bottom: 1px solid ' + themeData.border + ';'">
+                                        <td class="fw-bold" t-att-style="'color: ' + themeData.primary + ';'">
+                                            Máy chủ Dell PowerEdge R750
+                                        </td>
+                                        <td class="text-muted small d-none d-sm-table-cell">Intel Xeon Silver 4314, 32GB RAM</td>
+                                        <td class="text-end">2.00 Cái</td>
+                                        <td class="text-end">45.000.000 ₫</td>
+                                        <td class="text-end text-muted small d-none d-sm-table-cell">10%</td>
+                                        <td class="text-end fw-bold">90.000.000 ₫</td>
+                                    </tr>
+                                    <tr t-att-style="(themeData.listAlternateRow ? ('background-color: ' + (state.isDark ? '#263345' : '#f8fafc') + '; ') : '') + 'border-bottom: 1px solid ' + themeData.border + ';'">
+                                        <td class="fw-bold" t-att-style="'color: ' + themeData.primary + ';'">
+                                            Gói dịch vụ triển khai SGT ERP
+                                        </td>
+                                        <td class="text-muted small d-none d-sm-table-cell">Cài đặt, phân quyền và đào tạo</td>
+                                        <td class="text-end">1.00 Gói</td>
+                                        <td class="text-end">30.000.000 ₫</td>
+                                        <td class="text-end text-muted small d-none d-sm-table-cell">10%</td>
+                                        <td class="text-end fw-bold">30.000.000 ₫</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Total Summary Calculation (Bottom Right) -->
+                        <div class="row justify-content-end mb-2" style="font-size: 12px;">
+                            <div class="col-12 col-sm-6 col-md-5">
+                                <div class="d-flex justify-content-between py-1 border-bottom" t-att-style="'border-color: ' + themeData.border + ';'">
+                                    <span class="text-muted">Chưa thuế:</span>
+                                    <span class="fw-semibold">120.000.000 ₫</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-1 border-bottom" t-att-style="'border-color: ' + themeData.border + ';'">
+                                    <span class="text-muted">Thuế GTGT (10%):</span>
+                                    <span class="fw-semibold">12.000.000 ₫</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 fw-bold fs-6">
+                                    <span>Tổng cộng:</span>
+                                    <span t-att-style="'color: ' + themeData.primary + '; font-size: 16px;'">132.000.000 ₫</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 4. Miniature Odoo 19 Chatter Section -->
+                    <div class="border rounded p-2 small"
+                         t-att-style="'background-color: ' + themeData.cardBg + '; border-color: ' + themeData.border + '; color: ' + themeData.text + '; font-size: 11px;'">
+                        <div class="d-flex align-items-center gap-2 pb-2 border-bottom mb-2 text-muted"
+                             t-att-style="'border-color: ' + themeData.border + ';'">
+                            <span class="fw-bold" t-att-style="'color: ' + themeData.primary + '; cursor: pointer;'"><i class="fa fa-envelope-o me-1"/> Gửi tin nhắn</span>
+                            <span>|</span>
+                            <span style="cursor: pointer;"><i class="fa fa-pencil me-1"/> Ghi chú</span>
+                            <span>|</span>
+                            <span style="cursor: pointer;"><i class="fa fa-calendar-check-o me-1"/> Lên lịch hoạt động</span>
+                        </div>
+                        <div class="d-flex align-items-start gap-2">
+                            <span class="badge rounded-circle bg-secondary text-white p-1 mt-1" style="width: 18px; height: 18px; font-size: 9px; display: inline-flex; align-items: center; justify-content: center;">AD</span>
+                            <div>
+                                <span class="fw-bold me-2">Administrator</span>
+                                <span class="text-muted" style="font-size: 10px;">Hôm nay lúc 09:30</span>
+                                <div class="mt-1" style="opacity: 0.9;">Đơn bán hàng <strong>S00042</strong> đã được xác nhận thành công và tự động đồng bộ theo chủ đề <strong><t t-esc="themeData.name || 'SGT ERP Theme'"/></strong>.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </t>
+</templates>

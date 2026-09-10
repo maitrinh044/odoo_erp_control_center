@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_approval_wizard_form" model="ir.ui.view">
+            <field name="name">sgt.erp.approval.wizard.form</field>
+            <field name="model">sgt.erp.approval.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Xác nhận phê duyệt">
+                    <sheet>
+                        <div class="alert alert-info" role="alert" invisible="action_type != 'approve'">
+                            <i class="fa fa-info-circle me-2"/> Bạn đang thực hiện <b>Phê duyệt</b> cho cấp: <b><field name="level_name" readonly="1" class="d-inline"/></b>
+                        </div>
+                        <div class="alert alert-danger" role="alert" invisible="action_type != 'reject'">
+                            <i class="fa fa-exclamation-triangle me-2"/> Bạn đang thực hiện <b>Từ chối</b> cấp: <b><field name="level_name" readonly="1" class="d-inline"/></b>. Vui lòng nêu rõ lý do bên dưới.
+                        </div>
+                        <group>
+                            <field name="line_id" invisible="1"/>
+                            <field name="action_type" invisible="1"/>
+                            <field name="document_reference"/>
+                            <field name="note" placeholder="Nhập ý kiến chỉ đạo, lý do duyệt hoặc nguyên nhân từ chối..." widget="text"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_confirm" string="Xác nhận" type="object" class="btn-primary" invisible="action_type != 'approve'"/>
+                        <button name="action_confirm" string="Xác nhận Từ chối" type="object" class="btn-danger" invisible="action_type != 'reject'"/>
+                        <button string="Hủy bỏ" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

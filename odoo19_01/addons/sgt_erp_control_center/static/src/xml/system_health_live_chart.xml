@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- CPU Live Waveform Chart Widget -->
+    <t t-name="sgt_erp_control_center.LiveCpuChart">
+        <div class="o_sgt_live_chart_widget">
+            <div class="chart-toolbar">
+                <div class="live-badge-group">
+                    <span t-att-class="'pulse-dot ' + (state.isPaused ? 'paused' : '')" t-att-title="state.isPaused ? 'Paused' : 'Active'"></span>
+                    <t t-if="state.isPaused">
+                        <span class="badge bg-warning text-dark py-0 px-1" style="font-size: 0.65rem;">PAUSED</span>
+                    </t>
+                    <span class="current-telemetry-val val-cpu">
+                        <t t-esc="state.stats.cpu.percentage != null ? state.stats.cpu.percentage : 0"/>%
+                    </span>
+                </div>
+
+                <div class="chart-actions">
+                    <div class="interval-btn-group" title="Update frequency">
+                        <button type="button" 
+                                t-att-class="state.intervalMs === 1000 ? 'active' : ''"
+                                t-on-click="() => this.changeInterval(1000)">1s</button>
+                        <button type="button" 
+                                t-att-class="state.intervalMs === 2000 ? 'active' : ''"
+                                t-on-click="() => this.changeInterval(2000)">2s</button>
+                        <button type="button" 
+                                t-att-class="state.intervalMs === 5000 ? 'active' : ''"
+                                t-on-click="() => this.changeInterval(5000)">5s</button>
+                    </div>
+
+                    <button type="button" 
+                            t-att-class="'action-btn ' + (state.isPaused ? 'btn-play' : 'btn-pause')"
+                            t-on-click="togglePause"
+                            t-att-title="state.isPaused ? 'Resume live updates' : 'Pause live updates'">
+                        <i t-att-class="'fa ' + (state.isPaused ? 'fa-play' : 'fa-pause')"></i>
+                    </button>
+
+                    <button type="button" 
+                            class="action-btn"
+                            t-on-click="refreshNow"
+                            title="Refresh telemetry now">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas t-ref="cpuCanvas"></canvas>
+            </div>
+
+            <div class="chart-footer">
+                <span>60 seconds rolling</span>
+                <span>0% &#8212; 100% Scale</span>
+            </div>
+        </div>
+    </t>
+
+    <!-- RAM Live Waveform Chart Widget -->
+    <t t-name="sgt_erp_control_center.LiveRamChart">
+        <div class="o_sgt_live_chart_widget">
+            <div class="chart-toolbar">
+                <div class="live-badge-group">
+                    <span t-att-class="'pulse-dot ' + (state.isPaused ? 'paused' : '')" t-att-title="state.isPaused ? 'Paused' : 'Active'"></span>
+                    <t t-if="state.isPaused">
+                        <span class="badge bg-warning text-dark py-0 px-1" style="font-size: 0.65rem;">PAUSED</span>
+                    </t>
+                    <span class="current-telemetry-val val-ram">
+                        <t t-esc="state.stats.ram.percentage != null ? state.stats.ram.percentage : 0"/>%
+                    </span>
+                </div>
+
+                <div class="chart-actions">
+                    <span class="small text-muted me-1">
+                        <strong><t t-esc="state.stats.ram.used_gb || 0"/></strong> / <t t-esc="state.stats.ram.total_gb || 0"/> GB
+                    </span>
+                    <button type="button" 
+                            class="action-btn"
+                            t-on-click="refreshNow"
+                            title="Refresh telemetry now">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas t-ref="ramCanvas"></canvas>
+            </div>
+
+            <div class="chart-footer">
+                <span>60 seconds rolling</span>
+                <span>0 &#8212; <t t-esc="state.stats.ram.total_gb || 0"/> GB Scale</span>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mass Approval Wizard Form View -->
+    <record id="view_sgt_erp_mass_approval_wizard_form" model="ir.ui.view">
+        <field name="name">sgt.erp.mass.approval.wizard.form</field>
+        <field name="model">sgt.erp.mass.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Xử Lý Phê Duyệt Hàng Loạt">
+                <sheet>
+                    <div class="alert alert-info d-flex align-items-center mb-3" role="status">
+                        <i class="fa fa-tasks fa-2x me-3 text-info" title="Thông tin xử lý" aria-label="Thông tin xử lý"/>
+                        <div>
+                            <div class="fw-bold fs-6 mb-1">Xác nhận xử lý hàng loạt các chứng từ đã chọn</div>
+                            <span>Hệ thống sẽ duyệt hoặc từ chối các cấp duyệt hợp lệ và tự động luân chuyển tiến trình của từng chứng từ.</span>
+                        </div>
+                    </div>
+
+                    <!-- Stat summary cards -->
+                    <div class="row text-center mb-3 g-2">
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <div class="text-muted small">Tổng đã chọn</div>
+                                <div class="fs-5 fw-bold text-primary"><field name="total_count" readonly="1"/></div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <div class="text-muted small">Đơn bán hàng</div>
+                                <div class="fs-5 fw-bold text-success"><field name="sale_order_count" readonly="1"/></div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <div class="text-muted small">Đơn mua hàng</div>
+                                <div class="fs-5 fw-bold text-warning"><field name="purchase_order_count" readonly="1"/></div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <div class="text-muted small">Hóa đơn</div>
+                                <div class="fs-5 fw-bold text-danger"><field name="account_move_count" readonly="1"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <field name="action_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="note" placeholder="Nhập ghi chú phê duyệt hoặc lý do từ chối chung..."/>
+                    </group>
+
+                    <notebook>
+                        <page string="Danh Sách Chứng Từ Đã Chọn" name="lines">
+                            <field name="line_ids" readonly="1">
+                                <list string="Chứng từ" decoration-info="state == 'pending'" decoration-muted="state in ('approved', 'skipped')" decoration-danger="state == 'rejected'">
+                                    <field name="document_reference" string="Mã Chứng Từ"/>
+                                    <field name="name" string="Cấp Duyệt"/>
+                                    <field name="partner_id" string="Đối Tác"/>
+                                    <field name="amount_total" string="Tổng Tiền" widget="monetary"/>
+                                    <field name="company_id" string="Công Ty" groups="base.group_multi_company"/>
+                                    <field name="state" widget="badge" 
+                                           decoration-warning="state == 'waiting'" 
+                                           decoration-info="state == 'pending'" 
+                                           decoration-success="state == 'approved'" 
+                                           decoration-danger="state == 'rejected'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_mass_process" string="Xác Nhận Thực Hiện" type="object" class="btn-primary"/>
+                    <button string="Hủy Bỏ" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Binding for Mass Approval in List View -->
+    <record id="action_sgt_erp_mass_approval" model="ir.actions.act_window">
+        <field name="name">Phê Duyệt / Từ Chối Hàng Loạt</field>
+        <field name="res_model">sgt.erp.mass.approval.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_sgt_erp_approval_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="context">{'default_line_ids': active_ids, 'default_action_type': 'approve'}</field>
+    </record>
+</odoo>

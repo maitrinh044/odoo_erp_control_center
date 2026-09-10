@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="role_preset_erp_admin" model="sgt.erp.role.preset">
+            <field name="name">ERP Administrator</field>
+            <field name="code">erp_admin</field>
+            <field name="sequence">10</field>
+            <field name="data_scope">all</field>
+            <field name="description">Toàn quyền quản trị toàn bộ hệ thống ERP và cấu hình.</field>
+            <field name="group_ids" eval="[(4, ref('base.group_system')), (4, ref('sgt_erp_control_center.group_erp_control_center_admin'))]"/>
+        </record>
+
+        <record id="role_preset_manager" model="sgt.erp.role.preset">
+            <field name="name">Manager</field>
+            <field name="code">manager</field>
+            <field name="sequence">20</field>
+            <field name="data_scope">all</field>
+            <field name="description">Quản lý chung các phân hệ và chỉnh sửa cấu hình vận hành.</field>
+            <field name="group_ids" eval="[(4, ref('sgt_erp_control_center.group_erp_control_center_manager'))]"/>
+        </record>
+
+        <record id="role_preset_sales_manager" model="sgt.erp.role.preset">
+            <field name="name">Sales Manager</field>
+            <field name="code">sales_manager</field>
+            <field name="sequence">30</field>
+            <field name="data_scope">team</field>
+            <field name="description">Trưởng phòng kinh doanh: Quản lý khách hàng, báo giá và đơn hàng.</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user')), (4, ref('sales_team.group_sale_manager'))]"/>
+        </record>
+
+        <record id="role_preset_sales_user" model="sgt.erp.role.preset">
+            <field name="name">Sales User</field>
+            <field name="code">sales_user</field>
+            <field name="sequence">40</field>
+            <field name="data_scope">own</field>
+            <field name="description">Nhân viên kinh doanh: Tiếp cận khách hàng, tạo báo giá và tương tác lịch hẹn.</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user')), (4, ref('sales_team.group_sale_salesman'))]"/>
+        </record>
+
+        <record id="role_preset_hr_manager" model="sgt.erp.role.preset">
+            <field name="name">HR Manager</field>
+            <field name="code">hr_manager</field>
+            <field name="sequence">50</field>
+            <field name="data_scope">team</field>
+            <field name="description">Quản lý nhân sự: Hồ sơ nhân viên, chấm công và tuyển dụng.</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="role_preset_hr_user" model="sgt.erp.role.preset">
+            <field name="name">HR User</field>
+            <field name="code">hr_user</field>
+            <field name="sequence">60</field>
+            <field name="data_scope">own</field>
+            <field name="description">Nhân viên phòng nhân sự / Người dùng nội bộ.</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="role_preset_viewer" model="sgt.erp.role.preset">
+            <field name="name">Viewer</field>
+            <field name="code">viewer</field>
+            <field name="sequence">70</field>
+            <field name="data_scope">all</field>
+            <field name="description">Chỉ xem dữ liệu báo cáo, không có quyền chỉnh sửa.</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user')), (4, ref('sgt_erp_control_center.group_erp_control_center_user'))]"/>
+        </record>
+
+        <!-- Default Multi-Module Permission Matrix Rows for ERP Admin -->
+        <record id="matrix_admin_partner" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_erp_admin"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">all</field>
+        </record>
+        <record id="matrix_admin_sale" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_erp_admin"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">all</field>
+        </record>
+        <record id="matrix_admin_crm" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_erp_admin"/>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">all</field>
+        </record>
+
+        <!-- Default Multi-Module Permission Matrix Rows for Manager -->
+        <record id="matrix_manager_partner" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_manager"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">all</field>
+        </record>
+        <record id="matrix_manager_sale" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_manager"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">all</field>
+        </record>
+        <record id="matrix_manager_crm" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_manager"/>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">all</field>
+        </record>
+
+        <!-- Default Multi-Module Permission Matrix Rows for Sales Manager -->
+        <record id="matrix_sales_manager_partner" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_sales_manager"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">team</field>
+        </record>
+        <record id="matrix_sales_manager_sale" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_sales_manager"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">team</field>
+        </record>
+        <record id="matrix_sales_manager_crm" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_sales_manager"/>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="data_scope">team</field>
+        </record>
+
+        <!-- Default Multi-Module Permission Matrix Rows for Sales User -->
+        <record id="matrix_sales_user_partner" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_sales_user"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="data_scope">own</field>
+        </record>
+        <record id="matrix_sales_user_sale" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_sales_user"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="data_scope">own</field>
+        </record>
+        <record id="matrix_sales_user_crm" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_sales_user"/>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="data_scope">own</field>
+        </record>
+
+        <!-- Default Multi-Module Permission Matrix Rows for Viewer -->
+        <record id="matrix_viewer_partner" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_viewer"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="data_scope">all</field>
+        </record>
+        <record id="matrix_viewer_sale" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_viewer"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="data_scope">all</field>
+        </record>
+        <record id="matrix_viewer_crm" model="sgt.erp.permission.matrix">
+            <field name="role_preset_id" ref="role_preset_viewer"/>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="data_scope">all</field>
+        </record>
+    </data>
+</odoo>

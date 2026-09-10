@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_workflow_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.workflow.list</field>
+            <field name="model">sgt.erp.workflow</field>
+            <field name="arch" type="xml">
+                <list string="Workflow Configurations">
+                    <field name="name"/>
+                    <field name="workflow_type" widget="badge"/>
+                    <field name="model_id"/>
+                    <field name="require_approval" widget="boolean_toggle"/>
+                    <field name="approver_group_id"/>
+                    <field name="company_id"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_sgt_erp_workflow_form" model="ir.ui.view">
+            <field name="name">sgt.erp.workflow.form</field>
+            <field name="model">sgt.erp.workflow</field>
+            <field name="arch" type="xml">
+                <form string="Workflow Configuration">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="E.g. CRM Lead Approval Flow"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="workflow_type"/>
+                                <field name="model_id" options="{'no_create': True}"/>
+                                <field name="company_id" options="{'no_create': True}"/>
+                                <field name="trigger"/>
+                            </group>
+                            <group>
+                                <field name="require_approval"/>
+                                <field name="number_of_approvals" invisible="not require_approval"/>
+                                <field name="approver_group_id" invisible="not require_approval"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Workflow Stages Builder" name="stages">
+                                <field name="stage_ids">
+                                    <list string="Stages" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="require_approval" widget="boolean_toggle"/>
+                                        <field name="min_approvals"/>
+                                        <field name="approver_group_id" options="{'no_create': True}"/>
+                                        <field name="amount_threshold"/>
+                                        <field name="fold" widget="boolean_toggle"/>
+                                        <field name="is_won" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Multi-level Approval Stages (Các cấp phê duyệt)" name="approval_levels" invisible="not require_approval">
+                                <group>
+                                    <field name="approval_mode" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                                <field name="level_ids">
+                                    <list string="Approval Levels" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name" placeholder="E.g. Cấp 1: Trưởng nhóm"/>
+                                        <field name="approver_type"/>
+                                        <field name="approver_user_ids" widget="many2many_tags" options="{'no_create': True}" invisible="approver_type == 'group'"/>
+                                        <field name="approver_group_id" options="{'no_create': True}" invisible="approver_type == 'user'"/>
+                                        <field name="amount_min"/>
+                                        <field name="amount_max"/>
+                                        <field name="auto_notification" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Approval Rules &amp; Triggers" name="approval_rules">
+                                <group>
+                                    <group string="Cấu Hình Phê Duyệt Nâng Cao">
+                                        <field name="approver_user_ids" widget="many2many_tags" options="{'no_create': True}" invisible="not require_approval"/>
+                                        <field name="amount_threshold" invisible="not require_approval"/>
+                                        <field name="action_after_approval" placeholder="Next stage, notifications, etc." invisible="not require_approval"/>
+                                    </group>
+                                    <group string="Validation &amp; Ràng Buộc">
+                                        <field name="required_fields" placeholder="E.g. partner_id, phone, email"/>
+                                        <field name="stage_configuration" placeholder="Stage rules or transition logic..."/>
+                                    </group>
+                                </group>
+                                <group string="Notification / Thông Báo Khi Chuyển Bước">
+                                    <group>
+                                        <field name="notification_type"/>
+                                        <field name="notification_template_id" invisible="notification_type not in ('email', 'both')" options="{'no_create': True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="notification_message" placeholder="Nội dung thông báo (In-app hoặc email subject)..." invisible="notification_type == 'none'"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Description" name="desc">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_workflow" model="ir.actions.act_window">
+            <field name="name">Workflow Builder</field>
+            <field name="res_model">sgt.erp.workflow</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Quản lý quy trình phê duyệt và cấu hình các bước luân chuyển chứng từ.
+                </p>
+            </field>
+        </record>
+
+        <!-- Approval Builder View & Action -->
+        <record id="view_sgt_erp_approval_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.workflow.approval.list</field>
+            <field name="model">sgt.erp.workflow</field>
+            <field name="arch" type="xml">
+                <list string="Approval Flows &amp; Rules">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="trigger" widget="badge"/>
+                    <field name="approver_group_id"/>
+                    <field name="number_of_approvals"/>
+                    <field name="amount_threshold"/>
+                    <field name="notification_type" widget="badge"/>
+                    <field name="action_after_approval"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_approval_builder" model="ir.actions.act_window">
+            <field name="name">Approval Builder</field>
+            <field name="res_model">sgt.erp.workflow</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('require_approval', '=', True)]</field>
+            <field name="context">{'default_require_approval': True}</field>
+            <field name="view_id" ref="view_sgt_erp_approval_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Thiết lập và quản lý các luồng phê duyệt đa cấp theo mô hình, điều kiện kích hoạt và hạn mức số tiền.
+                </p>
+            </field>
+        </record>
+
+        <!-- Pending Approvals Queue View & Action -->
+        <record id="view_sgt_erp_approval_line_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.approval.line.list</field>
+            <field name="model">sgt.erp.approval.line</field>
+            <field name="arch" type="xml">
+                <list string="Hàng đợi Phê duyệt" decoration-info="state == 'pending'" decoration-muted="state in ('approved', 'skipped')" decoration-danger="state == 'rejected'">
+                    <field name="sequence" widget="handle"/>
+                    <field name="document_reference" string="Chứng từ"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                    <field name="name" string="Cấp duyệt"/>
+                    <field name="approver_user_ids" widget="many2many_tags"/>
+                    <field name="approver_group_id"/>
+                    <field name="state" widget="badge" decoration-info="state == 'pending'" decoration-warning="state == 'waiting'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
+                    <field name="approved_by_id"/>
+                    <field name="approved_date"/>
+                    <button name="action_open_document" string="Xem chứng từ" type="object" icon="fa-external-link" class="btn-sm btn-link"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Dedicated Approval Line Form View -->
+        <record id="view_sgt_erp_approval_line_form" model="ir.ui.view">
+            <field name="name">sgt.erp.approval.line.form</field>
+            <field name="model">sgt.erp.approval.line</field>
+            <field name="arch" type="xml">
+                <form string="Chi Tiết Cấp Phê Duyệt">
+                    <header>
+                        <button name="action_open_approve_wizard" string="Phê Duyệt Cấp Này" type="object" class="btn-success" invisible="state != 'pending'"/>
+                        <button name="action_open_reject_wizard" string="Từ Chối" type="object" class="btn-outline-danger" invisible="state != 'pending'"/>
+                        <button name="action_open_document" string="Xem Chứng Từ Gốc" type="object" class="btn-secondary" icon="fa-external-link"/>
+                        <field name="state" widget="statusbar" statusbar_visible="waiting,pending,approved,rejected"/>
+                    </header>
+                    <sheet>
+                        <div class="alert alert-info d-flex align-items-center mb-3" role="status" invisible="state != 'pending'">
+                            <i class="fa fa-info-circle fa-2x me-3 text-info" title="Thông tin" aria-label="Thông tin"/>
+                            <div>
+                                <div class="fw-bold">Cấp duyệt đang chờ xử lý</div>
+                                <span>Bạn có thể kiểm tra danh sách sản phẩm, đơn giá bên dưới và bấm nút Phê duyệt hoặc Từ chối trên thanh tiêu đề.</span>
+                            </div>
+                        </div>
+
+                        <div class="oe_title">
+                            <span class="text-muted small">Mã chứng từ liên quan</span>
+                            <h1><field name="document_reference" readonly="1"/></h1>
+                            <h4 class="text-primary"><field name="name" readonly="1"/></h4>
+                        </div>
+
+                        <group>
+                            <group string="Thông Tin Chứng Từ">
+                                <field name="partner_id" readonly="1"/>
+                                <field name="amount_total" readonly="1" widget="monetary"/>
+                                <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                                <field name="purchase_order_id" readonly="1" invisible="not purchase_order_id"/>
+                                <field name="sale_order_id" readonly="1" invisible="not sale_order_id"/>
+                                <field name="account_move_id" readonly="1" invisible="not account_move_id"/>
+                            </group>
+                            <group string="Cấu Hình &amp; Thẩm Quyền">
+                                <field name="workflow_id" readonly="1"/>
+                                <field name="approver_group_id" readonly="1"/>
+                                <field name="approver_user_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="approved_by_id" readonly="1" invisible="not approved_by_id"/>
+                                <field name="approved_date" readonly="1" invisible="not approved_date"/>
+                                <field name="note" readonly="state in ('approved', 'rejected')"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Chi Tiết Sản Phẩm (Đơn Mua Hàng)" name="purchase_lines" invisible="not purchase_order_id">
+                                <field name="purchase_order_line_ids" readonly="1">
+                                    <list string="Sản phẩm mua" create="0" delete="0" edit="0">
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom_id"/>
+                                        <field name="price_unit" widget="monetary"/>
+                                        <field name="price_subtotal" widget="monetary"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Chi Tiết Sản Phẩm (Đơn Bán Hàng)" name="sale_lines" invisible="not sale_order_id">
+                                <field name="sale_order_line_ids" readonly="1">
+                                    <list string="Sản phẩm bán" create="0" delete="0" edit="0">
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="product_uom_id"/>
+                                        <field name="price_unit" widget="monetary"/>
+                                        <field name="price_subtotal" widget="monetary"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Chi Tiết Hóa Đơn / Chi Phí" name="invoice_lines" invisible="not account_move_id">
+                                <field name="invoice_line_ids" readonly="1">
+                                    <list string="Dòng chi phí" create="0" delete="0" edit="0">
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="quantity"/>
+                                        <field name="product_uom_id"/>
+                                        <field name="price_unit" widget="monetary"/>
+                                        <field name="price_subtotal" widget="monetary"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_pending_approvals" model="ir.actions.act_window">
+            <field name="name">Chờ Tôi Phê Duyệt</field>
+            <field name="res_model">sgt.erp.approval.line</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('state', '=', 'pending')]</field>
+            <field name="view_id" ref="view_sgt_erp_approval_line_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Hiện tại không có chứng từ nào đang chờ phê duyệt.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

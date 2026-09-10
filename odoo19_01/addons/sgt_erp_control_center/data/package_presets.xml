@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Starter Package -->
+        <record id="package_starter" model="sgt.erp.package">
+            <field name="name">Starter</field>
+            <field name="code">starter</field>
+            <field name="sequence">10</field>
+            <field name="description">Gói khởi đầu: Quản lý quan hệ khách hàng (CRM), Danh bạ (Contacts) và Lịch làm việc.</field>
+            <field name="feature_ids" eval="[
+                (4, ref('feature_crm')),
+                (4, ref('feature_crm_lead')),
+                (4, ref('feature_crm_opportunity')),
+                (4, ref('feature_contacts')),
+                (4, ref('feature_calendar')),
+            ]"/>
+        </record>
+
+        <!-- Business Package -->
+        <record id="package_business" model="sgt.erp.package">
+            <field name="name">Business</field>
+            <field name="code">business</field>
+            <field name="sequence">20</field>
+            <field name="description">Gói doanh nghiệp: CRM, Bán hàng (Sales), Danh bạ, Lịch, Phê duyệt cơ bản và Dashboard.</field>
+            <field name="feature_ids" eval="[
+                (4, ref('feature_crm')),
+                (4, ref('feature_crm_lead')),
+                (4, ref('feature_crm_opportunity')),
+                (4, ref('feature_crm_dashboard')),
+                (4, ref('feature_contacts')),
+                (4, ref('feature_sales')),
+                (4, ref('feature_sales_quotation')),
+                (4, ref('feature_calendar')),
+                (4, ref('feature_system_dashboard')),
+                (4, ref('feature_system_approval')),
+            ]"/>
+        </record>
+
+        <!-- Professional Package -->
+        <record id="package_professional" model="sgt.erp.package">
+            <field name="name">Professional</field>
+            <field name="code">professional</field>
+            <field name="sequence">30</field>
+            <field name="description">Gói chuyên nghiệp: CRM, Sales, Contacts, Nhân sự (HR), Dự án (Project), Calendar, Approval và Dashboard nâng cao.</field>
+            <field name="feature_ids" eval="[
+                (4, ref('feature_crm')),
+                (4, ref('feature_crm_lead')),
+                (4, ref('feature_crm_opportunity')),
+                (4, ref('feature_crm_dashboard')),
+                (4, ref('feature_contacts')),
+                (4, ref('feature_sales')),
+                (4, ref('feature_sales_quotation')),
+                (4, ref('feature_sales_approval')),
+                (4, ref('feature_hr_employee')),
+                (4, ref('feature_hr_attendance')),
+                (4, ref('feature_project')),
+                (4, ref('feature_project_tasks')),
+                (4, ref('feature_calendar')),
+                (4, ref('feature_google_calendar')),
+                (4, ref('feature_system_dashboard')),
+                (4, ref('feature_system_approval')),
+            ]"/>
+        </record>
+
+        <!-- Enterprise Package -->
+        <record id="package_enterprise" model="sgt.erp.package">
+            <field name="name">Enterprise</field>
+            <field name="code">enterprise</field>
+            <field name="sequence">40</field>
+            <field name="description">Gói doanh nghiệp toàn diện: Toàn bộ các tính năng ERP, Tự động hóa và API tích hợp.</field>
+            <field name="feature_ids" eval="[
+                (4, ref('feature_crm')),
+                (4, ref('feature_crm_lead')),
+                (4, ref('feature_crm_opportunity')),
+                (4, ref('feature_crm_approval')),
+                (4, ref('feature_crm_dashboard')),
+                (4, ref('feature_contacts')),
+                (4, ref('feature_sales')),
+                (4, ref('feature_sales_quotation')),
+                (4, ref('feature_sales_approval')),
+                (4, ref('feature_hr_employee')),
+                (4, ref('feature_hr_attendance')),
+                (4, ref('feature_hr_recruitment')),
+                (4, ref('feature_hr_payroll')),
+                (4, ref('feature_hr_asset')),
+                (4, ref('feature_calendar')),
+                (4, ref('feature_google_calendar')),
+                (4, ref('feature_calendar_meeting_notes')),
+                (4, ref('feature_project')),
+                (4, ref('feature_project_tasks')),
+                (4, ref('feature_project_timesheet')),
+                (4, ref('feature_system_dashboard')),
+                (4, ref('feature_system_approval')),
+                (4, ref('feature_system_automation')),
+                (4, ref('feature_system_api')),
+                (4, ref('feature_system_integration')),
+            ]"/>
+        </record>
+
+        <!-- Custom Package -->
+        <record id="package_custom" model="sgt.erp.package">
+            <field name="name">Custom</field>
+            <field name="code">custom</field>
+            <field name="sequence">50</field>
+            <field name="description">Gói tùy biến: Chọn lọc tính năng linh hoạt theo từng yêu cầu hợp đồng khách hàng.</field>
+        </record>
+    </data>
+</odoo>

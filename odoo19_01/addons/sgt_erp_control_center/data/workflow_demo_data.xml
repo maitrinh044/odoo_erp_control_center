@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================ -->
+        <!-- PHÂN HỆ BÁN HÀNG (SALES WORKFLOWS)                           -->
+        <!-- ============================================================ -->
+
+        <!-- 1. Đơn Bán Hàng Dự Án VIP (> 500M, 3 cấp) -->
+        <record id="workflow_sale_project_vip" model="sgt.erp.workflow">
+            <field name="name">Quy trình Đơn Bán Hàng Dự Án VIP (> 500M)</field>
+            <field name="workflow_type">sales</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">500000000.0</field>
+            <field name="description">Áp dụng cho các hợp đồng cung cấp dự án doanh nghiệp lớn có giá trị trên 500 triệu VND.</field>
+        </record>
+        <record id="level_sale_proj_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng nhóm kinh doanh dự án</field>
+            <field name="workflow_id" ref="workflow_sale_project_vip"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_salesman"/>
+            <field name="amount_min">500000000.0</field>
+            <field name="description">Kiểm tra tính khả thi và tiến độ giao hàng dự án.</field>
+        </record>
+        <record id="level_sale_proj_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc kinh doanh (CSO)</field>
+            <field name="workflow_id" ref="workflow_sale_project_vip"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_manager"/>
+            <field name="amount_min">500000000.0</field>
+            <field name="description">Duyệt biên lợi nhuận và chính sách giá chiết khấu dự án.</field>
+        </record>
+        <record id="level_sale_proj_lvl3" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 3: Tổng Giám Đốc (CEO)</field>
+            <field name="workflow_id" ref="workflow_sale_project_vip"/>
+            <field name="sequence">30</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">1000000000.0</field>
+            <field name="description">Phê duyệt tối cao cho các gói thầu/dự án vượt 1 tỷ đồng.</field>
+        </record>
+
+        <!-- 2. Đơn Bán Hàng Bán Lẻ Tiêu Chuẩn (> 20M, 1 cấp) -->
+        <record id="workflow_sale_retail_standard" model="sgt.erp.workflow">
+            <field name="name">Quy trình Bán Hàng Bán Lẻ Tiêu Chuẩn (> 20M)</field>
+            <field name="workflow_type">sales</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">20000000.0</field>
+            <field name="description">Duyệt các đơn hàng bán lẻ và khách hàng thân thiết vượt 20 triệu VND.</field>
+        </record>
+        <record id="level_sale_retail_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng quầy / Giám sát bán hàng</field>
+            <field name="workflow_id" ref="workflow_sale_retail_standard"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_salesman"/>
+            <field name="amount_min">20000000.0</field>
+            <field name="description">Kiểm tra tồn kho và xác nhận chiết khấu bán lẻ.</field>
+        </record>
+
+        <!-- 3. Đơn Bán Hàng Dịch Vụ ERP &amp; Phần Mềm (> 100M, 2 cấp) -->
+        <record id="workflow_sale_software_erp" model="sgt.erp.workflow">
+            <field name="name">Quy trình Hợp Đồng Dịch Vụ ERP (> 100M)</field>
+            <field name="workflow_type">sales</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">100000000.0</field>
+            <field name="description">Kiểm soát phạm vi triển khai và kế hoạch nhân sự tư vấn ERP.</field>
+        </record>
+        <record id="level_sale_erp_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Giám đốc dự án triển khai (Project Director)</field>
+            <field name="workflow_id" ref="workflow_sale_software_erp"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_manager"/>
+            <field name="amount_min">100000000.0</field>
+        </record>
+        <record id="level_sale_erp_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc công nghệ (CTO)</field>
+            <field name="workflow_id" ref="workflow_sale_software_erp"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">250000000.0</field>
+        </record>
+
+        <!-- 4. Đơn Bán Hàng Xuất Khẩu Quốc Tế (> 300M, 3 cấp) -->
+        <record id="workflow_sale_export_global" model="sgt.erp.workflow">
+            <field name="name">Quy trình Bán Hàng Xuất Khẩu Quốc Tế (> 300M)</field>
+            <field name="workflow_type">sales</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">300000000.0</field>
+            <field name="description">Duyệt điều khoản Incoterms, LC và rủi ro tỷ giá ngoại hối.</field>
+        </record>
+        <record id="level_sale_exp_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng nhóm xuất nhập khẩu</field>
+            <field name="workflow_id" ref="workflow_sale_export_global"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_manager"/>
+            <field name="amount_min">300000000.0</field>
+        </record>
+        <record id="level_sale_exp_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc tài chính (CFO)</field>
+            <field name="workflow_id" ref="workflow_sale_export_global"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">500000000.0</field>
+        </record>
+        <record id="level_sale_exp_lvl3" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 3: Tổng Giám Đốc (CEO)</field>
+            <field name="workflow_id" ref="workflow_sale_export_global"/>
+            <field name="sequence">30</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">1000000000.0</field>
+        </record>
+
+        <!-- 5. Đơn Bán Hàng Kênh Đại Lý / Phân Phối (> 150M, 2 cấp) -->
+        <record id="workflow_sale_agency_distribution" model="sgt.erp.workflow">
+            <field name="name">Quy trình Bán Hàng Đại Lý Phân Phối (> 150M)</field>
+            <field name="workflow_type">sales</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">direct</field>
+            <field name="amount_threshold">150000000.0</field>
+            <field name="description">Chế độ duyệt trực tiếp đồng thời giữa Quản lý kênh đại lý và Kế toán công nợ.</field>
+        </record>
+        <record id="level_sale_agency_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Giám đốc kênh đại lý (Channel Manager)</field>
+            <field name="workflow_id" ref="workflow_sale_agency_distribution"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_manager"/>
+            <field name="amount_min">150000000.0</field>
+        </record>
+        <record id="level_sale_agency_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Kế toán trưởng công nợ</field>
+            <field name="workflow_id" ref="workflow_sale_agency_distribution"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">150000000.0</field>
+        </record>
+
+
+        <!-- ============================================================ -->
+        <!-- PHÂN HỆ MUA HÀNG (PURCHASE WORKFLOWS)                        -->
+        <!-- ============================================================ -->
+
+        <!-- 6. Đơn Mua Thiết Bị CNTT &amp; Máy Chủ (> 50M, 2 cấp) -->
+        <record id="workflow_purchase_it_equipment" model="sgt.erp.workflow">
+            <field name="name">Quy trình Mua Sắm Thiết Bị CNTT &amp; Server (> 50M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">50000000.0</field>
+            <field name="description">Kiểm tra thông số kỹ thuật phần cứng và thẩm định ngân sách IT.</field>
+        </record>
+        <record id="level_po_it_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng phòng CNTT (IT Head)</field>
+            <field name="workflow_id" ref="workflow_purchase_it_equipment"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">50000000.0</field>
+        </record>
+        <record id="level_po_it_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc tài chính (CFO)</field>
+            <field name="workflow_id" ref="workflow_purchase_it_equipment"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">100000000.0</field>
+        </record>
+
+        <!-- 7. Đơn Mua Vật Tư Văn Phòng &amp; Tiêu Hao (> 10M, 1 cấp) -->
+        <record id="workflow_purchase_office_stationery" model="sgt.erp.workflow">
+            <field name="name">Quy trình Mua Văn Phòng Phẩm &amp; Tiêu Hao (> 10M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">10000000.0</field>
+            <field name="description">Duyệt định kỳ hàng tháng cho văn phòng phẩm và đồ dùng hành chính.</field>
+        </record>
+        <record id="level_po_office_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng phòng hành chính - nhân sự</field>
+            <field name="workflow_id" ref="workflow_purchase_office_stationery"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">10000000.0</field>
+        </record>
+
+        <!-- 8. Đơn Mua Nguyên Vật Liệu Sản Xuất (> 200M, 3 cấp) -->
+        <record id="workflow_purchase_raw_materials" model="sgt.erp.workflow">
+            <field name="name">Quy trình Mua Nguyên Vật Liệu Sản Xuất (> 200M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">200000000.0</field>
+            <field name="description">Kiểm soát đơn hàng nhập khẩu hạt nhựa, thép, linh kiện phục vụ sản xuất.</field>
+        </record>
+        <record id="level_po_raw_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng phòng thu mua (Purchasing Manager)</field>
+            <field name="workflow_id" ref="workflow_purchase_raw_materials"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">200000000.0</field>
+        </record>
+        <record id="level_po_raw_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc nhà máy / Giám đốc sản xuất (COO)</field>
+            <field name="workflow_id" ref="workflow_purchase_raw_materials"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">500000000.0</field>
+        </record>
+        <record id="level_po_raw_lvl3" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 3: Tổng Giám Đốc (CEO)</field>
+            <field name="workflow_id" ref="workflow_purchase_raw_materials"/>
+            <field name="sequence">30</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">1000000000.0</field>
+        </record>
+
+        <!-- 9. Đơn Mua Dịch Vụ Thuê Ngoài &amp; Tư Vấn (> 80M, 2 cấp) -->
+        <record id="workflow_purchase_consulting_outsourcing" model="sgt.erp.workflow">
+            <field name="name">Quy trình Thuê Dịch Vụ Ngoài &amp; Tư Vấn (> 80M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">80000000.0</field>
+            <field name="description">Duyệt hợp đồng dịch vụ kiểm toán, luật sư, tư vấn tái cấu trúc.</field>
+        </record>
+        <record id="level_po_consult_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Giám đốc khối nghiệp vụ liên quan</field>
+            <field name="workflow_id" ref="workflow_purchase_consulting_outsourcing"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">80000000.0</field>
+        </record>
+        <record id="level_po_consult_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc điều hành (CEO)</field>
+            <field name="workflow_id" ref="workflow_purchase_consulting_outsourcing"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">150000000.0</field>
+        </record>
+
+        <!-- 10. Đơn Thuê Mặt Bằng, Văn Phòng &amp; Kho Bãi (> 150M, 3 cấp) -->
+        <record id="workflow_purchase_warehouse_lease" model="sgt.erp.workflow">
+            <field name="name">Quy trình Hợp Đồng Thuê Kho Bãi &amp; Văn Phòng (> 150M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">150000000.0</field>
+            <field name="description">Kiểm soát chi phí cố định thuê dài hạn các chi nhánh và kho logistics.</field>
+        </record>
+        <record id="level_po_lease_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng ban quản lý tài sản</field>
+            <field name="workflow_id" ref="workflow_purchase_warehouse_lease"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">150000000.0</field>
+        </record>
+        <record id="level_po_lease_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc tài chính (CFO)</field>
+            <field name="workflow_id" ref="workflow_purchase_warehouse_lease"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">300000000.0</field>
+        </record>
+        <record id="level_po_lease_lvl3" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 3: Tổng Giám Đốc (CEO)</field>
+            <field name="workflow_id" ref="workflow_purchase_warehouse_lease"/>
+            <field name="sequence">30</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">600000000.0</field>
+        </record>
+
+        <!-- 11. Đơn Mua Bản Quyền Phần Mềm &amp; Dịch Vụ Đám Mây Cloud (> 40M, 2 cấp) -->
+        <record id="workflow_purchase_cloud_licenses" model="sgt.erp.workflow">
+            <field name="name">Quy trình Mua Bản Quyền Cloud &amp; SaaS (> 40M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">40000000.0</field>
+            <field name="description">Duyệt mua tài khoản AWS, Google Workspace, Microsoft 365 định kỳ.</field>
+        </record>
+        <record id="level_po_cloud_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Kỹ sư trưởng hệ thống hạ tầng</field>
+            <field name="workflow_id" ref="workflow_purchase_cloud_licenses"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">40000000.0</field>
+        </record>
+        <record id="level_po_cloud_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc công nghệ (CTO)</field>
+            <field name="workflow_id" ref="workflow_purchase_cloud_licenses"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">100000000.0</field>
+        </record>
+
+        <!-- 12. Đơn Mua Xe Doanh Nghiệp &amp; Tài Sản Lớn (> 500M, 3 cấp) -->
+        <record id="workflow_purchase_company_vehicles" model="sgt.erp.workflow">
+            <field name="name">Quy trình Mua Phương Tiện &amp; Tài Sản Cố Định Lớn (> 500M)</field>
+            <field name="workflow_type">purchase</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">500000000.0</field>
+            <field name="description">Mua xe đưa đón nhân viên, xe chuyên dụng và dây chuyền máy móc.</field>
+        </record>
+        <record id="level_po_car_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng phòng hậu cần - kỹ thuật</field>
+            <field name="workflow_id" ref="workflow_purchase_company_vehicles"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="purchase.group_purchase_manager"/>
+            <field name="amount_min">500000000.0</field>
+        </record>
+        <record id="level_po_car_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc tài chính (CFO)</field>
+            <field name="workflow_id" ref="workflow_purchase_company_vehicles"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">500000000.0</field>
+        </record>
+        <record id="level_po_car_lvl3" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 3: Chủ tịch Hội Đồng Quản Trị</field>
+            <field name="workflow_id" ref="workflow_purchase_company_vehicles"/>
+            <field name="sequence">30</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">1500000000.0</field>
+        </record>
+
+
+        <!-- ============================================================ -->
+        <!-- PHÂN HỆ HÓA ĐƠN &amp; KẾ TOÁN (ACCOUNT WORKFLOWS)                -->
+        <!-- ============================================================ -->
+
+        <!-- 13. Hóa Đơn Tiếp Khách &amp; Công Tác Phí (> 15M, 1 cấp) -->
+        <record id="workflow_account_hospitality_travel" model="sgt.erp.workflow">
+            <field name="name">Quy trình Duyệt Chi Phí Tiếp Khách &amp; Công Tác (> 15M)</field>
+            <field name="workflow_type">account</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">15000000.0</field>
+            <field name="description">Xác nhận chứng từ chi phí vé máy bay, khách sạn, tiếp đối tác kinh doanh.</field>
+        </record>
+        <record id="level_inv_travel_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Kế toán trưởng duyệt thanh toán</field>
+            <field name="workflow_id" ref="workflow_account_hospitality_travel"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_manager"/>
+            <field name="amount_min">15000000.0</field>
+        </record>
+
+        <!-- 14. Hóa Đơn Vận Tải Logistics &amp; Cước Biển (> 70M, 2 cấp) -->
+        <record id="workflow_account_logistics_freight" model="sgt.erp.workflow">
+            <field name="name">Quy trình Duyệt Hóa Đơn Logistics &amp; Cước Vận Tải (> 70M)</field>
+            <field name="workflow_type">account</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">70000000.0</field>
+            <field name="description">Kiểm tra đối chiếu cước vận chuyển đường biển và phí lưu kho bãi hải quan.</field>
+        </record>
+        <record id="level_inv_log_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng ban Logistics</field>
+            <field name="workflow_id" ref="workflow_account_logistics_freight"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_user"/>
+            <field name="amount_min">70000000.0</field>
+        </record>
+        <record id="level_inv_log_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Kế toán trưởng</field>
+            <field name="workflow_id" ref="workflow_account_logistics_freight"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_manager"/>
+            <field name="amount_min">150000000.0</field>
+        </record>
+
+        <!-- 15. Hóa Đơn Chiến Dịch Marketing &amp; Quảng Cáo Số (> 100M, 2 cấp) -->
+        <record id="workflow_account_digital_marketing" model="sgt.erp.workflow">
+            <field name="name">Quy trình Chi Phí Marketing &amp; Quảng Cáo Số (> 100M)</field>
+            <field name="workflow_type">account</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">100000000.0</field>
+            <field name="description">Duyệt chi phí thanh toán cho Google Ads, Meta Ads và đơn vị truyền thông.</field>
+        </record>
+        <record id="level_inv_mkt_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Giám đốc tiếp thị (CMO)</field>
+            <field name="workflow_id" ref="workflow_account_digital_marketing"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_manager"/>
+            <field name="amount_min">100000000.0</field>
+        </record>
+        <record id="level_inv_mkt_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc tài chính (CFO)</field>
+            <field name="workflow_id" ref="workflow_account_digital_marketing"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">250000000.0</field>
+        </record>
+
+        <!-- 16. Hóa Đơn Khám Sức Khỏe &amp; Bảo Hiểm Nhân Viên (> 60M, 2 cấp) -->
+        <record id="workflow_account_employee_insurance" model="sgt.erp.workflow">
+            <field name="name">Quy trình Hóa Đơn Bảo Hiểm &amp; Y Tế Nhân Viên (> 60M)</field>
+            <field name="workflow_type">account</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">60000000.0</field>
+            <field name="description">Quyết toán hợp đồng bảo hiểm sức khỏe toàn diện PTI/Bảo Việt định kỳ hàng năm.</field>
+        </record>
+        <record id="level_inv_ins_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng phòng Nhân sự (HRD)</field>
+            <field name="workflow_id" ref="workflow_account_employee_insurance"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_manager"/>
+            <field name="amount_min">60000000.0</field>
+        </record>
+        <record id="level_inv_ins_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Kế toán trưởng</field>
+            <field name="workflow_id" ref="workflow_account_employee_insurance"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">120000000.0</field>
+        </record>
+
+        <!-- 17. Hóa Đơn Sửa Chữa &amp; Bảo Trì Nhà Xưởng (> 35M, 2 cấp) -->
+        <record id="workflow_account_facility_maintenance" model="sgt.erp.workflow">
+            <field name="name">Quy trình Duyệt Chi Phí Sửa Chữa &amp; Bảo Trì Cơ Sở (> 35M)</field>
+            <field name="workflow_type">account</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">35000000.0</field>
+            <field name="description">Thẩm định nghiệm thu công tác sửa chữa trạm biến áp, hệ thống PCCC, mái che.</field>
+        </record>
+        <record id="level_inv_fac_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Kỹ sư trưởng bảo trì nhà xưởng</field>
+            <field name="workflow_id" ref="workflow_account_facility_maintenance"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_user"/>
+            <field name="amount_min">35000000.0</field>
+        </record>
+        <record id="level_inv_fac_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Kế toán trưởng</field>
+            <field name="workflow_id" ref="workflow_account_facility_maintenance"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_manager"/>
+            <field name="amount_min">80000000.0</field>
+        </record>
+
+        <!-- 18. Hóa Đơn Sự Kiện Year End Party &amp; Hội Thảo (> 120M, 3 cấp) -->
+        <record id="workflow_account_corporate_event" model="sgt.erp.workflow">
+            <field name="name">Quy trình Quyết Toán Chi Phí Sự Kiện &amp; Hội Thảo (> 120M)</field>
+            <field name="workflow_type">account</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">120000000.0</field>
+            <field name="description">Duyệt quyết toán chi phí gala tất niên, hội nghị khách hàng thường niên.</field>
+        </record>
+        <record id="level_inv_evt_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng ban tổ chức sự kiện</field>
+            <field name="workflow_id" ref="workflow_account_corporate_event"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="account.group_account_manager"/>
+            <field name="amount_min">120000000.0</field>
+        </record>
+        <record id="level_inv_evt_lvl2" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 2: Giám đốc nhân sự (CHRO)</field>
+            <field name="workflow_id" ref="workflow_account_corporate_event"/>
+            <field name="sequence">20</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">120000000.0</field>
+        </record>
+        <record id="level_inv_evt_lvl3" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 3: Tổng Giám Đốc (CEO)</field>
+            <field name="workflow_id" ref="workflow_account_corporate_event"/>
+            <field name="sequence">30</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="base.group_system"/>
+            <field name="amount_min">300000000.0</field>
+        </record>
+
+
+        <!-- ============================================================ -->
+        <!-- PHÂN HỆ CRM &amp; KHÁCH HÀNG (CRM WORKFLOWS)                     -->
+        <!-- ============================================================ -->
+
+        <!-- 19. Kiểm Soát Cơ Hội Doanh Nghiệp VIP CRM (> 1 Tỷ) -->
+        <record id="workflow_crm_enterprise_opportunity" model="sgt.erp.workflow">
+            <field name="name">Quy trình Kiểm Soát Cơ Hội Khách Hàng VIP CRM (> 1 Tỷ)</field>
+            <field name="workflow_type">crm</field>
+            <field name="trigger">stage_change</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">1000000000.0</field>
+            <field name="required_fields">expected_revenue,partner_id,phone</field>
+            <field name="description">Bắt buộc thẩm định và nhập đầy đủ doanh thu dự kiến, đối tác và số điện thoại trước khi luân chuyển giai đoạn.</field>
+        </record>
+        <record id="level_crm_vip_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Giám đốc kinh doanh CRM</field>
+            <field name="workflow_id" ref="workflow_crm_enterprise_opportunity"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_manager"/>
+            <field name="amount_min">1000000000.0</field>
+        </record>
+
+        <!-- 20. Kiểm Soát Chuyển Giai Đoạn Khách Hàng Tiềm Năng B2B CRM (> 500M) -->
+        <record id="workflow_crm_b2b_qualification" model="sgt.erp.workflow">
+            <field name="name">Quy trình Thẩm Định Cơ Hội B2B Chuẩn Hóa (> 500M)</field>
+            <field name="workflow_type">crm</field>
+            <field name="trigger">stage_change</field>
+            <field name="require_approval" eval="True"/>
+            <field name="approval_mode">sequential</field>
+            <field name="amount_threshold">500000000.0</field>
+            <field name="required_fields">expected_revenue,email_from</field>
+            <field name="description">Đảm bảo thông tin liên hệ email và doanh thu được chuẩn hóa trước khi bước vào đàm phán hợp đồng.</field>
+        </record>
+        <record id="level_crm_b2b_lvl1" model="sgt.erp.workflow.level">
+            <field name="name">Cấp 1: Trưởng nhóm tư vấn giải pháp B2B</field>
+            <field name="workflow_id" ref="workflow_crm_b2b_qualification"/>
+            <field name="sequence">10</field>
+            <field name="approver_type">group</field>
+            <field name="approver_group_id" ref="sales_team.group_sale_salesman"/>
+            <field name="amount_min">500000000.0</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_integration_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.integration.list</field>
+            <field name="model">sgt.erp.integration</field>
+            <field name="arch" type="xml">
+                <list string="Integrations">
+                    <field name="name"/>
+                    <field name="integration_type" widget="badge"/>
+                    <field name="status" widget="badge" decoration-success="status == 'connected'" decoration-danger="status == 'error'" decoration-muted="status == 'disabled'"/>
+                    <field name="company_id"/>
+                    <field name="last_check"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_sgt_erp_integration_form" model="ir.ui.view">
+            <field name="name">sgt.erp.integration.form</field>
+            <field name="model">sgt.erp.integration</field>
+            <field name="arch" type="xml">
+                <form string="Integration Configuration">
+                    <header>
+                        <button name="action_test_connection" string="Test Connection" type="object" class="oe_highlight btn-primary" icon="fa-refresh"/>
+                        <field name="status" widget="statusbar" statusbar_visible="not_connected,connected,error,disabled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="E.g. Google Calendar Sync"/></h1>
+                        </div>
+                        <group>
+                            <group string="Service Details">
+                                <field name="integration_type"/>
+                                <field name="company_id" options="{'no_create': True}"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <group string="Connection Status">
+                                <field name="last_check" readonly="1"/>
+                                <field name="last_error" readonly="1" invisible="not last_error"/>
+                            </group>
+                        </group>
+                        <group string="Credentials &amp; Security">
+                            <field name="client_id"/>
+                            <field name="client_secret" password="True"/>
+                            <field name="api_endpoint"/>
+                        </group>
+                        <group string="Advanced Settings">
+                            <field name="additional_settings" placeholder="JSON or key-value config..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_integration" model="ir.actions.act_window">
+            <field name="name">Integrations</field>
+            <field name="res_model">sgt.erp.integration</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Cấu hình kết nối tích hợp với các dịch vụ bên ngoài (Google Workspace, Zalo, Webhook, REST API).
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Root Menu: SGT ERP -->
+        <menuitem id="menu_sgt_erp_root"
+                  name="SGT ERP"
+                  sequence="5"
+                  web_icon="fa fa-sliders,#FFFFFF,#09244B"
+                  groups="group_erp_control_center_user"/>
+
+        <!-- 1. Control Center -->
+        <menuitem id="menu_sgt_erp_control_center"
+                  name="1. Control Center"
+                  parent="menu_sgt_erp_root"
+                  sequence="10"
+                  action="action_sgt_erp_control_center_dashboard"
+                  groups="group_erp_control_center_user"/>
+
+        <!-- 2. General Setup -->
+        <menuitem id="menu_sgt_erp_general_setup"
+                  name="2. General Setup"
+                  parent="menu_sgt_erp_root"
+                  sequence="20"
+                  action="action_sgt_erp_config"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 3. Branding & Theme -->
+        <menuitem id="menu_sgt_erp_theme_manager"
+                  name="3. Branding &amp; Theme"
+                  parent="menu_sgt_erp_root"
+                  sequence="30"
+                  action="action_sgt_erp_theme"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 4. Features & Packages -->
+        <menuitem id="menu_sgt_erp_feature_manager"
+                  name="4. Features &amp; Packages"
+                  parent="menu_sgt_erp_root"
+                  sequence="40"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_feature_sub"
+                  name="Features"
+                  parent="menu_sgt_erp_feature_manager"
+                  sequence="10"
+                  action="action_sgt_erp_feature"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_package_manager"
+                  name="Packages"
+                  parent="menu_sgt_erp_feature_manager"
+                  sequence="20"
+                  action="action_sgt_erp_package"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 5. Workflow -->
+        <menuitem id="menu_sgt_erp_workflow_manager"
+                  name="5. Workflow"
+                  parent="menu_sgt_erp_root"
+                  sequence="50"
+                  groups="base.group_user"/>
+
+        <menuitem id="menu_sgt_erp_pending_approvals"
+                  name="Chờ tôi phê duyệt"
+                  parent="menu_sgt_erp_workflow_manager"
+                  sequence="5"
+                  action="action_sgt_erp_pending_approvals"
+                  groups="base.group_user"/>
+
+        <menuitem id="menu_sgt_erp_workflow_builder"
+                  name="Workflow Builder"
+                  parent="menu_sgt_erp_workflow_manager"
+                  sequence="10"
+                  action="action_sgt_erp_workflow"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_approval_builder"
+                  name="Approval Builder"
+                  parent="menu_sgt_erp_workflow_manager"
+                  sequence="20"
+                  action="action_sgt_erp_approval_builder"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 6. Integrations -->
+        <menuitem id="menu_sgt_erp_integration_manager"
+                  name="6. Integrations"
+                  parent="menu_sgt_erp_root"
+                  sequence="60"
+                  action="action_sgt_erp_integration"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 7. User & Permission -->
+        <menuitem id="menu_sgt_erp_role_preset"
+                  name="7. User &amp; Permission"
+                  parent="menu_sgt_erp_root"
+                  sequence="70"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_role_preset_sub"
+                  name="Role Presets"
+                  parent="menu_sgt_erp_role_preset"
+                  sequence="10"
+                  action="action_sgt_erp_role_preset"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_users"
+                  name="Users &amp; Assignments"
+                  parent="menu_sgt_erp_role_preset"
+                  sequence="20"
+                  action="action_sgt_erp_users"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_permission_matrix"
+                  name="Permission Matrix"
+                  parent="menu_sgt_erp_role_preset"
+                  sequence="30"
+                  action="action_sgt_erp_permission_matrix"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 8. License -->
+        <menuitem id="menu_sgt_erp_license_manager"
+                  name="8. License"
+                  parent="menu_sgt_erp_root"
+                  sequence="80"
+                  action="action_sgt_erp_license"
+                  groups="group_erp_control_center_manager"/>
+
+        <!-- 9. System Health -->
+        <menuitem id="menu_sgt_erp_system_health"
+                  name="9. System Health"
+                  parent="menu_sgt_erp_root"
+                  sequence="90"
+                  action="action_sgt_erp_system_health_dashboard"
+                  groups="group_erp_control_center_user"/>
+
+        <!-- 10. Configuration -->
+        <menuitem id="menu_sgt_erp_configuration_wizard"
+                  name="10. Configuration"
+                  parent="menu_sgt_erp_root"
+                  sequence="100"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_setup_wizard_sub"
+                  name="Setup Wizard"
+                  parent="menu_sgt_erp_configuration_wizard"
+                  sequence="10"
+                  action="action_sgt_erp_setup_wizard"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_update_manager"
+                  name="Update Manager"
+                  parent="menu_sgt_erp_configuration_wizard"
+                  sequence="20"
+                  action="action_sgt_erp_update"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_general_settings"
+                  name="General Settings"
+                  parent="menu_sgt_erp_configuration_wizard"
+                  sequence="30"
+                  action="action_sgt_erp_config"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_audit_log"
+                  name="Audit Logs"
+                  parent="menu_sgt_erp_configuration_wizard"
+                  sequence="40"
+                  action="action_sgt_erp_audit_log"
+                  groups="group_erp_control_center_manager"/>
+    </data>
+</odoo>

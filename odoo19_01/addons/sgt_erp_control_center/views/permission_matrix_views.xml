@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_permission_matrix_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.permission.matrix.list</field>
+            <field name="model">sgt.erp.permission.matrix</field>
+            <field name="arch" type="xml">
+                <list string="Visual Permission Matrix" editable="bottom">
+                    <header>
+                        <button name="action_sync_to_odoo_acls" string="Synchronize to Odoo Security" type="object" class="btn btn-primary" icon="fa-shield"/>
+                    </header>
+                    <field name="role_preset_id" options="{'no_create': True}" string="Vai trò (Role)"/>
+                    <field name="module_shortdesc" readonly="1" string="Phân hệ / Module"/>
+                    <field name="model_id" options="{'no_create': True}" string="Đối tượng (Model)"/>
+                    <field name="model_name" optional="hide"/>
+                    <field name="model_type" widget="badge" 
+                           decoration-success="model_type == 'primary'" 
+                           decoration-muted="model_type == 'config'"/>
+                    <field name="perm_read" widget="boolean_toggle"/>
+                    <field name="perm_create" widget="boolean_toggle"/>
+                    <field name="perm_write" widget="boolean_toggle"/>
+                    <field name="perm_unlink" widget="boolean_toggle"/>
+                    <field name="data_scope" widget="badge" 
+                           decoration-warning="data_scope == 'own'" 
+                           decoration-info="data_scope == 'team'" 
+                           decoration-success="data_scope == 'all'"/>
+                    <field name="note" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_sgt_erp_permission_matrix_search" model="ir.ui.view">
+            <field name="name">sgt.erp.permission.matrix.search</field>
+            <field name="model">sgt.erp.permission.matrix</field>
+            <field name="arch" type="xml">
+                <search string="Search Permission Matrix">
+                    <field name="role_preset_id"/>
+                    <field name="module_shortdesc" string="Phân hệ"/>
+                    <field name="model_id"/>
+                    <field name="model_name"/>
+                    <separator/>
+                    <filter string="Chỉ của mình (Own)" name="scope_own" domain="[('data_scope', '=', 'own')]"/>
+                    <filter string="Cả nhóm (Team)" name="scope_team" domain="[('data_scope', '=', 'team')]"/>
+                    <filter string="Toàn hệ thống (All)" name="scope_all" domain="[('data_scope', '=', 'all')]"/>
+                    <separator/>
+                    <filter string="Có quyền Xem" name="read_allowed" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Có quyền Sửa" name="write_allowed" domain="[('perm_write', '=', True)]"/>
+                    <filter string="Có quyền Tạo" name="create_allowed" domain="[('perm_create', '=', True)]"/>
+                    <filter string="Có quyền Xóa" name="unlink_allowed" domain="[('perm_unlink', '=', True)]"/>
+                    <group>
+                        <filter string="Theo Vai trò (Role Preset)" name="group_by_role" context="{'group_by': 'role_preset_id'}"/>
+                        <filter string="Theo Phân hệ (Module)" name="group_by_module" context="{'group_by': 'module_shortdesc'}"/>
+                        <filter string="Theo Phạm vi dữ liệu" name="group_by_scope" context="{'group_by': 'data_scope'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_permission_matrix" model="ir.actions.act_window">
+            <field name="name">Ma trận Phân quyền Trực quan</field>
+            <field name="res_model">sgt.erp.permission.matrix</field>
+            <field name="view_mode">list</field>
+            <field name="search_view_id" ref="view_sgt_erp_permission_matrix_search"/>
+            <field name="context">{'search_default_group_by_role': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Thiết lập ma trận phân quyền trực quan cho từng vai trò người dùng theo từng đối tượng kinh doanh.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

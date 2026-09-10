@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ============================================================ -->
+        <!-- KANBAN VIEW (FEATURE CARDS STUDIO)                           -->
+        <!-- ============================================================ -->
+        <record id="view_sgt_erp_feature_kanban" model="ir.ui.view">
+            <field name="name">sgt.erp.feature.kanban</field>
+            <field name="model">sgt.erp.feature</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_dashboard" default_group_by="category" sample="1">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    <field name="active"/>
+                    <field name="icon"/>
+                    <field name="menu_xml_id"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="card" class="p-3 mb-2">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div t-attf-class="p-2 rounded-circle me-2 #{record.active.raw_value ? 'bg-success text-white' : 'bg-secondary text-white'}" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">
+                                        <i t-attf-class="fa #{record.icon.raw_value or 'fa-cube'} fa-lg" title="Icon"/>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold fs-6 text-dark"><field name="name"/></div>
+                                        <span class="badge bg-light text-secondary border font-monospace"><field name="code"/></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span t-if="record.active.raw_value" class="badge rounded-pill bg-success px-2 py-1">
+                                        <i class="fa fa-check me-1"/>Đang Bật
+                                    </span>
+                                    <span t-else="" class="badge rounded-pill bg-secondary px-2 py-1">
+                                        <i class="fa fa-pause me-1"/>Đã Tắt
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-2 text-truncate" t-att-title="record.description.value">
+                                <field name="description"/>
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top mt-auto">
+                                <div>
+                                    <span class="badge bg-info text-dark" t-if="record.menu_xml_id.raw_value" t-att-title="record.menu_xml_id.raw_value">
+                                        <i class="fa fa-bars me-1"/> Có Menu
+                                    </span>
+                                    <span class="text-muted small fst-italic" t-else="">
+                                        Logic ngầm
+                                    </span>
+                                </div>
+                                <div>
+                                    <button name="action_toggle_feature" type="object" 
+                                            t-attf-class="btn btn-sm #{record.active.raw_value ? 'btn-outline-danger' : 'btn-success'} shadow-sm">
+                                        <i t-attf-class="fa #{record.active.raw_value ? 'fa-power-off' : 'fa-play'} me-1"/>
+                                        <span t-if="record.active.raw_value">Tắt Phân Hệ</span>
+                                        <span t-else="">Bật Ngay</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- LIST VIEW                                                    -->
+        <!-- ============================================================ -->
+        <record id="view_sgt_erp_feature_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.feature.list</field>
+            <field name="model">sgt.erp.feature</field>
+            <field name="arch" type="xml">
+                <list string="Danh Mục Tính Năng ERP" decoration-muted="not active">
+                    <header>
+                        <button name="action_enable_all_features" string="Bật Tất Cả Tính Năng" type="object" class="btn btn-primary"/>
+                        <button name="action_force_sync_all_menus" string="Đồng Bộ Lại Menu" type="object" class="btn btn-secondary"/>
+                    </header>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" string="Tên Tính Năng" class="fw-bold"/>
+                    <field name="code" string="Mã Kỹ Thuật" class="font-monospace text-muted"/>
+                    <field name="category" widget="badge" string="Phân Hệ"/>
+                    <field name="description" string="Mô Tả Nghiệp Vụ"/>
+                    <field name="menu_xml_id" string="Menu Điều Khiển" optional="show"/>
+                    <field name="company_id" string="Công Ty" optional="hide"/>
+                    <field name="active" widget="boolean_toggle" string="Trạng Thái (Bật/Tắt)"/>
+                    <button name="action_toggle_feature" type="object" string="Bật / Tắt" icon="fa-power-off" class="btn btn-sm btn-outline-primary"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- SEARCH VIEW                                                  -->
+        <!-- ============================================================ -->
+        <record id="view_sgt_erp_feature_search" model="ir.ui.view">
+            <field name="name">sgt.erp.feature.search</field>
+            <field name="model">sgt.erp.feature</field>
+            <field name="arch" type="xml">
+                <search string="Search Features">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    <filter string="Đang Bật (Enabled)" name="enabled" domain="[('active', '=', True)]"/>
+                    <filter string="Đã Tắt (Disabled)" name="disabled" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Có Menu Điều Khiển" name="has_menu" domain="[('menu_xml_id', '!=', False)]"/>
+                    <group>
+                        <filter string="Phân Hệ Nghiệp Vụ" name="group_by_category" context="{'group_by': 'category'}"/>
+                        <filter string="Trạng Thái Hoạt Động" name="group_by_active" context="{'group_by': 'active'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- FORM VIEW                                                    -->
+        <!-- ============================================================ -->
+        <record id="view_sgt_erp_feature_form" model="ir.ui.view">
+            <field name="name">sgt.erp.feature.form</field>
+            <field name="model">sgt.erp.feature</field>
+            <field name="arch" type="xml">
+                <form string="Cấu Hình Tính Năng ERP">
+                    <header>
+                        <button name="action_toggle_feature" string="Bật/Tắt Tính Năng (1-Chạm)" type="object" class="btn btn-primary"/>
+                        <button name="sync_menu_visibility" string="Đồng Bộ Lại Menu" type="object" class="btn btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <div class="alert alert-info d-flex align-items-center mb-3" role="status">
+                            <i class="fa fa-info-circle fa-2x text-info me-3" title="Nguyên tắc an toàn" aria-label="Nguyên tắc an toàn"/>
+                            <div>
+                                <div class="fw-bold">Nguyên tắc an toàn dữ liệu SGT ERP</div>
+                                <span>Khi tắt tính năng, hệ thống chỉ ẩn Menu và kích hoạt bộ bảo vệ ngăn truy cập trực tiếp. Tuyệt đối không gỡ module hay xóa dữ liệu doanh nghiệp trong cơ sở dữ liệu.</span>
+                            </div>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" string="Tên Tính Năng"/>
+                            <h1><field name="name" placeholder="VD: Quản Lý Bán Hàng &amp; Báo Giá"/></h1>
+                        </div>
+                        <group>
+                            <group string="Thông Tin Cơ Bản">
+                                <field name="code" placeholder="VD: sales, purchase, account..."/>
+                                <field name="category"/>
+                                <field name="icon" placeholder="VD: fa-shopping-cart"/>
+                                <field name="active" widget="boolean_toggle" string="Trạng Thái (Enabled)"/>
+                                <field name="company_id" options="{'no_create': True}"/>
+                            </group>
+                            <group string="Điều Khiển Menu &amp; Bảo Mật URL">
+                                <field name="menu_xml_id" placeholder="VD: sale.sale_menu_root,crm.crm_menu_root"/>
+                                <field name="auto_sync_menu" widget="boolean_toggle"/>
+                                <field name="block_direct_access" widget="boolean_toggle"/>
+                                <field name="required_module_names" placeholder="VD: sale_management,crm"/>
+                            </group>
+                        </group>
+                        <group string="Mô Tả Chức Năng">
+                            <field name="description" nolabel="1" placeholder="Mô tả phạm vi nghiệp vụ của tính năng..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- WINDOW ACTION                                                -->
+        <!-- ============================================================ -->
+        <record id="action_sgt_erp_feature" model="ir.actions.act_window">
+            <field name="name">Quản Lý Tính Năng (Feature Manager)</field>
+            <field name="res_model">sgt.erp.feature</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Quản lý bật/tắt các tính năng ERP một chạm theo từng công ty hoặc gói khách hàng.
+                </p>
+                <p>
+                    Khi tắt tính năng, menu tương ứng sẽ tự động ẩn ngay lập tức mà không làm mất dữ liệu cũ.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

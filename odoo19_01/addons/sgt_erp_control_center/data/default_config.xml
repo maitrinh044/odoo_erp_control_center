@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="default_erp_config_main" model="sgt.erp.config">
+            <field name="name">Cấu Hình ERP Mặc Định</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="product_name">SGT ERP</field>
+            <field name="customer_name">Doanh Nghiệp Tiêu Chuẩn</field>
+            <field name="customer_code">SGT-MAIN</field>
+            <field name="industry">trading</field>
+            <field name="package_id" ref="package_business"/>
+            <field name="theme_id" ref="theme_preset_corporate_blue"/>
+            <field name="environment">development</field>
+            <field name="erp_version">19.0.1.0.0</field>
+            <field name="browser_title">SGT ERP Platform</field>
+            <field name="footer_text">Powered by SGT ERP Platform</field>
+        </record>
+    </data>
+</odoo>

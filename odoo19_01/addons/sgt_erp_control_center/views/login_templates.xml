@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Customize Web Login Layout for SGT ERP Branding -->
+    <template id="sgt_login_layout" inherit_id="web.login_layout" name="SGT ERP Login Layout">
+        <!-- Switch body class to sgt_login_body -->
+        <xpath expr="//t[@t-set='body_classname']" position="replace">
+            <t t-set="body_classname" t-value="'sgt_login_body'"/>
+        </xpath>
+
+        <!-- Inject custom styles for Login Page Branding -->
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <style>
+                body.sgt_login_body {
+                    min-height: 100vh;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #09244B;
+                    background-image: url('/sgt_erp/login_background'), linear-gradient(135deg, #09244B 0%, #165DFF 100%);
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-attachment: fixed;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                }
+                body.sgt_login_body .container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
+                }
+                body.sgt_login_body .card {
+                    background: rgba(255, 255, 255, 0.96) !important;
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    border-radius: 16px !important;
+                    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                    max-width: 380px !important;
+                    width: 100%;
+                    padding: 12px;
+                    transition: transform 0.25s ease, box-shadow 0.25s ease;
+                }
+                body.sgt_login_body .card:hover {
+                    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3) !important;
+                }
+                body.sgt_login_body .card-body {
+                    padding: 1.5rem !important;
+                }
+                body.sgt_login_body .btn-primary {
+                    background: linear-gradient(135deg, #165DFF 0%, #0E42D2 100%) !important;
+                    border: none !important;
+                    border-radius: 8px !important;
+                    font-weight: 600 !important;
+                    padding: 10px 16px !important;
+                    font-size: 0.95rem !important;
+                    letter-spacing: 0.3px;
+                    box-shadow: 0 4px 14px rgba(22, 93, 255, 0.38) !important;
+                    transition: all 0.2s ease-in-out !important;
+                }
+                body.sgt_login_body .btn-primary:hover {
+                    background: linear-gradient(135deg, #0E42D2 0%, #08299B 100%) !important;
+                    box-shadow: 0 6px 18px rgba(22, 93, 255, 0.5) !important;
+                    transform: translateY(-1px);
+                }
+                body.sgt_login_body .form-control {
+                    border-radius: 8px !important;
+                    border: 1.5px solid #E5E6EB !important;
+                    padding: 9px 14px !important;
+                    font-size: 0.95rem !important;
+                    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+                }
+                body.sgt_login_body .form-control:focus {
+                    border-color: #165DFF !important;
+                    box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.18) !important;
+                }
+                body.sgt_login_body .form-label {
+                    font-weight: 500;
+                    color: #4E5969;
+                    font-size: 0.875rem;
+                }
+                body.sgt_login_body .sgt_login_logo {
+                    max-height: 85px;
+                    max-width: 100%;
+                    width: auto;
+                    object-fit: contain;
+                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+                }
+                body.sgt_login_body .sgt_login_footer {
+                    font-size: 0.8rem;
+                    color: #86909C;
+                }
+            </style>
+        </xpath>
+
+        <!-- Replace company logo with SGT ERP Login Logo -->
+        <xpath expr="//img[contains(@t-attf-src, 'company_logo')]" position="replace">
+            <img class="sgt_login_logo" t-attf-src="/sgt_erp/login_logo{{ '?dbname='+db if db else '' }}" alt="Logo"/>
+        </xpath>
+
+        <!-- Replace Powered by Odoo with SGT Config Footer Text or SGT ERP Branding -->
+        <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace">
+            <t t-set="sgt_config" t-value="request.env['sgt.erp.config'].sudo().search([], limit=1)"/>
+            <span class="sgt_login_footer" t-if="sgt_config and sgt_config.footer_text" t-out="sgt_config.footer_text"/>
+            <span class="sgt_login_footer" t-elif="sgt_config and sgt_config.product_name">
+                Powered by <strong style="color: #165DFF;" t-out="sgt_config.product_name"/>
+            </span>
+            <span class="sgt_login_footer" t-else="">
+                Powered by <strong style="color: #165DFF;">SGT ERP</strong>
+            </span>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,91 @@
+:root {
+  --sgt-primary: #165DFF;
+  --sgt-secondary: #09244B;
+  --sgt-accent: #FFB020;
+  --sgt-background: #F5F7FA;
+  --sgt-card-bg: #FFFFFF;
+  --sgt-text: #1F2937;
+  --sgt-text-secondary: #6B7280;
+  --sgt-border: #E5E7EB;
+
+  --sgt-navbar-bg: #09244B;
+  --sgt-navbar-text: #FFFFFF;
+  --sgt-navbar-hover: #165DFF;
+
+  --sgt-sidebar-bg: #071A34;
+  --sgt-sidebar-text: #D1D5DB;
+  --sgt-sidebar-hover: #165DFF;
+  --sgt-sidebar-active: #165DFF;
+
+  --sgt-btn-primary: #165DFF;
+  --sgt-btn-secondary: #6B7280;
+  --sgt-btn-text: #FFFFFF;
+  --sgt-btn-radius: 6px;
+
+  --sgt-card-radius: 10px;
+  --sgt-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  --sgt-form-bg: #FFFFFF;
+  --sgt-input-bg: #FFFFFF;
+  --sgt-input-border: #D1D5DB;
+  --sgt-input-radius: 6px;
+
+  --sgt-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --sgt-font-size: 14px;
+  --sgt-menu-font-size: 14px;
+  --sgt-heading-font-size: 20px;
+  --sgt-font-weight: 400;
+}
+
+body.o_web_client {
+  font-family: var(--sgt-font-family) !important;
+  font-size: var(--sgt-font-size) !important;
+  background-color: var(--sgt-background) !important;
+  color: var(--sgt-text) !important;
+}
+
+/* Control Center Dashboard Card Styling */
+.sgt_control_card {
+  border-radius: var(--sgt-card-radius);
+  background: var(--sgt-card-bg);
+  box-shadow: var(--sgt-card-shadow);
+  border: 1px solid var(--sgt-border);
+  padding: 1.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.sgt_control_card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.sgt_badge_status {
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sgt_badge_active {
+  background-color: #DEF7EC;
+  color: #03543F;
+}
+
+.sgt_badge_disabled {
+  background-color: #F3F4F6;
+  color: #4B5563;
+}
+
+.sgt_badge_error {
+  background-color: #FDE8E8;
+  color: #9B1C1C;
+}
+
+.sgt_badge_warning {
+  background-color: #FEF08A;
+  color: #854D0E;
+}

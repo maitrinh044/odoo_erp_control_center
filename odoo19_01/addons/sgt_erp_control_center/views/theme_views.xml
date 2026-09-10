@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record id="view_sgt_erp_theme_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.theme.list</field>
+            <field name="model">sgt.erp.theme</field>
+            <field name="arch" type="xml">
+                <list string="ERP Themes">
+                    <field name="name"/>
+                    <field name="style" widget="badge"/>
+                    <field name="primary_color" widget="color"/>
+                    <field name="navbar_bg" widget="color"/>
+                    <field name="font_family"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_sgt_erp_theme_kanban" model="ir.ui.view">
+            <field name="name">sgt.erp.theme.kanban</field>
+            <field name="model">sgt.erp.theme</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_dashboard">
+                    <field name="name"/>
+                    <field name="style"/>
+                    <field name="primary_color"/>
+                    <field name="navbar_bg"/>
+                    <field name="font_family"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="fs-5"><field name="name"/></strong>
+                                <span class="badge bg-secondary"><field name="style"/></span>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center mb-3">
+                                <div class="rounded-circle border" t-attf-style="width: 24px; height: 24px; background-color: #{record.primary_color.raw_value};" title="Primary Color"></div>
+                                <div class="rounded-circle border" t-attf-style="width: 24px; height: 24px; background-color: #{record.navbar_bg.raw_value};" title="Navbar Color"></div>
+                                <span class="text-muted small ms-2"><field name="font_family"/></span>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button name="action_apply_to_current_company" type="object" class="btn btn-sm btn-outline-primary">
+                                    <i class="fa fa-paint-brush me-1"></i>Apply to Company
+                                </button>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form View with Preview Section -->
+        <record id="view_sgt_erp_theme_form" model="ir.ui.view">
+            <field name="name">sgt.erp.theme.form</field>
+            <field name="model">sgt.erp.theme</field>
+            <field name="arch" type="xml">
+                <form string="ERP Theme">
+                    <header>
+                        <button name="action_apply_to_current_company" string="Set as Active Theme for Current Company" type="object" class="oe_highlight btn-primary" icon="fa-check"/>
+                        <button name="action_preview_theme" string="Preview Theme" type="object" class="btn-info" icon="fa-eye"/>
+                        <button name="action_reset_preview" string="Exit Preview (Hoàn tác)" type="object" class="btn-outline-secondary" icon="fa-undo"/>
+                        <button name="action_create_from_preset" string="Create From Preset" type="object" class="btn-secondary" icon="fa-clone"/>
+                        <field name="active" widget="boolean_button" options="{'terminology': 'active'}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Theme Name"/>
+                            <h1><field name="name" placeholder="E.g. Corporate Blue"/></h1>
+                        </div>
+
+                        <group>
+                            <group string="Basic Configuration">
+                                <field name="style"/>
+                                <field name="company_id" options="{'no_create': True}"/>
+                            </group>
+                            <group string="Typography">
+                                <field name="font_family"/>
+                                <field name="font_size"/>
+                                <field name="menu_font_size"/>
+                                <field name="heading_font_size"/>
+                                <field name="font_weight"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Colors &amp; Palette" name="colors">
+                                <group>
+                                    <group string="Main Colors">
+                                        <label for="primary_color"/>
+                                        <div class="o_row">
+                                            <field name="primary_color"/>
+                                            <field name="primary_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="secondary_color"/>
+                                        <div class="o_row">
+                                            <field name="secondary_color"/>
+                                            <field name="secondary_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="accent_color"/>
+                                        <div class="o_row">
+                                            <field name="accent_color"/>
+                                            <field name="accent_color" widget="color" nolabel="1"/>
+                                        </div>
+                                    </group>
+                                    <group string="Background &amp; Text">
+                                        <label for="background_color"/>
+                                        <div class="o_row">
+                                            <field name="background_color"/>
+                                            <field name="background_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="card_background"/>
+                                        <div class="o_row">
+                                            <field name="card_background"/>
+                                            <field name="card_background" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="text_color"/>
+                                        <div class="o_row">
+                                            <field name="text_color"/>
+                                            <field name="text_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="secondary_text_color"/>
+                                        <div class="o_row">
+                                            <field name="secondary_text_color"/>
+                                            <field name="secondary_text_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="border_color"/>
+                                        <div class="o_row">
+                                            <field name="border_color"/>
+                                            <field name="border_color" widget="color" nolabel="1"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Gradient Studio" name="gradient_studio">
+                                <div class="alert alert-info py-2 mb-3" role="status">
+                                    <i class="fa fa-paint-brush me-1" title="Info"/> <strong>Visual Gradient Studio:</strong> Chọn Preset dải màu thịnh hành hoặc tùy biến màu Bắt đầu (Start) + Kết thúc (End) và góc xoay chuyển sắc để áp dụng cho Navbar, Nút bấm (Primary Buttons) và Sidebar.
+                                </div>
+                                <group string="Quick Preset Library (Thư viện mẫu 1-chạm)">
+                                    <field name="gradient_preset" widget="selection"/>
+                                </group>
+                                <div class="row g-3 mt-2">
+                                    <!-- 1. Top Navbar Gradient -->
+                                    <div class="col-md-4">
+                                        <div class="card h-100 shadow-sm border p-3">
+                                            <h6 class="fw-bold mb-3"><i class="fa fa-header me-2 text-primary" title="Navbar"/>Navbar Gradient</h6>
+                                            <group>
+                                                <field name="navbar_gradient_enabled" widget="boolean_toggle"/>
+                                                <label for="navbar_gradient_color1" invisible="not navbar_gradient_enabled"/>
+                                                <div class="o_row" invisible="not navbar_gradient_enabled">
+                                                    <field name="navbar_gradient_color1"/>
+                                                    <field name="navbar_gradient_color1" widget="color" nolabel="1"/>
+                                                </div>
+                                                <label for="navbar_gradient_color2" invisible="not navbar_gradient_enabled"/>
+                                                <div class="o_row" invisible="not navbar_gradient_enabled">
+                                                    <field name="navbar_gradient_color2"/>
+                                                    <field name="navbar_gradient_color2" widget="color" nolabel="1"/>
+                                                </div>
+                                                <field name="navbar_gradient_angle" invisible="not navbar_gradient_enabled"/>
+                                            </group>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 2. Primary Button Gradient -->
+                                    <div class="col-md-4">
+                                        <div class="card h-100 shadow-sm border p-3">
+                                            <h6 class="fw-bold mb-3"><i class="fa fa-mouse-pointer me-2 text-info" title="Button"/>Primary Button Gradient</h6>
+                                            <group>
+                                                <field name="btn_gradient_enabled" widget="boolean_toggle"/>
+                                                <label for="btn_gradient_color1" invisible="not btn_gradient_enabled"/>
+                                                <div class="o_row" invisible="not btn_gradient_enabled">
+                                                    <field name="btn_gradient_color1"/>
+                                                    <field name="btn_gradient_color1" widget="color" nolabel="1"/>
+                                                </div>
+                                                <label for="btn_gradient_color2" invisible="not btn_gradient_enabled"/>
+                                                <div class="o_row" invisible="not btn_gradient_enabled">
+                                                    <field name="btn_gradient_color2"/>
+                                                    <field name="btn_gradient_color2" widget="color" nolabel="1"/>
+                                                </div>
+                                                <field name="btn_gradient_angle" invisible="not btn_gradient_enabled"/>
+                                            </group>
+                                        </div>
+                                    </div>
+
+                                    <!-- 3. Sidebar Gradient -->
+                                    <div class="col-md-4">
+                                        <div class="card h-100 shadow-sm border p-3">
+                                            <h6 class="fw-bold mb-3"><i class="fa fa-bars me-2 text-dark" title="Sidebar"/>Sidebar Gradient</h6>
+                                            <group>
+                                                <field name="sidebar_gradient_enabled" widget="boolean_toggle"/>
+                                                <label for="sidebar_gradient_color1" invisible="not sidebar_gradient_enabled"/>
+                                                <div class="o_row" invisible="not sidebar_gradient_enabled">
+                                                    <field name="sidebar_gradient_color1"/>
+                                                    <field name="sidebar_gradient_color1" widget="color" nolabel="1"/>
+                                                </div>
+                                                <label for="sidebar_gradient_color2" invisible="not sidebar_gradient_enabled"/>
+                                                <div class="o_row" invisible="not sidebar_gradient_enabled">
+                                                    <field name="sidebar_gradient_color2"/>
+                                                    <field name="sidebar_gradient_color2" widget="color" nolabel="1"/>
+                                                </div>
+                                                <field name="sidebar_gradient_angle" invisible="not sidebar_gradient_enabled"/>
+                                            </group>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+
+                            <page string="Navbar &amp; Sidebar" name="navigation">
+                                <group>
+                                    <group string="Top Navbar">
+                                        <label for="navbar_bg"/>
+                                        <div class="o_row">
+                                            <field name="navbar_bg"/>
+                                            <field name="navbar_bg" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="navbar_text_color"/>
+                                        <div class="o_row">
+                                            <field name="navbar_text_color"/>
+                                            <field name="navbar_text_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="navbar_hover_color"/>
+                                        <div class="o_row">
+                                            <field name="navbar_hover_color"/>
+                                            <field name="navbar_hover_color" widget="color" nolabel="1"/>
+                                        </div>
+                                    </group>
+                                    <group string="Sidebar / App Drawer">
+                                        <label for="sidebar_bg"/>
+                                        <div class="o_row">
+                                            <field name="sidebar_bg"/>
+                                            <field name="sidebar_bg" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="sidebar_text_color"/>
+                                        <div class="o_row">
+                                            <field name="sidebar_text_color"/>
+                                            <field name="sidebar_text_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="sidebar_hover_color"/>
+                                        <div class="o_row">
+                                            <field name="sidebar_hover_color"/>
+                                            <field name="sidebar_hover_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="sidebar_active_color"/>
+                                        <div class="o_row">
+                                            <field name="sidebar_active_color"/>
+                                            <field name="sidebar_active_color" widget="color" nolabel="1"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Buttons, Cards &amp; Forms" name="components">
+                                <group>
+                                    <group string="Buttons">
+                                        <label for="btn_primary_color"/>
+                                        <div class="o_row">
+                                            <field name="btn_primary_color"/>
+                                            <field name="btn_primary_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="btn_secondary_color"/>
+                                        <div class="o_row">
+                                            <field name="btn_secondary_color"/>
+                                            <field name="btn_secondary_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="btn_text_color"/>
+                                        <div class="o_row">
+                                            <field name="btn_text_color"/>
+                                            <field name="btn_text_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <field name="btn_radius"/>
+                                    </group>
+                                    <group string="Cards &amp; Input Fields">
+                                        <field name="card_radius"/>
+                                        <field name="card_shadow"/>
+                                        <label for="form_bg"/>
+                                        <div class="o_row">
+                                            <field name="form_bg"/>
+                                            <field name="form_bg" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="input_bg"/>
+                                        <div class="o_row">
+                                            <field name="input_bg"/>
+                                            <field name="input_bg" widget="color" nolabel="1"/>
+                                        </div>
+                                        <label for="input_border_color"/>
+                                        <div class="o_row">
+                                            <field name="input_border_color"/>
+                                            <field name="input_border_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <field name="input_radius"/>
+                                    </group>
+                                    <group string="Kanban &amp; List View">
+                                        <label for="kanban_bg_color"/>
+                                        <div class="o_row">
+                                            <field name="kanban_bg_color"/>
+                                            <field name="kanban_bg_color" widget="color" nolabel="1"/>
+                                        </div>
+                                        <field name="list_alternate_row" widget="boolean_toggle"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Live Component Preview (Real-time)" name="preview">
+                                <widget name="sgt_live_theme_preview"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_theme" model="ir.actions.act_window">
+            <field name="name">Theme Manager</field>
+            <field name="res_model">sgt.erp.theme</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo và tùy biến chủ đề (Theme) giao diện cho ERP.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

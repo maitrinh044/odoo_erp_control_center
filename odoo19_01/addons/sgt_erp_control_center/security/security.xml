@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- ERP Control Center User (Chỉ xem) -->
+        <record id="group_erp_control_center_user" model="res.groups">
+            <field name="name">SGT ERP: User (Chỉ xem)</field>
+            <field name="comment">Chỉ xem thông tin cấu hình ERP.</field>
+        </record>
+
+        <!-- ERP Control Center Manager (Được chỉnh cấu hình) -->
+        <record id="group_erp_control_center_manager" model="res.groups">
+            <field name="name">SGT ERP: Manager (Cấu hình)</field>
+            <field name="implied_ids" eval="[(4, ref('group_erp_control_center_user'))]"/>
+            <field name="comment">Được phép thay đổi cấu hình, theme, kích hoạt tính năng.</field>
+        </record>
+
+        <!-- ERP Control Center Administrator (Full quyền + xem secret) -->
+        <record id="group_erp_control_center_admin" model="res.groups">
+            <field name="name">SGT ERP: Administrator (Toàn quyền)</field>
+            <field name="implied_ids" eval="[(4, ref('group_erp_control_center_manager')), (4, ref('base.group_erp_manager'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+            <field name="comment">Toàn quyền quản trị Control Center và xem các khóa bảo mật (API Secret, License Key).</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="update_v1_0_0" model="sgt.erp.update">
+            <field name="name">SGT ERP Control Center V1.0</field>
+            <field name="version">19.0.1.0.0</field>
+            <field name="release_date">2026-09-01</field>
+            <field name="state">installed</field>
+            <field name="is_current">False</field>
+            <field name="changelog"><![CDATA[
+                <ul>
+                    <li>Ra mắt nền tảng cốt lõi SGT ERP Control Center cho Odoo 19 Community.</li>
+                    <li>Theme Engine động bằng biến CSS Variables tức thì.</li>
+                    <li>8 Theme Presets chuẩn doanh nghiệp.</li>
+                    <li>Feature Manager & Package Manager quản lý gói tính năng an toàn.</li>
+                    <li>Google Calendar Central Integration & Local License Manager.</li>
+                </ul>
+            ]]></field>
+            <field name="upgrade_notes">Khởi tạo nền tảng ban đầu.</field>
+        </record>
+
+        <record id="update_v2_0_0" model="sgt.erp.update">
+            <field name="name">SGT ERP Control Center V2.0 (Visual Builders &amp; Health)</field>
+            <field name="version">19.0.2.0.0</field>
+            <field name="release_date">2026-09-03</field>
+            <field name="state">installed</field>
+            <field name="is_current">True</field>
+            <field name="changelog"><![CDATA[
+                <ul>
+                    <li><strong>Live Theme Preview (OWL)</strong>: Xem trước giao diện thời gian thực với toggle Desktop/Mobile/Dark Mode.</li>
+                    <li><strong>Multi-step Guided Setup Wizard</strong>: Trình hướng dẫn 5 bước trực quan triển khai khách hàng mới.</li>
+                    <li><strong>Workflow &amp; Approval Builder</strong>: Thiết kế các bước quy trình động và quy tắc duyệt đa cấp theo hạn mức.</li>
+                    <li><strong>Visual Permission Matrix</strong>: Bảng ma trận phân quyền vai trò CRUD một chạm.</li>
+                    <li><strong>Advanced System Health</strong>: Giám sát đo lường dung lượng Disk Usage, kích thước Database, Backup Status và Deployment.</li>
+                    <li><strong>Online License Client</strong>: Kiểm tra bản quyền trực tuyến với cơ chế fallback offline an toàn.</li>
+                </ul>
+            ]]></field>
+            <field name="upgrade_notes">Nâng cấp cấu trúc dữ liệu tương thích hoàn toàn Odoo 19.</field>
+        </record>
+    </data>
+</odoo>

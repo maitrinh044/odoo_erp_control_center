@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sgt_erp_package_tree" model="ir.ui.view">
+            <field name="name">sgt.erp.package.list</field>
+            <field name="model">sgt.erp.package</field>
+            <field name="arch" type="xml">
+                <list string="ERP Packages">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="description"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_sgt_erp_package_form" model="ir.ui.view">
+            <field name="name">sgt.erp.package.form</field>
+            <field name="model">sgt.erp.package</field>
+            <field name="arch" type="xml">
+                <form string="ERP Package">
+                    <header>
+                        <button name="action_apply_to_current_company" 
+                                string="Áp dụng gói cho công ty này" 
+                                type="object" 
+                                class="btn-primary" 
+                                icon="fa-check-circle"
+                                confirm="Bạn có chắc chắn muốn áp dụng gói này cho công ty hiện tại? Tất cả tính năng và menu tương ứng sẽ được tự động kích hoạt/đồng bộ."/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="Package Name (e.g. Professional)"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Included Features" name="features">
+                                <field name="feature_ids" context="{'active_test': False}">
+                                    <list string="Features">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="category" widget="badge"/>
+                                        <field name="active" widget="boolean" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_package" model="ir.actions.act_window">
+            <field name="name">Package Manager</field>
+            <field name="res_model">sgt.erp.package</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'active_test': False}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Định nghĩa các gói giải pháp ERP (Starter, Business, Professional, Enterprise).
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

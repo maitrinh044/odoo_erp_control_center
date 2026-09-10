@@ -1,0 +1,308 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api, _
+
+class SgtErpRolePreset(models.Model):
+    _name = 'sgt.erp.role.preset'
+    _description = 'SGT ERP User & Permission Role Preset'
+    _order = 'sequence asc, name asc'
+
+    name = fields.Char(string='Role Name', required=True)
+    code = fields.Char(string='Role Code', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
+    active = fields.Boolean(string='Active', default=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    
+    data_scope = fields.Selection([
+        ('all', 'All Documents (Toàn hệ thống)'),
+        ('team', 'Team Documents (Đội nhóm / Chi nhánh)'),
+        ('own', 'Own Documents Only (Chỉ bản ghi của mình)'),
+    ], string='Data Scope', default='own', required=True,
+       help='Phạm vi truy cập dữ liệu nghiệp vụ theo chiều sâu (Data Scope).')
+    security_group_id = fields.Many2one(
+        'res.groups',
+        string='Scope Security Group',
+        ondelete='set null',
+        help='Nhóm bảo mật đại diện cho Role Preset để áp dụng Record Rules'
+    )
+    rule_ids = fields.Many2many(
+        'ir.rule',
+        'sgt_erp_role_preset_rule_rel',
+        'preset_id',
+        'rule_id',
+        string='Generated Record Rules',
+        readonly=True,
+    )
+    group_ids = fields.Many2many(
+        'res.groups',
+        'sgt_erp_role_preset_group_rel',
+        'preset_id',
+        'group_id',
+        string='Mapped Odoo Groups'
+    )
+    user_ids = fields.One2many(
+        'res.users',
+        'role_preset_id',
+        string='Assigned Users'
+    )
+    user_count = fields.Integer(string='Users Count', compute='_compute_user_count')
+    description = fields.Text(string='Role Description')
+
+    permission_matrix_ids = fields.One2many(
+        'sgt.erp.permission.matrix',
+        'role_preset_id',
+        string='Permission Matrix'
+    )
+    matrix_count = fields.Integer(string='Objects Count', compute='_compute_matrix_count')
+
+    @api.depends('user_ids')
+    def _compute_user_count(self):
+        for rec in self:
+            rec.user_count = len(rec.user_ids)
+
+    @api.depends('permission_matrix_ids')
+    def _compute_matrix_count(self):
+        for rec in self:
+            rec.matrix_count = len(rec.permission_matrix_ids)
+
+    def action_view_users(self):
+        self.ensure_one()
+        return {
+            'name': _("Assigned Users - %s") % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.user_ids.ids)],
+            'context': {'default_role_preset_id': self.id},
+        }
+
+    def action_open_add_module_wizard(self):
+        """Mở pop-up wizard cho phép chọn nhiều module và thêm nhanh hàng loạt model vào ma trận của Role"""
+        self.ensure_one()
+        return {
+            'name': _("Thêm nhanh Quyền theo Module - %s") % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'sgt.erp.add.module.matrix.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_role_preset_id': self.id,
+                'default_data_scope': self.data_scope,
+            }
+        }
+
+    def _get_group_safe(self, xml_id):
+        try:
+            return self.env.ref(xml_id, raise_if_not_found=False)
+        except Exception:
+            return False
+
+    def _ensure_security_group(self):
+        """Đảm bảo mỗi role preset có 1 res.groups kỹ thuật riêng để gán record rules"""
+        for rec in self:
+            if not rec.security_group_id:
+                group_name = f"SGT Role Scope: {rec.name} [{rec.code}]"
+                grp = self.env['res.groups'].sudo().create({
+                    'name': group_name,
+                    'comment': f"Tự động sinh bởi SGT Control Center cho Role Preset {rec.name}",
+                })
+                rec.write({'security_group_id': grp.id})
+
+    def _sync_record_rules(self):
+        """Tự động sinh hoặc cập nhật ir.rule cho tất cả model trong Ma trận Phân quyền của Role"""
+        Rule = self.env['ir.rule'].sudo()
+        Model = self.env['ir.model'].sudo()
+
+        for rec in self:
+            rec._ensure_security_group()
+            if not rec.security_group_id:
+                continue
+
+            matrix_lines = rec.permission_matrix_ids
+            if matrix_lines:
+                lines_by_model = {line.model_id.model: line for line in matrix_lines}
+                target_models = list(lines_by_model.keys())
+            else:
+                lines_by_model = {}
+                target_models = ['sale.order', 'crm.lead']
+
+            generated_rules = self.env['ir.rule'].sudo()
+
+            for model_name in target_models:
+                ir_model = Model.search([('model', '=', model_name)], limit=1)
+                if not ir_model or model_name not in self.env:
+                    continue
+
+                line = lines_by_model.get(model_name)
+                scope = line.data_scope if line else rec.data_scope
+                p_read = line.perm_read if line else True
+                p_write = line.perm_write if line else True
+                p_create = line.perm_create if line else True
+                p_unlink = line.perm_unlink if line else True
+
+                model_fields = self.env[model_name]._fields
+
+                # Tính domain tương ứng
+                if scope == 'all':
+                    domain = "[(1, '=', 1)]"
+                elif scope == 'team':
+                    if 'user_id' in model_fields and 'team_id' in model_fields:
+                        domain = "['|', ('team_id.member_ids', 'in', [user.id]), ('user_id', '=', user.id)]"
+                    elif 'user_id' in model_fields:
+                        domain = "[('user_id', '=', user.id)]"
+                    elif 'team_id' in model_fields:
+                        domain = "[('team_id.member_ids', 'in', [user.id])]"
+                    elif 'employee_id' in model_fields:
+                        domain = "[('employee_id.user_id', '=', user.id)]"
+                    else:
+                        domain = "[(1, '=', 1)]"
+                else:  # 'own'
+                    if 'user_id' in model_fields:
+                        domain = "['|', ('user_id', '=', user.id), ('user_id', '=', False)]"
+                    elif 'employee_id' in model_fields:
+                        domain = "[('employee_id.user_id', '=', user.id)]"
+                    elif 'create_uid' in model_fields:
+                        domain = "[('create_uid', '=', user.id)]"
+                    else:
+                        domain = "[(1, '=', 1)]"
+
+                rule_name = f"SGT Scope [{rec.code}]: {model_name} ({scope})"
+
+                existing_rule = Rule.search([
+                    ('model_id', '=', ir_model.id),
+                    ('groups', 'in', [rec.security_group_id.id]),
+                ], limit=1)
+
+                rule_vals = {
+                    'name': rule_name,
+                    'model_id': ir_model.id,
+                    'domain_force': domain,
+                    'global': False,
+                    'groups': [(6, 0, [rec.security_group_id.id])],
+                    'perm_read': p_read,
+                    'perm_write': p_write,
+                    'perm_create': p_create,
+                    'perm_unlink': p_unlink,
+                    'active': rec.active,
+                }
+
+                if existing_rule:
+                    existing_rule.write(rule_vals)
+                    generated_rules |= existing_rule
+                else:
+                    new_rule = Rule.create(rule_vals)
+                    generated_rules |= new_rule
+
+            # Dọn dẹp ir.rule cũ của security group không còn nằm trong target_models
+            obsolete_rules = Rule.search([
+                ('groups', 'in', [rec.security_group_id.id]),
+                ('id', 'not in', generated_rules.ids),
+            ])
+            if obsolete_rules:
+                obsolete_rules.unlink()
+
+            rec.write({'rule_ids': [(6, 0, generated_rules.ids)]})
+
+    def action_sync_record_rules(self):
+        """Action gọi từ UI để đồng bộ record rules theo data scope"""
+        self._sync_record_rules()
+        if self.permission_matrix_ids:
+            self.permission_matrix_ids.action_sync_to_odoo_acls()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Record Rules Synchronized"),
+                'message': _("Quy tắc dữ liệu (Record Rules) và ACLs đã được cập nhật thành công cho %d đối tượng!") % len(self.rule_ids),
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
+    def action_auto_map_standard_groups(self):
+        """Tự động phát hiện và ánh xạ các nhóm quyền Odoo tiêu chuẩn theo loại Role Preset"""
+        mapping = {
+            'erp_admin': ['base.group_system', 'base.group_erp_manager', 'sgt_erp_control_center.group_erp_control_center_admin'],
+            'manager': ['sgt_erp_control_center.group_erp_control_center_manager', 'sales_team.group_sale_manager', 'hr.group_hr_manager'],
+            'sales_manager': ['base.group_user', 'sales_team.group_sale_salesman', 'crm.group_use_lead'],
+            'sales_user': ['base.group_user', 'sales_team.group_sale_salesman', 'crm.group_use_lead'],
+            'hr_manager': ['base.group_user', 'hr.group_hr_manager', 'hr_attendance.group_hr_attendance_manager'],
+            'hr_user': ['base.group_user', 'hr.group_hr_user', 'hr_attendance.group_hr_attendance_user'],
+            'viewer': ['base.group_user', 'sgt_erp_control_center.group_erp_control_center_user'],
+        }
+        total_mapped = 0
+        for rec in self:
+            groups_to_add = self.env['res.groups']
+            target_xml_ids = mapping.get(rec.code, ['base.group_user'])
+            for xml_id in target_xml_ids:
+                grp = self._get_group_safe(xml_id)
+                if grp:
+                    groups_to_add |= grp
+            if groups_to_add:
+                rec.write({'group_ids': [(4, g.id) for g in groups_to_add]})
+                total_mapped += len(groups_to_add)
+
+        self._sync_record_rules()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Auto-Map Groups"),
+                'message': _("Standard Odoo groups detected and mapped successfully!"),
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
+    def action_apply_to_users(self):
+        """Gán các groups được định cấu hình cho danh sách users bao gồm cả scope security group"""
+        self._sync_record_rules()
+        applied_users = 0
+        for rec in self:
+            if rec.user_ids:
+                groups_to_assign = rec.group_ids
+                if rec.security_group_id:
+                    groups_to_assign |= rec.security_group_id
+                for user in rec.user_ids:
+                    user.write({'group_ids': [(4, g.id) for g in groups_to_assign]})
+                    applied_users += 1
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Role Presets Applied"),
+                'message': _("Permissions & Data Scope Rules mapped successfully to %d assigned users!") % applied_users,
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._sync_record_rules()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'data_scope' in vals:
+            self.mapped('permission_matrix_ids').write({'data_scope': vals['data_scope']})
+        if any(f in vals for f in ['data_scope', 'name', 'code', 'active']):
+            self._sync_record_rules()
+        return res
+
+    def _register_hook(self):
+        super()._register_hook()
+        defaults = {
+            'erp_admin': 'all',
+            'manager': 'all',
+            'sales_manager': 'team',
+            'sales_user': 'own',
+            'hr_manager': 'team',
+            'hr_user': 'own',
+            'viewer': 'all',
+        }
+        for code, scope in defaults.items():
+            preset = self.sudo().search([('code', '=', code)], limit=1)
+            if preset and preset.data_scope != scope:
+                preset.sudo().write({'data_scope': scope})

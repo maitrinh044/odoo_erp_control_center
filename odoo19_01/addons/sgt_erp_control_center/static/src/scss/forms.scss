@@ -1,0 +1,117 @@
+/* Buttons & Forms Styling via CSS Variables */
+.btn-primary,
+.o_form_button_save,
+.btn-fill-primary {
+  background: var(--sgt-btn-primary) !important;
+  background-color: var(--sgt-btn-primary) !important;
+  border-color: transparent !important;
+  color: var(--sgt-btn-text) !important;
+  border-radius: var(--sgt-btn-radius) !important;
+  font-weight: 500;
+  transition: opacity 0.15s ease-in-out, filter 0.15s ease;
+
+  &:hover,
+  &:focus,
+  &:active {
+    opacity: 0.92;
+    filter: brightness(1.08);
+    background: var(--sgt-btn-primary) !important;
+    background-color: var(--sgt-btn-primary) !important;
+    border-color: transparent !important;
+    color: var(--sgt-btn-text) !important;
+  }
+}
+
+.btn-secondary {
+  border-radius: var(--sgt-btn-radius) !important;
+}
+
+/* Statusbar Tabs (Production, Demo, Test, Development) */
+.o_statusbar_status {
+  --o-statusbar-background-active: var(--sgt-primary) !important;
+  --o-statusbar-border-active: var(--sgt-primary) !important;
+  --o-statusbar-background-hover: var(--sgt-accent) !important;
+
+  > .o_arrow_button:not(.d-none) {
+    border-radius: var(--sgt-btn-radius, 4px) !important;
+    transition: all 0.15s ease;
+
+    &.o_arrow_button_current,
+    &.btn-primary,
+    &.active {
+      background-color: var(--sgt-primary) !important;
+      background: var(--sgt-primary) !important;
+      border-color: var(--sgt-primary) !important;
+      color: var(--sgt-btn-text, #FFFFFF) !important;
+      font-weight: 600 !important;
+
+      &:before,
+      &:after {
+        border-left-color: var(--sgt-primary) !important;
+      }
+    }
+
+    &:hover:not(.active):not(.o_arrow_button_current) {
+      background-color: rgba(0, 0, 0, 0.06) !important;
+    }
+  }
+}
+
+/* Form Notebook Tabs (General Setup, Branding, etc.) */
+.o_form_view {
+  background-color: var(--sgt-background) !important;
+
+  .nav-tabs {
+    border-bottom: 2px solid var(--sgt-border) !important;
+    margin-bottom: 1rem;
+
+    .nav-item {
+      margin-bottom: -2px;
+
+      .nav-link {
+        color: var(--sgt-text-secondary) !important;
+        font-weight: 500;
+        border: none !important;
+        border-bottom: 2px solid transparent !important;
+        padding: 0.6rem 1.2rem;
+        background-color: transparent !important;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          color: var(--sgt-primary) !important;
+          border-bottom-color: var(--sgt-accent) !important;
+        }
+
+        &.active {
+          color: var(--sgt-primary) !important;
+          border-bottom: 2px solid var(--sgt-primary) !important;
+          font-weight: 600 !important;
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
+
+  .o_form_sheet_bg {
+    background: transparent !important;
+    border-bottom: none !important;
+
+    .o_form_sheet {
+      background: var(--sgt-form-bg) !important;
+      border-radius: var(--sgt-card-radius) !important;
+      box-shadow: var(--sgt-card-shadow) !important;
+      border: 1px solid var(--sgt-border) !important;
+    }
+  }
+
+  .o_input {
+    border-radius: var(--sgt-input-radius) !important;
+    border-color: var(--sgt-input-border) !important;
+    background-color: var(--sgt-input-bg) !important;
+
+    &:focus {
+      border-color: var(--sgt-primary) !important;
+      box-shadow: 0 0 0 0.2rem rgba(22, 93, 255, 0.25) !important;
+    }
+  }
+}

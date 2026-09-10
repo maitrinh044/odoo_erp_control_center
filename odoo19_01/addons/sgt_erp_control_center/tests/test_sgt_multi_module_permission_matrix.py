@@ -1,0 +1,142 @@
+# -*- coding: utf-8 -*-
+from odoo.tests.common import TransactionCase
+
+class TestSgtMultiModulePermissionMatrix(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.RolePreset = cls.env['sgt.erp.role.preset']
+        cls.Matrix = cls.env['sgt.erp.permission.matrix']
+        cls.Wizard = cls.env['sgt.erp.add.module.matrix.wizard']
+        cls.IrModel = cls.env['ir.model']
+        cls.IrModule = cls.env['ir.module.module']
+
+        cls.model_sale_order = cls.IrModel.search([('model', '=', 'sale.order')], limit=1)
+        cls.model_crm_lead = cls.IrModel.search([('model', '=', 'crm.lead')], limit=1)
+        cls.model_res_partner = cls.IrModel.search([('model', '=', 'res.partner')], limit=1)
+
+        cls.module_sale = cls.IrModule.search([('name', '=', 'sale')], limit=1)
+        cls.module_crm = cls.IrModule.search([('name', '=', 'crm')], limit=1)
+
+    def test_01_role_preset_can_have_multiple_modules(self):
+        """Kiểm tra 1 Role Preset có thể được gán quyền cho nhiều Module cùng lúc"""
+        role = self.RolePreset.create({
+            'name': 'Multi-Module Manager',
+            'code': 'multi_mod_manager',
+            'data_scope': 'team',
+        })
+
+        # Thêm quyền cho Sales module
+        line_sale = self.Matrix.create({
+            'role_preset_id': role.id,
+            'model_id': self.model_sale_order.id,
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': True,
+            'perm_unlink': False,
+            'data_scope': 'team',
+        })
+
+        # Thêm quyền cho CRM module
+        line_crm = self.Matrix.create({
+            'role_preset_id': role.id,
+            'model_id': self.model_crm_lead.id,
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': True,
+            'perm_unlink': False,
+            'data_scope': 'team',
+        })
+
+        # Thêm quyền cho Contacts module
+        line_partner = self.Matrix.create({
+            'role_preset_id': role.id,
+            'model_id': self.model_res_partner.id,
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': False,
+            'perm_unlink': False,
+            'data_scope': 'all',
+        })
+
+        # Xác minh Role Preset liên kết đồng thời 3 model từ 3 module khác nhau
+        self.assertEqual(role.matrix_count, 3, "Role phải có đúng 3 dòng quyền trong ma trận")
+        self.assertIn(line_sale, role.permission_matrix_ids)
+        self.assertIn(line_crm, role.permission_matrix_ids)
+        self.assertIn(line_partner, role.permission_matrix_ids)
+
+        # Kiểm tra module info được tính tự động
+        self.assertTrue(line_sale.module_shortdesc)
+        self.assertTrue(line_crm.module_shortdesc)
+        self.assertTrue(line_partner.module_shortdesc)
+
+    def test_02_wizard_add_multi_module_models(self):
+        """Kiểm tra Wizard Thêm nhanh Quyền theo nhiều Module cùng lúc"""
+        role = self.RolePreset.create({
+            'name': 'Universal Director',
+            'code': 'universal_director',
+            'data_scope': 'all',
+        })
+
+        # Mở wizard và chọn cả 2 module: sale và crm
+        wizard = self.Wizard.create({
+            'role_preset_id': role.id,
+            'module_ids': [(6, 0, [self.module_sale.id, self.module_crm.id])],
+            'filter_mode': 'primary',
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': True,
+            'perm_unlink': False,
+            'data_scope': 'all',
+        })
+
+        # Kích hoạt preview
+        wizard._onchange_module_and_settings()
+        models_in_preview = wizard.line_ids.mapped('model_id.model')
+        self.assertIn('sale.order', models_in_preview, "sale.order phải có trong preview")
+        self.assertIn('crm.lead', models_in_preview, "crm.lead phải có trong preview")
+
+        # Áp dụng wizard
+        res = wizard.action_add_to_matrix()
+        self.assertEqual(res.get('params', {}).get('type'), 'success')
+
+        # Kiểm tra các dòng đã được tạo trong Role
+        created_models = role.permission_matrix_ids.mapped('model_id.model')
+        self.assertIn('sale.order', created_models)
+        self.assertIn('crm.lead', created_models)
+
+    def test_03_record_rules_generated_for_all_matrix_models(self):
+        """Kiểm tra Record Rules được sinh tự động cho toàn bộ model trong ma trận của Role"""
+        role = self.RolePreset.create({
+            'name': 'Branch Officer',
+            'code': 'branch_officer',
+            'data_scope': 'team',
+        })
+
+        self.Matrix.create({
+            'role_preset_id': role.id,
+            'model_id': self.model_sale_order.id,
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': True,
+            'perm_unlink': False,
+            'data_scope': 'team',
+        })
+        self.Matrix.create({
+            'role_preset_id': role.id,
+            'model_id': self.model_crm_lead.id,
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': True,
+            'perm_unlink': False,
+            'data_scope': 'team',
+        })
+
+        role._sync_record_rules()
+        self.assertTrue(role.security_group_id)
+
+        rules = role.rule_ids
+        rule_models = rules.mapped('model_id.model')
+        self.assertIn('sale.order', rule_models, "Record Rule cho sale.order phải được sinh")
+        self.assertIn('crm.lead', rule_models, "Record Rule cho crm.lead phải được sinh")
