@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'SGT ERP Control Center',
-    'version': '19.0.2.36.0',
+    'version': '19.0.2.37.0',
     'summary': 'Trung tâm cấu hình, white-labeling, theme, feature toggle và quản trị ERP',
     'description': """
 SGT ERP Control Center (Version 2)

@@ -10,9 +10,10 @@
             <field name="arch" type="xml">
                 <list string="Danh Sách Bản Sao Lưu" decoration-danger="state == 'failed'" decoration-success="state == 'success'">
                     <header>
-                        <button name="action_trigger_backup_now" string="Sao Lưu Đầy Đủ (ZIP)" type="object" class="btn btn-primary" icon="fa-database"/>
-                        <button name="action_trigger_backup_now" string="Sao Lưu Nhanh (SQL Dump)" type="object" class="btn btn-secondary" context="{'backup_type': 'dump'}" icon="fa-file-text-o"/>
-                        <button name="action_cleanup_old_backups" string="Dọn Dẹp Bản Cũ Quá Hạn" type="object" class="btn btn-outline-secondary" icon="fa-recycle"/>
+                        <button name="action_trigger_backup_now" string="Sao Lưu Đầy Đủ (ZIP)" type="object" class="btn btn-primary" icon="fa-database" display="always"/>
+                        <button name="action_trigger_backup_now" string="Sao Lưu Nhanh (SQL Dump)" type="object" class="btn btn-secondary" context="{'backup_type': 'dump'}" icon="fa-file-text-o" display="always"/>
+                        <button name="action_scan_existing_backups" string="Quét File Đang Có Trên Đĩa" type="object" class="btn btn-outline-info" icon="fa-search" display="always"/>
+                        <button name="action_cleanup_old_backups" string="Dọn Dẹp Bản Cũ Quá Hạn" type="object" class="btn btn-outline-secondary" icon="fa-recycle" display="always"/>
                     </header>
                     <field name="name" string="Tên Bản Sao Lưu" class="fw-bold"/>
                     <field name="backup_date" string="Thời Điểm Tạo"/>
@@ -40,8 +41,9 @@
             <field name="arch" type="xml">
                 <form string="Thông Tin Bản Sao Lưu">
                     <header>
+                        <button name="action_trigger_backup_now" string="Khởi Chạy Sao Lưu Ngay" type="object" class="btn btn-success" icon="fa-play" invisible="state == 'success'"/>
                         <button name="action_download_backup" string="Tải File Về Máy" type="object" class="btn btn-primary" icon="fa-download" invisible="state != 'success'"/>
-                        <button name="action_delete_backup" string="Xóa File Vĩnh Viễn" type="object" class="btn btn-outline-danger" icon="fa-trash" confirm="Hành động này sẽ xóa file vật lý trên máy chủ. Bạn có chắc chắn không?"/>
+                        <button name="action_delete_backup" string="Xóa File Vĩnh Viễn" type="object" class="btn btn-outline-danger" icon="fa-trash" confirm="Hành động này sẽ xóa file vật lý trên máy chủ. Bạn có chắc chắn không?" invisible="not id"/>
                         <field name="state" widget="statusbar" statusbar_visible="running,success,failed"/>
                     </header>
                     <sheet>
@@ -103,7 +105,6 @@
             <field name="name">Quản Lý Sao Lưu (Backup Manager)</field>
             <field name="res_model">sgt.erp.backup</field>
             <field name="view_mode">list,form</field>
-            <field name="context">{'search_default_filter_success': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Chưa có bản sao lưu nào được tạo.

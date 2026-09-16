@@ -176,6 +176,70 @@ class SgtErpBackup(models.Model):
         _logger.info("SGT ERP Cron: Running scheduled automated backup (Type: %s)...", b_type)
         self.create_backup(backup_type=b_type, backup_mode='cron')
 
+    @api.model
+    def action_scan_existing_backups(self):
+        """Quét thư mục backup và tự động đồng bộ các file vật lý đã có vào danh sách."""
+        backup_dir = self._get_backup_dir()
+        if not os.path.exists(backup_dir):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _("Thông báo"),
+                    'message': _("Thư mục lưu trữ sao lưu chưa tồn tại trên máy chủ."),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+
+        created_count = 0
+        current_db = self.env.cr.dbname
+        existing_paths = set(self.search([]).mapped('file_path'))
+
+        for filename in sorted(os.listdir(backup_dir), reverse=True):
+            if not (filename.endswith('.zip') or filename.endswith('.dump')):
+                continue
+            file_path = os.path.join(backup_dir, filename)
+            if file_path in existing_paths or not os.path.isfile(file_path):
+                continue
+
+            size_bytes = os.path.getsize(file_path)
+            size_mb = round(size_bytes / (1024.0 * 1024.0), 2)
+            mtime = datetime.fromtimestamp(os.path.getmtime(file_path))
+            b_type = 'zip' if filename.endswith('.zip') else 'dump'
+
+            self.create({
+                'name': filename,
+                'backup_date': mtime,
+                'db_name': current_db,
+                'backup_type': b_type,
+                'backup_mode': 'manual',
+                'file_path': file_path,
+                'file_size_mb': size_mb,
+                'state': 'success',
+                'company_id': self.env.company.id,
+            })
+            created_count += 1
+
+        configs = self.env['sgt.erp.config'].search([])
+        if configs:
+            configs.write({
+                'backup_status': 'ok',
+                'backup_last_date': fields.Datetime.now(),
+            })
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Đồng Bộ Bản Sao Lưu"),
+                'message': _("Đã tìm thấy và đồng bộ %d bản sao lưu có sẵn trên đĩa cứng.") % created_count,
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'reload'},
+            }
+        }
+
     def action_cleanup_old_backups(self):
         """Action nút bấm dọn dẹp các bản sao lưu cũ quá hạn."""
         deleted_count = self._cleanup_old_backups()
