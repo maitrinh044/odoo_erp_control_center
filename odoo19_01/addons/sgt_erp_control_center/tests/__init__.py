@@ -13,3 +13,4 @@ from . import test_purchase_account_approval
 from . import test_mass_approval_and_demo_data
 from . import test_demo_products
 from . import test_workflow_selection
+from . import test_backup_manager

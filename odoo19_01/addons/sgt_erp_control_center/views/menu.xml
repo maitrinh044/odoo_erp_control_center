@@ -130,8 +130,21 @@
                   name="9. System Health"
                   parent="menu_sgt_erp_root"
                   sequence="90"
+                  groups="group_erp_control_center_user"/>
+
+        <menuitem id="menu_sgt_erp_system_health_sub"
+                  name="Health Dashboard"
+                  parent="menu_sgt_erp_system_health"
+                  sequence="10"
                   action="action_sgt_erp_system_health_dashboard"
                   groups="group_erp_control_center_user"/>
+
+        <menuitem id="menu_sgt_erp_backup_manager"
+                  name="Backup Manager"
+                  parent="menu_sgt_erp_system_health"
+                  sequence="20"
+                  action="action_sgt_erp_backup"
+                  groups="group_erp_control_center_manager"/>
 
         <!-- 10. Configuration -->
         <menuitem id="menu_sgt_erp_configuration_wizard"

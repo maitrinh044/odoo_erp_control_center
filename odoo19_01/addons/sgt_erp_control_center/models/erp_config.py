@@ -170,6 +170,19 @@ class SgtErpConfig(models.Model):
     server_uptime = fields.Char(string='Server Uptime', compute='_compute_advanced_health')
     backup_last_date = fields.Datetime(string='Last Backup Timestamp', default=fields.Datetime.now)
     backup_status = fields.Selection([('ok', 'Active & Healthy'), ('warning', 'Pending / Old'), ('none', 'No Backup Configured')], default='ok', string='Backup Status')
+    backup_auto_enabled = fields.Boolean(string='Bật Tự Động Sao Lưu Hàng Ngày', default=True)
+    backup_retention_days = fields.Integer(string='Thời Gian Lưu Trữ (Ngày)', default=14)
+    backup_default_type = fields.Selection([
+        ('zip', 'Đầy Đủ (Database + Filestore)'),
+        ('dump', 'Chỉ Database (SQL Dump)'),
+    ], string='Định Dạng Mặc Định', default='zip')
+    backup_count = fields.Integer(string='Tổng Số Bản Sao Lưu', compute='_compute_backup_count')
+
+    def _compute_backup_count(self):
+        Backup = self.env['sgt.erp.backup']
+        for rec in self:
+            rec.backup_count = Backup.search_count([('state', '=', 'success')])
+
     deployment_docker_container = fields.Char(string='Docker Container', default='odoo19_01-odoo-1')
     deployment_python_version = fields.Char(string='Python Version', compute='_compute_advanced_health')
     deployment_os_info = fields.Char(string='Operating System', compute='_compute_advanced_health')
@@ -215,11 +228,29 @@ class SgtErpConfig(models.Model):
             'view_mode': 'list,form',
         }
 
+    def action_open_backup_manager(self):
+        return {
+            'name': _("Quản Lý Sao Lưu (Backup Manager)"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sgt.erp.backup',
+            'view_mode': 'list,form',
+            'target': 'current',
+        }
+
     def action_check_backup_status(self):
         """Kiểm tra trạng thái sao lưu định kỳ và cập nhật thông số Backup (V2)"""
         self.ensure_one()
+        latest_backup = self.env['sgt.erp.backup'].search([('state', '=', 'success')], order='backup_date desc', limit=1)
         backup_cron = self.env['ir.cron'].search([('name', 'ilike', 'backup')], limit=1)
-        if backup_cron and backup_cron.active:
+        if latest_backup:
+            self.backup_last_date = latest_backup.backup_date
+            self.backup_status = 'ok'
+            msg = _("Bản sao lưu gần nhất: %(name)s (%(size).2f MB, ngày %(date)s).") % {
+                'name': latest_backup.name,
+                'size': latest_backup.file_size_mb,
+                'date': latest_backup.backup_date.strftime('%d/%m/%Y %H:%M:%S') if latest_backup.backup_date else '',
+            }
+        elif backup_cron and backup_cron.active:
             self.backup_status = 'ok'
             self.backup_last_date = backup_cron.lastcall or fields.Datetime.now()
             msg = _("Backup schedule verified: Active automated database backup is enabled.")

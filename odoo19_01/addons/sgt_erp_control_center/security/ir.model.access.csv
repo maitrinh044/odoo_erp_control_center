@@ -72,3 +72,7 @@ access_sgt_erp_mass_approval_wizard_user,sgt.erp.mass.approval.wizard.user,model
 access_sgt_erp_mass_approval_wizard_manager,sgt.erp.mass.approval.wizard.manager,model_sgt_erp_mass_approval_wizard,group_erp_control_center_manager,1,1,1,1
 access_sgt_erp_mass_approval_wizard_admin,sgt.erp.mass.approval.wizard.admin,model_sgt_erp_mass_approval_wizard,group_erp_control_center_admin,1,1,1,1
 
+access_sgt_erp_backup_user,sgt.erp.backup.user,model_sgt_erp_backup,group_erp_control_center_user,1,0,0,0
+access_sgt_erp_backup_manager,sgt.erp.backup.manager,model_sgt_erp_backup,group_erp_control_center_manager,1,1,1,1
+access_sgt_erp_backup_admin,sgt.erp.backup.admin,model_sgt_erp_backup,group_erp_control_center_admin,1,1,1,1
+

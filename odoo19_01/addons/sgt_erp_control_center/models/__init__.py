@@ -19,3 +19,4 @@ from . import erp_approval_line
 from . import erp_workflow_interceptor
 from . import erp_purchase_workflow
 from . import erp_account_workflow
+from . import erp_backup

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'SGT ERP Control Center',
-    'version': '19.0.2.35.0',
+    'version': '19.0.2.36.0',
     'summary': 'Trung tâm cấu hình, white-labeling, theme, feature toggle và quản trị ERP',
     'description': """
 SGT ERP Control Center (Version 2)
@@ -37,11 +37,13 @@ Các tính năng nổi bật:
         'data/role_presets.xml',
         'data/update_data.xml',
         'data/default_config.xml',
+        'data/backup_cron.xml',
         'data/workflow_demo_data.xml',
         'data/product_demo_data.xml',
         'views/setup_wizard_views.xml',
         'views/control_center_views.xml',
         'views/health_dashboard_views.xml',
+        'views/backup_views.xml',
         'views/erp_config_views.xml',
         'views/theme_views.xml',
         'views/feature_views.xml',
