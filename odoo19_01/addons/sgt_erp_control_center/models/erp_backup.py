@@ -120,7 +120,7 @@ class SgtErpBackup(models.Model):
 
         return record
 
-    def action_trigger_backup_now(self):
+    def action_trigger_backup_now(self, *args, **kwargs):
         """Action nút bấm 1-chạm tạo bản sao lưu ngay lập tức."""
         backup_type = self.env.context.get('backup_type', 'zip')
         record = self.create_backup(backup_type=backup_type, backup_mode='manual')
@@ -176,8 +176,7 @@ class SgtErpBackup(models.Model):
         _logger.info("SGT ERP Cron: Running scheduled automated backup (Type: %s)...", b_type)
         self.create_backup(backup_type=b_type, backup_mode='cron')
 
-    @api.model
-    def action_scan_existing_backups(self):
+    def action_scan_existing_backups(self, *args, **kwargs):
         """Quét thư mục backup và tự động đồng bộ các file vật lý đã có vào danh sách."""
         backup_dir = self._get_backup_dir()
         if not os.path.exists(backup_dir):
@@ -240,7 +239,7 @@ class SgtErpBackup(models.Model):
             }
         }
 
-    def action_cleanup_old_backups(self):
+    def action_cleanup_old_backups(self, *args, **kwargs):
         """Action nút bấm dọn dẹp các bản sao lưu cũ quá hạn."""
         deleted_count = self._cleanup_old_backups()
         return {
