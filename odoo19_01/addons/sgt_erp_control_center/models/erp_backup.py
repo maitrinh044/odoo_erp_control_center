@@ -254,6 +254,22 @@ class SgtErpBackup(models.Model):
             }
         }
 
+    def action_open_backup_schedule(self, *args, **kwargs):
+        """Mở trực tiếp cấu hình Cron Lịch trình sao lưu tự động."""
+        cron = self.env.ref('sgt_erp_control_center.cron_sgt_erp_automated_backup', raise_if_not_found=False)
+        if not cron:
+            cron = self.env['ir.cron'].search([('code', 'ilike', 'cron_run_automated_backup')], limit=1)
+        if not cron:
+            raise UserError(_("Không tìm thấy tiến trình Cron của tính năng Sao lưu tự động."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Tùy Chỉnh Lịch Sao Lưu Định Kỳ"),
+            'res_model': 'ir.cron',
+            'res_id': cron.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
     @api.model
     def _cleanup_old_backups(self, retention_days=None):
         """Xóa các bản backup cũ vượt quá số ngày lưu trữ cho phép để tiết kiệm đĩa."""

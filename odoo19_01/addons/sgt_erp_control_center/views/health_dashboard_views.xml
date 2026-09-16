@@ -212,8 +212,10 @@
                                         <field name="backup_count"/>
                                         <field name="backup_auto_enabled" widget="boolean_toggle"/>
                                         <field name="backup_retention_days"/>
-                                        <field name="deployment_docker_container"/>
-                                        <button name="action_open_backup_manager" string="Mở Quản Lý Sao Lưu (Backup Manager)" type="object" class="btn btn-outline-primary btn-sm mt-2" icon="fa-database"/>
+                                        <div class="d-flex gap-2 mt-2">
+                                            <button name="action_open_backup_manager" string="Mở Quản Lý Sao Lưu" type="object" class="btn btn-outline-primary btn-sm" icon="fa-database"/>
+                                            <button name="action_open_backup_schedule" string="Tùy Chỉnh Lịch Tự Động" type="object" class="btn btn-outline-secondary btn-sm" icon="fa-clock-o"/>
+                                        </div>
                                     </group>
                                     <group string="Host Platform Stack">
                                         <field name="odoo_version"/>
