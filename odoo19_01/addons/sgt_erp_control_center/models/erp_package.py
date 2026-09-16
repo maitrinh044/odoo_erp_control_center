@@ -29,7 +29,7 @@ class SgtErpPackage(models.Model):
                 raise ValidationError(_("Package code must be unique!"))
 
     def apply_to_company(self, company_id=None):
-        """Kích hoạt các feature thuộc package này cho công ty, không xóa dữ liệu"""
+        """Activate features included in this package for company without data deletion"""
         self.ensure_one()
         if not company_id:
             company_id = self.env.company.id
@@ -48,11 +48,11 @@ class SgtErpPackage(models.Model):
             elif package.code != 'custom':
                 feat.active = False
 
-        # Đồng bộ menu tương ứng của tất cả các feature
+        # Synchronize corresponding menus of all features
         all_features.sync_menu_visibility()
 
     def action_apply_to_current_company(self):
-        """Áp dụng gói này trực tiếp cho công ty hiện tại từ màn hình Form"""
+        """Apply this package directly to current company from form view"""
         self.ensure_one()
         company = self.env.company
         company.write({'erp_package_id': self.id})
@@ -61,8 +61,8 @@ class SgtErpPackage(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Cấu hình Gói thành công"),
-                'message': _("Đã áp dụng thành công gói '%s' cho công ty %s và đồng bộ các phân hệ liên quan.") % (self.name, company.name),
+                'title': _("Package Applied Successfully"),
+                'message': _("Successfully applied package '%s' to company %s and synchronized corresponding features.") % (self.name, company.name),
                 'sticky': False,
                 'type': 'success',
                 'next': {'type': 'ir.actions.client', 'tag': 'reload'},

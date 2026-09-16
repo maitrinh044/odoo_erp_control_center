@@ -9,9 +9,9 @@
                     <header>
                         <button name="action_sync_to_odoo_acls" string="Synchronize to Odoo Security" type="object" class="btn btn-primary" icon="fa-shield"/>
                     </header>
-                    <field name="role_preset_id" options="{'no_create': True}" string="Vai trò (Role)"/>
-                    <field name="module_shortdesc" readonly="1" string="Phân hệ / Module"/>
-                    <field name="model_id" options="{'no_create': True}" string="Đối tượng (Model)"/>
+                    <field name="role_preset_id" options="{'no_create': True}" string="Role Preset"/>
+                    <field name="module_shortdesc" readonly="1" string="Module"/>
+                    <field name="model_id" options="{'no_create': True}" string="Model"/>
                     <field name="model_name" optional="hide"/>
                     <field name="model_type" widget="badge" 
                            decoration-success="model_type == 'primary'" 
@@ -35,36 +35,36 @@
             <field name="arch" type="xml">
                 <search string="Search Permission Matrix">
                     <field name="role_preset_id"/>
-                    <field name="module_shortdesc" string="Phân hệ"/>
+                    <field name="module_shortdesc" string="Module"/>
                     <field name="model_id"/>
                     <field name="model_name"/>
                     <separator/>
-                    <filter string="Chỉ của mình (Own)" name="scope_own" domain="[('data_scope', '=', 'own')]"/>
-                    <filter string="Cả nhóm (Team)" name="scope_team" domain="[('data_scope', '=', 'team')]"/>
-                    <filter string="Toàn hệ thống (All)" name="scope_all" domain="[('data_scope', '=', 'all')]"/>
+                    <filter string="Own Records Only" name="scope_own" domain="[('data_scope', '=', 'own')]"/>
+                    <filter string="Team Records" name="scope_team" domain="[('data_scope', '=', 'team')]"/>
+                    <filter string="All Records" name="scope_all" domain="[('data_scope', '=', 'all')]"/>
                     <separator/>
-                    <filter string="Có quyền Xem" name="read_allowed" domain="[('perm_read', '=', True)]"/>
-                    <filter string="Có quyền Sửa" name="write_allowed" domain="[('perm_write', '=', True)]"/>
-                    <filter string="Có quyền Tạo" name="create_allowed" domain="[('perm_create', '=', True)]"/>
-                    <filter string="Có quyền Xóa" name="unlink_allowed" domain="[('perm_unlink', '=', True)]"/>
+                    <filter string="Read Allowed" name="read_allowed" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Write Allowed" name="write_allowed" domain="[('perm_write', '=', True)]"/>
+                    <filter string="Create Allowed" name="create_allowed" domain="[('perm_create', '=', True)]"/>
+                    <filter string="Delete Allowed" name="unlink_allowed" domain="[('perm_unlink', '=', True)]"/>
                     <group>
-                        <filter string="Theo Vai trò (Role Preset)" name="group_by_role" context="{'group_by': 'role_preset_id'}"/>
-                        <filter string="Theo Phân hệ (Module)" name="group_by_module" context="{'group_by': 'module_shortdesc'}"/>
-                        <filter string="Theo Phạm vi dữ liệu" name="group_by_scope" context="{'group_by': 'data_scope'}"/>
+                        <filter string="By Role Preset" name="group_by_role" context="{'group_by': 'role_preset_id'}"/>
+                        <filter string="By Module" name="group_by_module" context="{'group_by': 'module_shortdesc'}"/>
+                        <filter string="By Data Scope" name="group_by_scope" context="{'group_by': 'data_scope'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record id="action_sgt_erp_permission_matrix" model="ir.actions.act_window">
-            <field name="name">Ma trận Phân quyền Trực quan</field>
+            <field name="name">Visual Permission Matrix</field>
             <field name="res_model">sgt.erp.permission.matrix</field>
             <field name="view_mode">list</field>
             <field name="search_view_id" ref="view_sgt_erp_permission_matrix_search"/>
             <field name="context">{'search_default_group_by_role': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Thiết lập ma trận phân quyền trực quan cho từng vai trò người dùng theo từng đối tượng kinh doanh.
+                    Configure visual access permissions matrix for roles across business objects.
                 </p>
             </field>
         </record>

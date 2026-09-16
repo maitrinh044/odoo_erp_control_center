@@ -22,43 +22,43 @@ class TestPurchaseAccountApproval(TransactionCase):
 
         # Test users
         cls.user_purchaser = cls.env['res.users'].create({
-            'name': 'Nhân Viên Mua Hàng',
+            'name': 'Purchasing Staff',
             'login': 'purchaser_user',
             'email': 'purchaser@example.com',
             'group_ids': [(6, 0, [group_user.id, group_purchase_user.id, group_account_user.id])]
         })
         cls.user_lead = cls.env['res.users'].create({
-            'name': 'Trưởng Nhóm Mua Hàng',
+            'name': 'Purchasing Team Lead',
             'login': 'purchase_lead',
             'email': 'purchase_lead@example.com',
             'group_ids': [(6, 0, [group_user.id, group_purchase_manager.id])]
         })
         cls.user_director = cls.env['res.users'].create({
-            'name': 'Giám Đốc Tài Chính',
+            'name': 'Chief Financial Officer',
             'login': 'cfo_approver',
             'email': 'cfo@example.com',
             'group_ids': [(6, 0, [group_user.id, group_purchase_manager.id, group_account_manager.id])]
         })
 
-        cls.vendor = cls.env['res.partner'].create({'name': 'Nhà Cung Cấp Chuẩn SGT'})
+        cls.vendor = cls.env['res.partner'].create({'name': 'SGT Standard Vendor'})
         cls.product = cls.env['product.product'].create({
-            'name': 'Vật Tư Công Nghiệp ERP',
+            'name': 'ERP Industrial Supply',
             'list_price': 5000000.0,
             'standard_price': 5000000.0,
             'taxes_id': [(5, 0, 0)],
             'supplier_taxes_id': [(5, 0, 0)],
         })
 
-        # Workflow Mua Hàng 2 cấp
+        # 2-level Purchase Workflow
         cls.po_wf = cls.Workflow.create({
-            'name': 'Quy trình phê duyệt mua hàng 2 cấp Test',
+            'name': '2-Level Purchase Approval Workflow Test',
             'workflow_type': 'purchase',
             'require_approval': True,
             'approval_mode': 'sequential',
-            'amount_threshold': 20000000.0, # >= 20M kích hoạt duyệt
+            'amount_threshold': 20000000.0, # >= 20M triggers approval
         })
         cls.po_lvl1 = cls.Level.create({
-            'name': 'Cấp 1: Trưởng nhóm mua hàng',
+            'name': 'Level 1: Purchasing Team Lead',
             'workflow_id': cls.po_wf.id,
             'sequence': 10,
             'approver_type': 'user',
@@ -66,7 +66,7 @@ class TestPurchaseAccountApproval(TransactionCase):
             'amount_min': 20000000.0,
         })
         cls.po_lvl2 = cls.Level.create({
-            'name': 'Cấp 2: Giám đốc tài chính',
+            'name': 'Level 2: CFO',
             'workflow_id': cls.po_wf.id,
             'sequence': 20,
             'approver_type': 'user',
@@ -74,16 +74,16 @@ class TestPurchaseAccountApproval(TransactionCase):
             'amount_min': 50000000.0,
         })
 
-        # Workflow Hóa Đơn 1 cấp (Kế toán trưởng / CFO duyệt)
+        # 1-level Vendor Bill Workflow (Chief Accountant / CFO approval)
         cls.inv_wf = cls.Workflow.create({
-            'name': 'Quy trình duyệt hóa đơn nhà cung cấp Test',
+            'name': 'Vendor Bill Approval Workflow Test',
             'workflow_type': 'account',
             'require_approval': True,
             'approval_mode': 'sequential',
             'amount_threshold': 30000000.0, # >= 30M
         })
         cls.inv_lvl1 = cls.Level.create({
-            'name': 'Cấp 1: Giám đốc duyệt thanh toán',
+            'name': 'Level 1: Director Payment Approval',
             'workflow_id': cls.inv_wf.id,
             'sequence': 10,
             'approver_type': 'user',
@@ -92,7 +92,7 @@ class TestPurchaseAccountApproval(TransactionCase):
         })
 
     def test_01_purchase_order_under_threshold_direct_confirm(self):
-        """Đơn mua hàng dưới hạn mức (5M < 10M) xác nhận trực tiếp."""
+        """Purchase order under threshold confirms directly."""
         po = self.PurchaseOrder.with_user(self.user_purchaser).create({
             'partner_id': self.vendor.id,
             'order_line': [(0, 0, {
@@ -108,7 +108,7 @@ class TestPurchaseAccountApproval(TransactionCase):
         self.assertEqual(po.sgt_approval_state, 'not_required')
 
     def test_02_purchase_order_sequential_multi_level_approval(self):
-        """Đơn mua hàng vượt hạn mức (60M > 50M) luân chuyển tuần tự 2 cấp và tự động chốt."""
+        """Purchase order exceeding threshold sequentially flows 2 levels and auto-confirms."""
         po = self.PurchaseOrder.with_user(self.user_purchaser).create({
             'partner_id': self.vendor.id,
             'sgt_approval_workflow_id': self.po_wf.id,
@@ -121,12 +121,12 @@ class TestPurchaseAccountApproval(TransactionCase):
         })
         self.assertEqual(po.amount_total, 60000000.0)
 
-        # Purchaser bấm xác nhận -> chuyển sang to_approve
+        # Purchaser clicks confirm -> switches to to_approve
         po.button_confirm()
         self.assertEqual(po.sgt_approval_state, 'to_approve')
         self.assertEqual(len(po.sgt_approval_line_ids), 2)
 
-        # Bấm lại khi chưa được duyệt -> bị chặn bởi UserError
+        # Clicking again while not yet approved -> blocked by UserError
         with self.assertRaises(UserError):
             po.button_confirm()
 
@@ -135,21 +135,21 @@ class TestPurchaseAccountApproval(TransactionCase):
         self.assertEqual(line1.state, 'pending')
         self.assertEqual(line2.state, 'waiting')
 
-        # Cấp 1 (Trưởng nhóm) duyệt
-        line1.with_user(self.user_lead).action_approve(note="Đồng ý số lượng mua")
+        # Level 1 (Team Lead) approves
+        line1.with_user(self.user_lead).action_approve(note="Approved purchase quantity")
         self.assertEqual(line1.state, 'approved')
         self.assertEqual(line2.state, 'pending')
         self.assertEqual(po.sgt_approval_state, 'to_approve')
         self.assertIn(po.state, ('draft', 'sent', 'to approve'))
 
-        # Cấp 2 (CFO) duyệt -> tự động xác nhận đơn mua hàng
-        line2.with_user(self.user_director).action_approve(note="Đã cân đối ngân sách, duyệt")
+        # Level 2 (CFO) approves -> automatically confirms purchase order
+        line2.with_user(self.user_director).action_approve(note="Budget balanced, approved")
         self.assertEqual(line2.state, 'approved')
         self.assertEqual(po.sgt_approval_state, 'approved')
         self.assertEqual(po.state, 'purchase')
 
     def test_03_purchase_order_rejection(self):
-        """Đơn mua hàng bị từ chối ở cấp 1 dừng toàn bộ quy trình."""
+        """Purchase order rejected at level 1 stops the whole workflow."""
         po = self.PurchaseOrder.with_user(self.user_purchaser).create({
             'partner_id': self.vendor.id,
             'sgt_approval_workflow_id': self.po_wf.id,
@@ -164,13 +164,13 @@ class TestPurchaseAccountApproval(TransactionCase):
         self.assertEqual(po.sgt_approval_state, 'to_approve')
 
         line1 = po.sgt_approval_line_ids[0]
-        line1.with_user(self.user_lead).action_reject(note="Giá nhà cung cấp quá cao")
+        line1.with_user(self.user_lead).action_reject(note="Vendor price is too high")
 
         self.assertEqual(line1.state, 'rejected')
         self.assertEqual(po.sgt_approval_state, 'rejected')
 
     def test_04_account_move_vendor_bill_multi_level_approval(self):
-        """Hóa đơn nhà cung cấp vượt hạn mức (40M > 30M) bị chặn vào sổ cho tới khi được duyệt."""
+        """Vendor bill exceeding threshold is blocked from posting until approved."""
         bill = self.AccountMove.with_user(self.user_purchaser).create({
             'move_type': 'in_invoice',
             'partner_id': self.vendor.id,
@@ -185,26 +185,26 @@ class TestPurchaseAccountApproval(TransactionCase):
         })
         self.assertEqual(bill.amount_total, 40000000.0)
 
-        # Bấm action_post() -> chuyển sang to_approve
+        # Click action_post() -> switches to to_approve
         bill.action_post()
         self.assertEqual(bill.sgt_approval_state, 'to_approve')
         self.assertEqual(len(bill.sgt_approval_line_ids), 1)
 
-        # Bấm lại khi chưa được duyệt -> bị chặn bởi UserError
+        # Clicking again when not approved -> blocked by UserError
         with self.assertRaises(UserError):
             bill.action_post()
 
         inv_line = bill.sgt_approval_line_ids[0]
         self.assertEqual(inv_line.state, 'pending')
 
-        # Giám đốc tài chính duyệt -> Tự động ghi sổ (action_post)
-        inv_line.with_user(self.user_director).action_approve(note="Hóa đơn hợp lệ, duyệt vào sổ")
+        # CFO approves -> auto-post bill
+        inv_line.with_user(self.user_director).action_approve(note="Valid invoice, approved to post")
         self.assertEqual(inv_line.state, 'approved')
         self.assertEqual(bill.sgt_approval_state, 'approved')
         self.assertEqual(bill.state, 'posted')
 
     def test_05_unauthorized_user_blocked_on_purchase_and_bill(self):
-        """Người không có thẩm quyền cố tình duyệt sẽ bị chặn bởi AccessError."""
+        """Unauthorized user attempting approval is blocked by AccessError."""
         po = self.PurchaseOrder.with_user(self.user_purchaser).create({
             'partner_id': self.vendor.id,
             'sgt_approval_workflow_id': self.po_wf.id,
@@ -219,6 +219,6 @@ class TestPurchaseAccountApproval(TransactionCase):
         self.assertEqual(po.sgt_approval_state, 'to_approve')
 
         line1 = po.sgt_approval_line_ids[0]
-        # Nhân viên mua hàng không thể tự duyệt cấp 1 của Trưởng nhóm
+        # Purchaser cannot self-approve level 1 of Team Lead
         with self.assertRaises(AccessError):
             line1.with_user(self.user_purchaser).action_approve()

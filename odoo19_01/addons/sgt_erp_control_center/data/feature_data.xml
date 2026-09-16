@@ -5,7 +5,7 @@
         <!-- CRM FEATURES                                                 -->
         <!-- ============================================================ -->
         <record id="feature_crm" model="sgt.erp.feature">
-            <field name="name">CRM &amp; Khách Hàng Tiềm Năng</field>
+            <field name="name">CRM &amp; Pipeline</field>
             <field name="code">crm</field>
             <field name="category">crm</field>
             <field name="sequence">10</field>
@@ -13,10 +13,10 @@
             <field name="active">True</field>
             <field name="required_module_names">crm</field>
             <field name="menu_xml_id">crm.crm_menu_root</field>
-            <field name="description">Phân hệ quản lý quan hệ khách hàng, cơ hội kinh doanh và lead.</field>
+            <field name="description">Customer relationship management, sales opportunities, and leads.</field>
         </record>
         <record id="feature_crm_lead" model="sgt.erp.feature">
-            <field name="name">Quản Lý Leads &amp; Cơ Hội</field>
+            <field name="name">Leads &amp; Opportunities</field>
             <field name="code">crm_lead</field>
             <field name="category">crm</field>
             <field name="sequence">11</field>
@@ -24,7 +24,7 @@
             <field name="active">True</field>
         </record>
         <record id="feature_contacts" model="sgt.erp.feature">
-            <field name="name">Danh Bạ Đối Tác &amp; Khách Hàng</field>
+            <field name="name">Contacts &amp; Partners</field>
             <field name="code">contacts</field>
             <field name="category">crm</field>
             <field name="sequence">15</field>
@@ -32,14 +32,14 @@
             <field name="active">True</field>
             <field name="required_module_names">base</field>
             <field name="menu_xml_id">contacts.menu_contacts</field>
-            <field name="description">Quản lý danh bạ đối tác, khách hàng và nhà cung cấp toàn hệ thống.</field>
+            <field name="description">System-wide directory of partners, customers, and vendors.</field>
         </record>
 
         <!-- ============================================================ -->
         <!-- SALES FEATURES                                               -->
         <!-- ============================================================ -->
         <record id="feature_sales" model="sgt.erp.feature">
-            <field name="name">Bán Hàng &amp; Báo Giá (Sales)</field>
+            <field name="name">Sales &amp; Quotations</field>
             <field name="code">sales</field>
             <field name="category">sales</field>
             <field name="sequence">20</field>
@@ -47,10 +47,10 @@
             <field name="active">True</field>
             <field name="required_module_names">sale_management</field>
             <field name="menu_xml_id">sale.sale_menu_root</field>
-            <field name="description">Quản lý báo giá, đơn bán hàng và chính sách chiết khấu thương mại.</field>
+            <field name="description">Quotation and sales order management with commercial discount policies.</field>
         </record>
         <record id="feature_sales_quotation" model="sgt.erp.feature">
-            <field name="name">Báo Giá &amp; Đơn Bán Hàng</field>
+            <field name="name">Quotations &amp; Sales Orders</field>
             <field name="code">sales_quotation</field>
             <field name="category">sales</field>
             <field name="sequence">21</field>
@@ -58,7 +58,7 @@
             <field name="active">True</field>
         </record>
         <record id="feature_sales_approval" model="sgt.erp.feature">
-            <field name="name">Phê Duyệt Đơn Bán Đa Cấp</field>
+            <field name="name">Multi-level Sales Approval</field>
             <field name="code">sales_approval</field>
             <field name="category">sales</field>
             <field name="sequence">22</field>
@@ -70,7 +70,7 @@
         <!-- PURCHASE FEATURES                                            -->
         <!-- ============================================================ -->
         <record id="feature_purchase" model="sgt.erp.feature">
-            <field name="name">Mua Hàng &amp; Cung Ứng (Purchase)</field>
+            <field name="name">Purchase &amp; Procurement</field>
             <field name="code">purchase</field>
             <field name="category">purchase</field>
             <field name="sequence">25</field>
@@ -78,10 +78,10 @@
             <field name="active">True</field>
             <field name="required_module_names">purchase</field>
             <field name="menu_xml_id">purchase.menu_purchase_root</field>
-            <field name="description">Quản lý yêu cầu báo giá (RFQ), đơn mua hàng và nhà cung cấp.</field>
+            <field name="description">Request for quotations (RFQ), purchase orders, and supplier management.</field>
         </record>
         <record id="feature_purchase_approval" model="sgt.erp.feature">
-            <field name="name">Phê Duyệt Ngân Sách Mua Hàng</field>
+            <field name="name">Purchase Budget Approval</field>
             <field name="code">purchase_approval</field>
             <field name="category">purchase</field>
             <field name="sequence">26</field>
@@ -93,7 +93,7 @@
         <!-- ACCOUNTING & INVOICING FEATURES                              -->
         <!-- ============================================================ -->
         <record id="feature_account" model="sgt.erp.feature">
-            <field name="name">Kế Toán &amp; Hóa Đơn (Invoicing)</field>
+            <field name="name">Invoicing &amp; Accounting</field>
             <field name="code">account</field>
             <field name="category">account</field>
             <field name="sequence">30</field>
@@ -101,10 +101,10 @@
             <field name="active">True</field>
             <field name="required_module_names">account</field>
             <field name="menu_xml_id">account.menu_finance</field>
-            <field name="description">Quản lý hóa đơn khách hàng, hóa đơn nhà cung cấp và thanh toán.</field>
+            <field name="description">Customer invoices, vendor bills, and payment processing.</field>
         </record>
         <record id="feature_account_vendor_bills" model="sgt.erp.feature">
-            <field name="name">Duyệt Hóa Đơn Chi Phí / Nhà Cung Cấp</field>
+            <field name="name">Vendor Bill Approval</field>
             <field name="code">account_vendor_bills</field>
             <field name="category">account</field>
             <field name="sequence">31</field>
@@ -116,7 +116,7 @@
         <!-- HR FEATURES                                                  -->
         <!-- ============================================================ -->
         <record id="feature_hr_employee" model="sgt.erp.feature">
-            <field name="name">Nhân Sự &amp; Nhân Viên (HR)</field>
+            <field name="name">Human Resources &amp; Employees</field>
             <field name="code">hr</field>
             <field name="category">hr</field>
             <field name="sequence">40</field>
@@ -124,10 +124,10 @@
             <field name="active">True</field>
             <field name="required_module_names">hr</field>
             <field name="menu_xml_id">hr.menu_hr_root</field>
-            <field name="description">Quản lý hồ sơ nhân viên, phòng ban và chức vụ.</field>
+            <field name="description">Employee directory, departments, and job positions.</field>
         </record>
         <record id="feature_hr_attendance" model="sgt.erp.feature">
-            <field name="name">Chấm Công &amp; Điểm Danh</field>
+            <field name="name">Attendances &amp; Timesheets</field>
             <field name="code">hr_attendance</field>
             <field name="category">hr</field>
             <field name="sequence">41</field>
@@ -139,7 +139,7 @@
         <!-- CALENDAR FEATURES                                            -->
         <!-- ============================================================ -->
         <record id="feature_calendar" model="sgt.erp.feature">
-            <field name="name">Lịch Làm Việc &amp; Cuộc Họp (Calendar)</field>
+            <field name="name">Calendar &amp; Meetings</field>
             <field name="code">calendar</field>
             <field name="category">calendar</field>
             <field name="sequence">50</field>
@@ -147,10 +147,10 @@
             <field name="active">True</field>
             <field name="required_module_names">calendar</field>
             <field name="menu_xml_id">calendar.mail_menu_calendar</field>
-            <field name="description">Lịch công tác, phòng họp và đồng bộ lịch ngoại vi.</field>
+            <field name="description">Schedule, meeting rooms, and external calendar synchronization.</field>
         </record>
         <record id="feature_google_calendar" model="sgt.erp.feature">
-            <field name="name">Đồng Bộ Google Calendar</field>
+            <field name="name">Google Calendar Sync</field>
             <field name="code">google_calendar</field>
             <field name="category">calendar</field>
             <field name="sequence">51</field>
@@ -162,7 +162,7 @@
         <!-- PROJECT FEATURES                                             -->
         <!-- ============================================================ -->
         <record id="feature_project" model="sgt.erp.feature">
-            <field name="name">Quản Lý Dự Án &amp; Công Việc (Project)</field>
+            <field name="name">Project Management &amp; Tasks</field>
             <field name="code">project</field>
             <field name="category">project</field>
             <field name="sequence">60</field>
@@ -170,14 +170,14 @@
             <field name="active">True</field>
             <field name="required_module_names">project</field>
             <field name="menu_xml_id">project.menu_main_pm</field>
-            <field name="description">Quản lý tiến độ dự án, giao việc, thẻ Kanban và theo dõi tiến độ.</field>
+            <field name="description">Project milestones, task assignment, Kanban boards, and tracking.</field>
         </record>
 
         <!-- ============================================================ -->
         <!-- LMS / TRAINING FEATURES                                      -->
         <!-- ============================================================ -->
         <record id="feature_lms" model="sgt.erp.feature">
-            <field name="name">Đào Tạo Nội Bộ &amp; Khóa Học (LMS)</field>
+            <field name="name">Learning Management &amp; Training (LMS)</field>
             <field name="code">lms</field>
             <field name="category">lms</field>
             <field name="sequence">70</field>
@@ -185,7 +185,7 @@
             <field name="active">True</field>
             <field name="required_module_names">lms</field>
             <field name="menu_xml_id">lms.lms_menu_root</field>
-            <field name="description">Hệ thống đào tạo nội bộ, quản lý bài giảng và thi kiểm tra đánh giá năng lực.</field>
+            <field name="description">Internal training system, course management, and skills assessment.</field>
         </record>
 
         <!-- ============================================================ -->
@@ -198,10 +198,10 @@
             <field name="sequence">80</field>
             <field name="icon">fa-tachometer</field>
             <field name="active">True</field>
-            <field name="description">Bảng điều khiển trung tâm quản trị toàn bộ hệ thống ERP.</field>
+            <field name="description">Central management dashboard for the entire ERP system.</field>
         </record>
         <record id="feature_system_approval" model="sgt.erp.feature">
-            <field name="name">Engine Phê Duyệt Đa Cấp</field>
+            <field name="name">Multi-level Approval Engine</field>
             <field name="code">approval</field>
             <field name="category">system</field>
             <field name="sequence">81</field>

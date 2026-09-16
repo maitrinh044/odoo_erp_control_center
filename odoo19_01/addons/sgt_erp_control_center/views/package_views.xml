@@ -21,11 +21,11 @@
                 <form string="ERP Package">
                     <header>
                         <button name="action_apply_to_current_company" 
-                                string="Áp dụng gói cho công ty này" 
+                                string="Apply Package to Current Company" 
                                 type="object" 
                                 class="btn-primary" 
                                 icon="fa-check-circle"
-                                confirm="Bạn có chắc chắn muốn áp dụng gói này cho công ty hiện tại? Tất cả tính năng và menu tương ứng sẽ được tự động kích hoạt/đồng bộ."/>
+                                confirm="Are you sure you want to apply this package to the current company? All included features and menus will be synchronized immediately."/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -65,7 +65,7 @@
             <field name="context">{'active_test': False}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Định nghĩa các gói giải pháp ERP (Starter, Business, Professional, Enterprise).
+                    Define ERP solution packages (Starter, Business, Professional, Enterprise).
                 </p>
             </field>
         </record>

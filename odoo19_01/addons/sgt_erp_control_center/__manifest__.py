@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'SGT ERP Control Center',
-    'version': '19.0.2.44.0',
-    'summary': 'Trung tâm cấu hình, white-labeling, theme, feature toggle và quản trị ERP',
+    'version': '19.0.2.45.0',
+    'summary': 'Centralized configuration, white-labeling, theme engine, feature toggle, and ERP administration',
     'description': """
 SGT ERP Control Center (Version 2)
 ==================================
-Addon trung tâm dùng để cấu hình, quản lý và cá nhân hóa hệ thống Odoo ERP cho từng khách hàng.
-Đóng vai trò là trung tâm điều khiển toàn bộ cấu hình ERP, giúp đội triển khai không phải chỉnh sửa
-source code riêng cho từng khách hàng (One ERP Codebase + Customer Configuration).
+Central addon designed to configure, manage, and personalize the Odoo ERP system for each enterprise client.
+Acts as a centralized control center for all ERP configurations, allowing implementation teams to deploy 
+without modifying core source code per client (One ERP Codebase + Customer Configuration).
 
-Các tính năng nổi bật:
-- Control Center Dashboard trực quan hiển thị thông tin khách hàng, phiên bản, trạng thái chức năng và health check.
-- Live Theme Preview (OWL Interactive Widget): Xem trước màu sắc, typography và bố cục theo thời gian thực.
-- Multi-step Guided Setup Wizard: Hướng dẫn cấu hình hệ thống 5 bước cho kỹ thuật viên triển khai.
-- Workflow & Approval Builder: Định nghĩa các bước quy trình và luân chuyển phê duyệt đa cấp theo hạn mức.
-- Runtime Approval Interceptor: Tự động chặn xác nhận đơn bán vượt hạn mức và kiểm soát trường bắt buộc CRM.
-- Visual Permission Matrix: Thiết lập ma trận phân quyền người dùng trực quan một chạm.
-- Dynamic Theme Engine: Quản lý màu sắc bằng biến CSS Variables không cần restart Odoo.
-- 8 Theme Presets sẵn có và khả năng nhân bản từ Preset.
-- Advanced System Health: Đo lường Disk Usage, Database Size, Backup Status và Deployment Container.
-- Real-Time Hardware Telemetry: Biểu đồ dạng sóng trực quan đo CPU, RAM, Disk, DB connections theo thời gian thực (OWL 3 + HTML5 Canvas phong cách Task Manager).
-- Online License Client & Update Manager: Quản lý phiên bản cập nhật và kích hoạt bản quyền từ xa an toàn.
+Key Highlights:
+- Intuitive Control Center Dashboard displaying client info, versioning, feature status, and system health.
+- Live Theme Preview (OWL Interactive Widget): Real-time visual preview for colors, typography, and layouts.
+- Multi-step Guided Setup Wizard: 5-step guided wizard for swift client onboarding.
+- Workflow & Approval Builder: Define dynamic multi-level approval stages with monetary threshold triggers.
+- Runtime Approval Interceptors: Enforce approval limits on Sale Orders, Purchase Orders, and Vendor Bills.
+- Visual Permission Matrix: 1-click visual matrix to configure CRUD user rights and role presets.
+- Dynamic Theme Engine: Manage UI styling via real-time CSS Variables without server restarts.
+- 8 Enterprise Theme Presets and custom preset cloning.
+- Advanced System Health: Track disk usage, database size, backup status, and container uptime.
+- Real-Time Hardware Telemetry: Task-manager style canvas charts monitoring CPU, RAM, Disk, and DB pools.
+- Online License Client & Update Manager: Manage updates and online license verification with offline fallback.
     """,
     'category': 'Administration',
     'author': 'SaigonTrade (SGT)',

@@ -9,14 +9,14 @@
             <field name="is_current">False</field>
             <field name="changelog"><![CDATA[
                 <ul>
-                    <li>Ra mắt nền tảng cốt lõi SGT ERP Control Center cho Odoo 19 Community.</li>
-                    <li>Theme Engine động bằng biến CSS Variables tức thì.</li>
-                    <li>8 Theme Presets chuẩn doanh nghiệp.</li>
-                    <li>Feature Manager & Package Manager quản lý gói tính năng an toàn.</li>
+                    <li>Launched core SGT ERP Control Center platform for Odoo 19 Community.</li>
+                    <li>Dynamic Theme Engine powered by real-time CSS Variables.</li>
+                    <li>8 Enterprise-standard Theme Presets.</li>
+                    <li>Feature Manager & Package Manager for secure feature provisioning.</li>
                     <li>Google Calendar Central Integration & Local License Manager.</li>
                 </ul>
             ]]></field>
-            <field name="upgrade_notes">Khởi tạo nền tảng ban đầu.</field>
+            <field name="upgrade_notes">Initial release of the platform.</field>
         </record>
 
         <record id="update_v2_0_0" model="sgt.erp.update">
@@ -27,15 +27,15 @@
             <field name="is_current">True</field>
             <field name="changelog"><![CDATA[
                 <ul>
-                    <li><strong>Live Theme Preview (OWL)</strong>: Xem trước giao diện thời gian thực với toggle Desktop/Mobile/Dark Mode.</li>
-                    <li><strong>Multi-step Guided Setup Wizard</strong>: Trình hướng dẫn 5 bước trực quan triển khai khách hàng mới.</li>
-                    <li><strong>Workflow &amp; Approval Builder</strong>: Thiết kế các bước quy trình động và quy tắc duyệt đa cấp theo hạn mức.</li>
-                    <li><strong>Visual Permission Matrix</strong>: Bảng ma trận phân quyền vai trò CRUD một chạm.</li>
-                    <li><strong>Advanced System Health</strong>: Giám sát đo lường dung lượng Disk Usage, kích thước Database, Backup Status và Deployment.</li>
-                    <li><strong>Online License Client</strong>: Kiểm tra bản quyền trực tuyến với cơ chế fallback offline an toàn.</li>
+                    <li><strong>Live Theme Preview (OWL)</strong>: Real-time interface preview with Desktop, Mobile, and Dark Mode switcher.</li>
+                    <li><strong>Multi-step Guided Setup Wizard</strong>: 5-step guided wizard for new client deployment.</li>
+                    <li><strong>Workflow &amp; Approval Builder</strong>: Multi-level dynamic approval stages with budget threshold triggers.</li>
+                    <li><strong>Visual Permission Matrix</strong>: 1-click visual CRUD role permission matrix.</li>
+                    <li><strong>Advanced System Health</strong>: Real-time disk usage, database size, backup status, and deployment monitoring.</li>
+                    <li><strong>Online License Client</strong>: Remote online license verification with secure offline fallback.</li>
                 </ul>
             ]]></field>
-            <field name="upgrade_notes">Nâng cấp cấu trúc dữ liệu tương thích hoàn toàn Odoo 19.</field>
+            <field name="upgrade_notes">Data structure upgrade fully compatible with Odoo 19.</field>
         </record>
     </data>
 </odoo>

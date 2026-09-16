@@ -87,7 +87,7 @@ class SgtErpLicense(models.Model):
         return True
 
     def action_verify_online_license(self):
-        """Kiểm tra bản quyền trực tuyến từ server trung tâm (Online License Client / Server)"""
+        """Verify license online from central server (Online License Client / Server)"""
         self.ensure_one()
         self.last_sync_date = fields.Datetime.now()
         
@@ -104,7 +104,7 @@ class SgtErpLicense(models.Model):
                 }
             }
 
-        # Xác thực với Online License Server
+        # Verify with Online License Server
         target_url = self.license_server_url or 'http://127.0.0.1:8069/sgt_license/api/verify'
         if target_url.startswith('/'):
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://127.0.0.1:8069')
@@ -135,7 +135,7 @@ class SgtErpLicense(models.Model):
                 else:
                     self.online_status_message = result.get('message', _("Server returned invalid license status."))
         except Exception as e:
-            # Nếu key hợp lệ theo chuẩn SGT
+            # Fallback if key follows SGT format
             if self.license_key and self.license_key.startswith('SGT-'):
                 self.status = 'active'
                 self.online_status_message = _("License key valid (Offline verification validated key structure).")

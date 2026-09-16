@@ -17,7 +17,7 @@ class SgtErpAuditLog(models.Model):
         ('feature', 'Feature'),
         ('workflow', 'Workflow & Approval'),
         ('integration', 'Integration'),
-        ('license', 'License / Giấy phép'),
+        ('license', 'License'),
         ('general', 'General Configuration'),
     ], string='Category', required=True, readonly=True)
 
@@ -35,7 +35,7 @@ class SgtErpAuditLog(models.Model):
 
     @api.model
     def log_change(self, category, field_name, old_value, new_value, company_id=None):
-        """Helper để ghi nhận thay đổi cấu hình tường minh"""
+        """Helper to explicitly record configuration changes"""
         old_str = str(old_value) if old_value is not None and old_value is not False else ''
         new_str = str(new_value) if new_value is not None and new_value is not False else ''
         if old_str == new_str:

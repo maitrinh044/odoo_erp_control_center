@@ -11,7 +11,7 @@ class TestSgtErpControlCenter(TransactionCase):
         cls.company = cls.env.company
 
     def test_01_config_creation_and_unique_company(self):
-        """Kiểm tra tạo ERP config và ràng buộc duy nhất theo công ty"""
+        """Test ERP config creation and unique company constraint"""
         config = self.Config.search([('company_id', '=', self.company.id)], limit=1)
         if not config:
             config = self.Config.create({
@@ -23,7 +23,7 @@ class TestSgtErpControlCenter(TransactionCase):
         self.assertTrue(config.id)
         self.assertEqual(config.company_id, self.company)
 
-        # Ràng buộc trùng lặp phải quăng ValidationError
+        # Duplicate company constraint must raise ValidationError
         with self.assertRaises(ValidationError):
             self.Config.create({
                 'name': 'Duplicate Corp Config',
@@ -33,7 +33,7 @@ class TestSgtErpControlCenter(TransactionCase):
             })
 
     def test_02_action_apply_configuration(self):
-        """Kiểm tra áp dụng cấu hình 10 bước chuẩn chỉ"""
+        """Test applying 10-step configuration protocol"""
         config = self.Config.search([('company_id', '=', self.company.id)], limit=1)
         if not config:
             config = self.Config.create({
@@ -47,7 +47,7 @@ class TestSgtErpControlCenter(TransactionCase):
         self.assertEqual(action.get('type'), 'ir.actions.client')
         self.assertEqual(action.get('params', {}).get('type'), 'success')
 
-        # Kiểm tra chatter log
+        # Check chatter log
         messages = self.env['mail.message'].search([
             ('model', '=', 'sgt.erp.config'),
             ('res_id', '=', config.id)
@@ -56,7 +56,7 @@ class TestSgtErpControlCenter(TransactionCase):
         self.assertIn('Apply Configuration Executed', messages.body)
 
     def test_03_backup_status_check(self):
-        """Kiểm tra hàm kiểm tra trạng thái sao lưu (Backup Status)"""
+        """Test backup status check action"""
         config = self.Config.search([('company_id', '=', self.company.id)], limit=1)
         if not config:
             config = self.Config.create({
@@ -72,7 +72,7 @@ class TestSgtErpControlCenter(TransactionCase):
         self.assertTrue(config.backup_last_date)
 
     def test_04_setup_wizard(self):
-        """Kiểm tra luồng Wizard thiết lập nhanh 5 bước"""
+        """Test 5-step guided setup wizard workflow"""
         package = self.env['sgt.erp.package'].search([], limit=1)
         theme = self.env['sgt.erp.theme'].search([], limit=1)
         wizard = self.env['sgt.erp.setup.wizard'].create({
@@ -93,7 +93,7 @@ class TestSgtErpControlCenter(TransactionCase):
         self.assertEqual(wizard.state, 'step5')
 
     def test_05_audit_log_tracking(self):
-        """Kiểm tra ghi nhận Audit Log khi thay đổi cấu hình quan trọng (Mục 24)"""
+        """Test audit log tracking on important config changes"""
         AuditLog = self.env['sgt.erp.audit.log']
         config = self.Config.search([('company_id', '=', self.company.id)], limit=1)
         if not config:
@@ -104,7 +104,7 @@ class TestSgtErpControlCenter(TransactionCase):
                 'product_name': 'Original Product',
             })
         
-        # Sửa cấu hình
+        # Update config
         config.write({
             'product_name': 'New White-label Name',
             'customer_name': 'Updated Client Ltd',
@@ -121,7 +121,7 @@ class TestSgtErpControlCenter(TransactionCase):
         self.assertEqual(product_log.category, 'branding')
 
     def test_06_system_health_telemetry(self):
-        """Kiểm tra đo lường Health Telemetry: RAM, Disk, Crons, Mail, Database Metrics"""
+        """Test health telemetry metrics: RAM, Disk, Crons, Mail, Database"""
         config = self.Config.search([('company_id', '=', self.company.id)], limit=1)
         if not config:
             config = self.Config.create({

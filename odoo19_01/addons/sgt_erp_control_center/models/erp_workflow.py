@@ -57,11 +57,11 @@ class SgtErpWorkflow(models.Model):
 
     # Multi-level Approval Configuration
     approval_mode = fields.Selection([
-        ('sequential', 'Tuần tự qua từng cấp'),
-        ('direct', 'Trực tiếp cấp cao nhất'),
-    ], string='Cơ chế duyệt đa cấp', default='sequential', required=True)
-    level_ids = fields.One2many('sgt.erp.workflow.level', 'workflow_id', string='Các cấp phê duyệt')
-    level_count = fields.Integer(string='Số cấp duyệt', compute='_compute_level_count')
+        ('sequential', 'Sequential (Step-by-step)'),
+        ('direct', 'Direct (Highest Level Only)'),
+    ], string='Multi-Level Approval Mode', default='sequential', required=True)
+    level_ids = fields.One2many('sgt.erp.workflow.level', 'workflow_id', string='Approval Levels')
+    level_count = fields.Integer(string='Levels Count', compute='_compute_level_count')
 
     @api.depends('stage_ids')
     def _compute_stage_count(self):
@@ -74,7 +74,7 @@ class SgtErpWorkflow(models.Model):
             rec.level_count = len(rec.level_ids)
 
     def get_applicable_levels(self, amount=None):
-        """Trả về danh sách các cấp duyệt (sgt.erp.workflow.level) phù hợp theo hạn mức."""
+        """Return list of applicable approval levels (sgt.erp.workflow.level) based on amount."""
         self.ensure_one()
         if not self.level_ids:
             return self.env['sgt.erp.workflow.level']
@@ -94,7 +94,7 @@ class SgtErpWorkflow(models.Model):
             matching_levels = ordered_levels[:1]
 
         if self.approval_mode == 'direct' and matching_levels:
-            # Chỉ lấy cấp cao nhất (cuối cùng theo sequence)
+            # Only take the highest level (last by sequence)
             return matching_levels[-1:]
 
         return matching_levels
@@ -151,7 +151,7 @@ class SgtErpWorkflow(models.Model):
         if missing:
             from odoo.exceptions import ValidationError
             raise ValidationError(
-                _("Không thể tiếp tục vì thiếu các thông tin bắt buộc theo quy trình [%(workflow)s]:\n- %(fields)s") % {
+                _("Cannot proceed due to missing required fields in workflow [%(workflow)s]:\n- %(fields)s") % {
                     'workflow': self.name,
                     'fields': '\n- '.join(missing),
                 }

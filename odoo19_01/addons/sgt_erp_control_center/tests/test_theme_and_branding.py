@@ -11,7 +11,7 @@ class TestSgtErpThemeAndBranding(TransactionCase):
         cls.user = cls.env.user
 
     def test_01_theme_presets_exist(self):
-        """Kiểm tra sự tồn tại của 8 bộ theme preset chuẩn"""
+        """Verify existence of 8 standard theme presets."""
         expected_presets = [
             'Corporate Blue',
             'Modern Green',
@@ -28,7 +28,7 @@ class TestSgtErpThemeAndBranding(TransactionCase):
             self.assertIn(expected, theme_names, f"Preset '{expected}' must exist!")
 
     def test_02_create_from_preset(self):
-        """Kiểm tra nhân bản theme từ preset"""
+        """Verify duplicating a theme from preset."""
         preset = self.Theme.search([('name', '=', 'Corporate Blue')], limit=1)
         self.assertTrue(preset, "Corporate Blue preset must exist")
         
@@ -40,7 +40,7 @@ class TestSgtErpThemeAndBranding(TransactionCase):
         self.assertEqual(new_theme.primary_color, preset.primary_color)
 
     def test_03_theme_effective_priority(self):
-        """Kiểm tra thứ tự ưu tiên: User Theme -> Company Theme -> Default Theme"""
+        """Verify priority order: User Theme -> Company Theme -> Default Theme."""
         theme_corp = self.Theme.search([('name', '=', 'Corporate Blue')], limit=1)
         theme_dark = self.Theme.search([('name', '=', 'Dark Tech')], limit=1)
         
@@ -55,7 +55,7 @@ class TestSgtErpThemeAndBranding(TransactionCase):
         self.assertEqual(self.user.get_effective_theme(), theme_dark)
 
     def test_04_kanban_and_list_striping(self):
-        """Kiểm tra cấu hình Kanban background và List row striping CSS variables"""
+        """Verify Kanban background and List row striping CSS variables configuration."""
         theme = self.Theme.create({
             'name': 'Test Kanban & Striping Theme',
             'kanban_bg_color': '#FAFAFA',
@@ -72,7 +72,7 @@ class TestSgtErpThemeAndBranding(TransactionCase):
         self.assertEqual(css_vars_disabled.get('--sgt-list-stripe-bg'), 'transparent')
 
     def test_05_gradient_generator(self):
-        """Kiểm tra Visual Gradient Generator và việc tạo CSS variables cho gradient"""
+        """Verify Visual Gradient Generator and CSS variable generation for gradients."""
         theme = self.Theme.create({
             'name': 'Test Gradient Theme',
             'navbar_gradient_enabled': True,
@@ -99,7 +99,7 @@ class TestSgtErpThemeAndBranding(TransactionCase):
         self.assertIn('radial-gradient(circle, #09244B 0%, #165DFF 100%)', css_vars_radial.get('--sgt-navbar-bg'))
 
     def test_06_login_page_branding(self):
-        """Kiểm tra cấu hình branding Login page (login_logo, login_background, QWeb layout)"""
+        """Verify Login page branding configuration (login_logo, login_background, QWeb layout)."""
         config = self.env['sgt.erp.config'].sudo().search([('company_id', '=', self.company.id)], limit=1)
         if not config:
             config = self.env['sgt.erp.config'].sudo().create({

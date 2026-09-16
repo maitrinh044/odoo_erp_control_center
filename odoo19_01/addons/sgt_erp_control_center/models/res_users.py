@@ -11,20 +11,20 @@ class ResUsers(models.Model):
                                     help='ERP Role Preset which defines mapped groups and permissions.')
 
     def get_effective_theme(self):
-        """Trả về theme có hiệu lực theo thứ tự ưu tiên: User Theme -> Company Theme -> Default Theme"""
+        """Return effective theme in priority order: User Theme -> Company Theme -> Default Theme"""
         self.ensure_one()
         if self.use_custom_theme and self.erp_theme_id:
             return self.erp_theme_id
         if self.company_id and self.company_id.erp_theme_id:
             return self.company_id.erp_theme_id
         
-        # Fallback theme đầu tiên đang active
+        # Fallback to first active theme
         default_theme = self.env['sgt.erp.theme'].search([('active', '=', True)], limit=1)
         return default_theme
 
     @api.onchange('role_preset_id')
     def _onchange_role_preset_id(self):
-        """Tự động bổ sung các nhóm quyền từ Role Preset khi người dùng chọn trên giao diện"""
+        """Automatically add security groups from Role Preset when selected in the UI"""
         if self.role_preset_id:
             groups_to_add = self.role_preset_id.group_ids
             if self.role_preset_id.security_group_id:
@@ -32,7 +32,7 @@ class ResUsers(models.Model):
             self.group_ids = self.group_ids | groups_to_add
 
     def action_apply_role_preset(self):
-        """Áp dụng các nhóm quyền từ Role Preset vào tài khoản này"""
+        """Apply security groups from assigned Role Preset to this user"""
         for user in self:
             if user.role_preset_id:
                 user.role_preset_id._sync_record_rules()

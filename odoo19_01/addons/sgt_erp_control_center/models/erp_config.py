@@ -170,13 +170,13 @@ class SgtErpConfig(models.Model):
     server_uptime = fields.Char(string='Server Uptime', compute='_compute_advanced_health')
     backup_last_date = fields.Datetime(string='Last Backup Timestamp', default=fields.Datetime.now)
     backup_status = fields.Selection([('ok', 'Active & Healthy'), ('warning', 'Pending / Old'), ('none', 'No Backup Configured')], default='ok', string='Backup Status')
-    backup_auto_enabled = fields.Boolean(string='Bật Tự Động Sao Lưu Hàng Ngày', default=True)
-    backup_retention_days = fields.Integer(string='Thời Gian Lưu Trữ (Ngày)', default=14)
+    backup_auto_enabled = fields.Boolean(string='Enable Daily Automated Backup', default=True)
+    backup_retention_days = fields.Integer(string='Backup Retention Days', default=14)
     backup_default_type = fields.Selection([
-        ('zip', 'Đầy Đủ (Database + Filestore)'),
-        ('dump', 'Chỉ Database (SQL Dump)'),
-    ], string='Định Dạng Mặc Định', default='zip')
-    backup_count = fields.Integer(string='Tổng Số Bản Sao Lưu', compute='_compute_backup_count')
+        ('zip', 'Full (Database + Filestore)'),
+        ('dump', 'Database Only (SQL Dump)'),
+    ], string='Default Backup Format', default='zip')
+    backup_count = fields.Integer(string='Total Backup Archives', compute='_compute_backup_count')
 
     def _compute_backup_count(self):
         Backup = self.env['sgt.erp.backup']
@@ -208,7 +208,7 @@ class SgtErpConfig(models.Model):
             rec.role_preset_ids = RolePreset.search([])
 
     def action_apply_role_presets(self):
-        """Áp dụng các vai trò mẫu xuống tất cả người dùng được chỉ định"""
+        """Apply role presets to all assigned users"""
         presets = self.env['sgt.erp.role.preset'].search([('active', '=', True)])
         return presets.action_apply_to_users()
 
@@ -230,7 +230,7 @@ class SgtErpConfig(models.Model):
 
     def action_open_backup_manager(self):
         return {
-            'name': _("Quản Lý Sao Lưu (Backup Manager)"),
+            'name': _("Backup Archives"),
             'type': 'ir.actions.act_window',
             'res_model': 'sgt.erp.backup',
             'view_mode': 'list,form',
@@ -238,15 +238,15 @@ class SgtErpConfig(models.Model):
         }
 
     def action_open_backup_schedule(self):
-        """Mở trực tiếp cấu hình Cron Lịch trình sao lưu tự động."""
+        """Open automated backup cron schedule configuration."""
         cron = self.env.ref('sgt_erp_control_center.cron_sgt_erp_automated_backup', raise_if_not_found=False)
         if not cron:
             cron = self.env['ir.cron'].search([('code', 'ilike', 'cron_run_automated_backup')], limit=1)
         if not cron:
-            raise UserError(_("Không tìm thấy tiến trình Cron của tính năng Sao lưu tự động."))
+            raise UserError(_("Automated backup cron job not found."))
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Tùy Chỉnh Lịch Sao Lưu Định Kỳ"),
+            'name': _("Configure Automated Backup Schedule"),
             'res_model': 'ir.cron',
             'res_id': cron.id,
             'view_mode': 'form',
@@ -254,33 +254,33 @@ class SgtErpConfig(models.Model):
         }
 
     def action_trigger_backup_zip(self):
-        """Tạo nhanh bản sao lưu toàn diện (ZIP) từ màn hình Cấu hình Sao lưu."""
+        """Trigger full ZIP backup from Backup Settings."""
         return self.env['sgt.erp.backup'].with_context(backup_type='zip').action_trigger_backup_now()
 
     def action_trigger_backup_dump(self):
-        """Tạo nhanh bản sao lưu SQL Dump từ màn hình Cấu hình Sao lưu."""
+        """Trigger SQL dump backup from Backup Settings."""
         return self.env['sgt.erp.backup'].with_context(backup_type='dump').action_trigger_backup_now()
 
     def action_scan_existing_backups_config(self):
-        """Đồng bộ file sao lưu từ đĩa cứng từ màn hình Cấu hình Sao lưu."""
+        """Synchronize disk backup archives from Backup Settings."""
         return self.env['sgt.erp.backup'].action_scan_existing_backups()
 
     def action_cleanup_old_backups_config(self):
-        """Dọn dẹp bản sao lưu quá hạn từ màn hình Cấu hình Sao lưu."""
+        """Cleanup expired backups from Backup Settings."""
         return self.env['sgt.erp.backup'].action_cleanup_old_backups()
 
     def action_check_backup_status(self):
-        """Kiểm tra trạng thái sao lưu định kỳ và cập nhật thông số Backup (V2)"""
+        """Check backup status and refresh backup health metrics."""
         self.ensure_one()
         latest_backup = self.env['sgt.erp.backup'].search([('state', '=', 'success')], order='backup_date desc', limit=1)
         backup_cron = self.env['ir.cron'].search([('name', 'ilike', 'backup')], limit=1)
         if latest_backup:
             self.backup_last_date = latest_backup.backup_date
             self.backup_status = 'ok'
-            msg = _("Bản sao lưu gần nhất: %(name)s (%(size).2f MB, ngày %(date)s).") % {
+            msg = _("Latest backup archive: %(name)s (%(size).2f MB, created %(date)s).") % {
                 'name': latest_backup.name,
                 'size': latest_backup.file_size_mb,
-                'date': latest_backup.backup_date.strftime('%d/%m/%Y %H:%M:%S') if latest_backup.backup_date else '',
+                'date': latest_backup.backup_date.strftime('%Y-%m-%d %H:%M:%S') if latest_backup.backup_date else '',
             }
         elif backup_cron and backup_cron.active:
             self.backup_status = 'ok'
@@ -374,7 +374,7 @@ class SgtErpConfig(models.Model):
             rec.active_users_count = Users.search_count([('active', '=', True)])
             rec.server_time = fields.Datetime.now()
 
-            # Modules có tiền tố sgt_ hoặc liên quan
+            # SGT-prefixed or related modules
             modules = self.env['ir.module.module'].search([
                 ('name', 'like', 'sgt%'),
                 ('state', '=', 'installed')
@@ -708,16 +708,16 @@ class SgtErpConfig(models.Model):
 
     def action_apply_configuration(self):
         """
-        Áp dụng cấu hình toàn hệ thống theo 10 bước quy định tại Mục 26:
+        Apply entire system configuration following the 10-step protocol:
         1. Validate ERP Config
         2. Apply Branding
         3. Apply Theme
         4. Apply Package
         5. Apply Feature
         6. Apply Workflow Config
-        7. Apply User Permission Preset nếu có
+        7. Apply User Permission Preset if configured
         8. Apply Integration Config
-        9. Clear relevant cache nếu cần
+        9. Clear relevant cache
         10. Reload client
         """
         self.ensure_one()
@@ -737,7 +737,7 @@ class SgtErpConfig(models.Model):
         if self.company_logo:
             company_vals['logo'] = self.company_logo
 
-        # Cập nhật System Parameters cho Web Title và Product Name
+        # Update System Parameters for Web Title and Product Name
         ICP = self.env['ir.config_parameter'].sudo()
         if self.browser_title:
             ICP.set_param('sgt_erp.browser_title', self.browser_title)
@@ -774,7 +774,7 @@ class SgtErpConfig(models.Model):
         else:
             logs.append(_("5. Feature: Synchronized"))
 
-        # Đồng bộ trạng thái Menu của tất cả features
+        # Synchronize menu visibility across all features
         all_features = self.env['sgt.erp.feature'].with_context(active_test=False).search([
             '|', ('company_id', '=', company.id), ('company_id', '=', False)
         ])
@@ -790,7 +790,7 @@ class SgtErpConfig(models.Model):
         ])
         logs.append(_("6. Workflow Config: OK (%d active workflows)") % len(active_workflows))
 
-        # 7. Apply User Permission Preset nếu có
+        # 7. Apply User Permission Preset if configured
         try:
             presets = self.env['sgt.erp.role.preset'].search([('active', '=', True)])
             applied_users = 0
@@ -820,14 +820,14 @@ class SgtErpConfig(models.Model):
         else:
             logs.append(_("8. Integration Config: OK (Google Calendar Disabled)"))
 
-        # 9. Clear relevant cache nếu cần
+        # 9. Clear relevant cache if needed
         try:
             self.env.registry.clear_cache()
             logs.append(_("9. Clear Cache: OK (ORM & Registry cache cleared)"))
         except Exception:
             logs.append(_("9. Clear Cache: Skipped"))
 
-        # 10. Reload client - Ghi log Chatter trước khi reload
+        # 10. Reload client - Post note to Chatter
         log_content = Markup("<ul>") + Markup("").join([Markup("<li><strong>%s</strong></li>") % item for item in logs]) + Markup("</ul>")
         self.message_post(
             body=Markup("<p><strong>[Apply Configuration Executed - 10 Steps]</strong></p>%s") % log_content,

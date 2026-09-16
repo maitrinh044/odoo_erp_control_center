@@ -11,7 +11,7 @@ class TestSgtErpRoleAndSecurity(TransactionCase):
         cls.User = cls.env['res.users']
 
     def test_01_seven_role_presets_exist(self):
-        """Kiểm tra 7 vai trò mẫu chuẩn theo đặc tả"""
+        """Verify 7 standard role presets exist as specified."""
         expected_roles = [
             'erp_admin',
             'manager',
@@ -27,14 +27,14 @@ class TestSgtErpRoleAndSecurity(TransactionCase):
             self.assertIn(expected, codes, f"Role preset '{expected}' must exist!")
 
     def test_02_auto_map_standard_groups(self):
-        """Kiểm tra tự động phát hiện và ánh xạ nhóm quyền Odoo"""
+        """Verify automatic detection and mapping of standard Odoo groups."""
         sales_user = self.RolePreset.search([('code', '=', 'sales_user')], limit=1)
         self.assertTrue(sales_user)
         sales_user.action_auto_map_standard_groups()
         self.assertTrue(len(sales_user.group_ids) > 0, "Sales user preset should map standard groups")
 
     def test_03_assign_user_to_role_preset(self):
-        """Kiểm tra gán người dùng vào vai trò và đồng bộ nhóm quyền"""
+        """Verify assigning a user to a role preset and syncing groups."""
         viewer_preset = self.RolePreset.search([('code', '=', 'viewer')], limit=1)
         test_user = self.env.ref('base.user_admin')
         test_user.write({'role_preset_id': viewer_preset.id})
@@ -42,12 +42,12 @@ class TestSgtErpRoleAndSecurity(TransactionCase):
         self.assertIn(test_user, viewer_preset.user_ids)
         self.assertEqual(viewer_preset.user_count, len(viewer_preset.user_ids))
         
-        # Kiểm tra action_apply_to_users
+        # Test action_apply_to_users
         res = viewer_preset.action_apply_to_users()
         self.assertEqual(res.get('params', {}).get('type'), 'success')
 
     def test_04_permission_matrix_sync(self):
-        """Kiểm tra đồng bộ ma trận phân quyền sang ir.model.access"""
+        """Verify syncing permission matrix to ir.model.access."""
         partner_model = self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1)
         role = self.RolePreset.create({'name': 'Test Matrix Role', 'code': 'test_matrix_role'})
         
@@ -63,7 +63,7 @@ class TestSgtErpRoleAndSecurity(TransactionCase):
         self.assertEqual(res.get('params', {}).get('type'), 'success')
 
     def test_05_data_scope_field_and_rules_generation(self):
-        """Kiểm tra cấu hình data_scope và tự động sinh Record Rules cho sale.order & crm.lead"""
+        """Verify data_scope configuration and automatic generation of record rules for sale.order & crm.lead."""
         erp_admin = self.RolePreset.search([('code', '=', 'erp_admin')], limit=1)
         sales_manager = self.RolePreset.search([('code', '=', 'sales_manager')], limit=1)
         sales_user = self.RolePreset.search([('code', '=', 'sales_user')], limit=1)
@@ -81,25 +81,25 @@ class TestSgtErpRoleAndSecurity(TransactionCase):
         self.assertIn('sale.order', models_covered)
         self.assertIn('crm.lead', models_covered)
 
-        # Kiểm tra domain của own scope
+        # Verify domain of own scope
         sale_rule_own = sales_user.rule_ids.filtered(lambda r: r.model_id.model == 'sale.order')
         self.assertIn('user_id', sale_rule_own.domain_force)
 
-        # Chuyển data_scope sang team và kiểm tra cập nhật
+        # Switch data_scope to team and verify update
         sales_user.write({'data_scope': 'team'})
         sale_rule_team = sales_user.rule_ids.filtered(lambda r: r.model_id.model == 'sale.order')
         self.assertIn('team_id', sale_rule_team.domain_force)
 
-        # Chuyển data_scope sang all và kiểm tra cập nhật
+        # Switch data_scope to all and verify update
         sales_user.write({'data_scope': 'all'})
         sale_rule_all = sales_user.rule_ids.filtered(lambda r: r.model_id.model == 'sale.order')
         self.assertIn("(1, '=', 1)", sale_rule_all.domain_force)
 
-        # Khôi phục lại own
+        # Restore own scope
         sales_user.write({'data_scope': 'own'})
 
     def test_06_data_scope_assignment_and_record_filtering(self):
-        """Kiểm tra gán preset có data_scope cho user và chuyển đổi vai trò"""
+        """Verify assigning preset with data_scope to user and role transitions."""
         sales_user = self.RolePreset.search([('code', '=', 'sales_user')], limit=1)
         sales_manager = self.RolePreset.search([('code', '=', 'sales_manager')], limit=1)
 
@@ -113,10 +113,10 @@ class TestSgtErpRoleAndSecurity(TransactionCase):
             'role_preset_id': sales_user.id,
         })
 
-        # Test user tự động có security_group_id của sales_user
+        # Test user automatically gets sales_user security_group_id
         self.assertIn(sales_user.security_group_id, test_user.group_ids)
 
-        # Đổi vai trò sang sales_manager
+        # Change role to sales_manager
         test_user.write({'role_preset_id': sales_manager.id})
         self.assertNotIn(sales_user.security_group_id, test_user.group_ids, "Old role scope group should be removed")
         self.assertIn(sales_manager.security_group_id, test_user.group_ids, "New role scope group should be added")

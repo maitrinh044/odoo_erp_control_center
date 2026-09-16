@@ -51,13 +51,13 @@
                                                decoration-warning="backup_status == 'warning'" 
                                                decoration-danger="backup_status == 'none'"/>
                                     </span>
-                                    <span class="o_stat_text">Trạng Thái</span>
+                                    <span class="o_stat_text">Status</span>
                                 </div>
                             </button>
                             <button class="oe_stat_button" icon="fa-database" type="object" name="action_open_backup_manager">
                                 <div class="o_stat_info">
                                     <span class="o_stat_value"><field name="backup_count"/></span>
-                                    <span class="o_stat_text">Bản Sao Lưu</span>
+                                    <span class="o_stat_text">Backup Archives</span>
                                 </div>
                             </button>
                         </div>
@@ -211,7 +211,7 @@
                                         <field name="backup_last_date"/>
                                         <field name="backup_count"/>
                                         <div class="mt-2">
-                                            <button name="action_open_backup_manager" string="Mở Quản Lý Sao Lưu (Mục 10)" type="object" class="btn btn-outline-primary btn-sm" icon="fa-database"/>
+                                            <button name="action_open_backup_manager" string="Open Backup Management (Menu 10)" type="object" class="btn btn-outline-primary btn-sm" icon="fa-database"/>
                                         </div>
                                     </group>
                                     <group string="Host Platform Stack">

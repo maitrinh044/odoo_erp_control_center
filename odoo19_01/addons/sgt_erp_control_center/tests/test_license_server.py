@@ -11,7 +11,7 @@ class TestSgtErpLicenseServer(TransactionCase):
         cls.License = cls.env['sgt.erp.license']
 
     def test_01_license_local_verification(self):
-        """Kiểm tra xác thực giấy phép ở chế độ cục bộ (Offline)"""
+        """Test license verification in local mode (Offline)"""
         lic = self.License.create({
             'name': 'Local Enterprise License',
             'customer_name': 'Saigon Trade Test Corp',
@@ -24,7 +24,7 @@ class TestSgtErpLicenseServer(TransactionCase):
         self.assertEqual(lic.status, 'active')
 
     def test_02_license_online_verification(self):
-        """Kiểm tra xác thực giấy phép ở chế độ trực tuyến (Online License Server)"""
+        """Test license verification in online mode (Online License Server)"""
         lic = self.License.create({
             'name': 'Online Enterprise License',
             'customer_name': 'Saigon Trade Test Corp',
@@ -37,10 +37,10 @@ class TestSgtErpLicenseServer(TransactionCase):
         self.assertTrue(lic.last_sync_date)
 
     def test_03_license_expiration_warning(self):
-        """Kiểm tra tự động tính toán cảnh báo thời hạn giấy phép"""
+        """Test automatic expiration warning calculation"""
         today = fields.Date.context_today(self.env.user)
         
-        # 1. Bản quyền hết hạn
+        # 1. Expired license
         expired_lic = self.License.create({
             'name': 'Expired License',
             'customer_name': 'Expired Corp',
@@ -50,7 +50,7 @@ class TestSgtErpLicenseServer(TransactionCase):
         self.assertTrue(expired_lic.license_warning)
         self.assertIn("WARNING: License has expired", expired_lic.license_warning)
 
-        # 2. Bản quyền sắp hết hạn (dưới 15 ngày)
+        # 2. Expiring license (under 15 days)
         expiring_lic = self.License.create({
             'name': 'Expiring License',
             'customer_name': 'Expiring Corp',
@@ -61,10 +61,10 @@ class TestSgtErpLicenseServer(TransactionCase):
         self.assertIn("ATTENTION: License will expire in 5 days", expiring_lic.license_warning)
 
     def test_04_automatic_status_update_on_expiration_date(self):
-        """Kiểm tra tự động chuyển status sang 'expired' hoặc 'expiring' khi sửa ngày hết hạn"""
+        """Test automatic status update to 'expired' or 'expiring' on expiration date changes"""
         today = fields.Date.context_today(self.env.user)
 
-        # Tạo giấy phép ban đầu còn hạn
+        # Create license with future expiration date
         lic = self.License.create({
             'name': 'Dynamic Status License',
             'customer_name': 'Dynamic Corp',
@@ -72,14 +72,14 @@ class TestSgtErpLicenseServer(TransactionCase):
         })
         self.assertEqual(lic.status, 'active')
 
-        # Đổi ngày sang quá khứ (ví dụ 1/9/2026) -> status phải tự động đổi sang 'expired'
+        # Change date to the past -> status must automatically update to 'expired'
         lic.expiration_date = today - timedelta(days=3)
-        self.assertEqual(lic.status, 'expired', "Trạng thái phải tự động nhảy sang 'expired' khi ngày hết hạn ở quá khứ")
+        self.assertEqual(lic.status, 'expired', "Status must automatically update to 'expired' when expiration date is in the past")
 
-        # Đổi ngày sang sắp hết hạn (< 15 ngày) -> status phải tự động đổi sang 'expiring'
+        # Change date to near future (< 15 days) -> status must automatically update to 'expiring'
         lic.expiration_date = today + timedelta(days=7)
-        self.assertEqual(lic.status, 'expiring', "Trạng thái phải tự động nhảy sang 'expiring' khi còn dưới 15 ngày")
+        self.assertEqual(lic.status, 'expiring', "Status must automatically update to 'expiring' when under 15 days remain")
 
-        # Đổi ngày sang dài hạn (> 15 ngày) -> status phải tự động đổi sang 'active'
+        # Change date to long-term (> 15 days) -> status must automatically revert to 'active'
         lic.expiration_date = today + timedelta(days=90)
-        self.assertEqual(lic.status, 'active', "Trạng thái phải tự động quay lại 'active' khi gia hạn dài hạn")
+        self.assertEqual(lic.status, 'active', "Status must automatically revert to 'active' when renewed long-term")

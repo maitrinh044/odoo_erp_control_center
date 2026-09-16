@@ -66,18 +66,18 @@ function previewThemeAction(env, action) {
     if (env.services && env.services.notification) {
         if (isReset) {
             env.services.notification.add(
-                `Đã thoát chế độ xem trước và khôi phục về theme chính thức: "${themeName}".`,
+                `Exited preview mode and restored active theme: "${themeName}".`,
                 {
-                    title: `Khôi Phục Giao Diện`,
+                    title: `Theme Restored`,
                     type: "success",
                     sticky: false,
                 }
             );
         } else {
             env.services.notification.add(
-                `Đang xem trước trực tiếp theme "${themeName}"! Bấm nút "Exit Preview (Hoàn tác)" trên thanh công cụ để khôi phục theme cũ.`,
+                `Live preview active for "${themeName}"! Click "Exit Preview (Revert)" on the toolbar to restore previous theme.`,
                 {
-                    title: `Xem Trước Theme: ${themeName}`,
+                    title: `Theme Preview: ${themeName}`,
                     type: "info",
                     sticky: false,
                 }

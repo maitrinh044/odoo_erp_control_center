@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 class SgtErpSetupWizard(models.TransientModel):
     _name = 'sgt.erp.setup.wizard'
@@ -16,7 +17,7 @@ class SgtErpSetupWizard(models.TransientModel):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     
     # Step 1: Business & Brand
-    customer_name = fields.Char(string='Customer / Business Name', required=True, default='Doanh Nghiệp Mẫu')
+    customer_name = fields.Char(string='Customer / Business Name', required=True, default='Example Enterprise')
     product_name = fields.Char(string='ERP Product Name', default='SGT ERP', required=True)
     customer_code = fields.Char(string='Customer Code', default='SGT-PRO')
     industry = fields.Selection([
@@ -56,7 +57,7 @@ class SgtErpSetupWizard(models.TransientModel):
         for rec in self:
             if rec.package_id and rec.package_id.feature_ids:
                 feature_names = rec.package_id.feature_ids.mapped('name')
-                rec.package_features_summary = f"{len(feature_names)} tính năng: " + ", ".join(feature_names[:8]) + ("..." if len(feature_names) > 8 else "")
+                rec.package_features_summary = f"{len(feature_names)} features: " + ", ".join(feature_names[:8]) + ("..." if len(feature_names) > 8 else "")
             else:
                 rec.package_features_summary = _("No features selected in package.")
 
@@ -70,13 +71,13 @@ class SgtErpSetupWizard(models.TransientModel):
 
     def action_goto_step3(self):
         if not self.package_id:
-            raise UserError(_("Vui lòng chọn một Gói phần mềm trước khi tiếp tục!"))
+            raise UserError(_("Please select an ERP Package before proceeding!"))
         self.state = 'step3'
         return self._reopen_self()
 
     def action_goto_step4(self):
         if not self.theme_id:
-            raise UserError(_("Vui lòng chọn một Giao diện trước khi tiếp tục!"))
+            raise UserError(_("Please select a Theme before proceeding!"))
         self.state = 'step4'
         return self._reopen_self()
 
@@ -94,7 +95,7 @@ class SgtErpSetupWizard(models.TransientModel):
         }
 
     def action_apply_quick_setup(self):
-        """Kích hoạt và triển khai cấu hình hệ thống từ Wizard"""
+        """Activate and deploy system configuration from Wizard"""
         self.ensure_one()
         Config = self.env['sgt.erp.config']
         config = Config.search([('company_id', '=', self.company_id.id)], limit=1)
@@ -119,7 +120,7 @@ class SgtErpSetupWizard(models.TransientModel):
         else:
             config = Config.create(vals)
 
-        # Gán role preset nếu có chọn
+        # Assign role preset if selected
         if self.role_preset_id:
             self.role_preset_id.write({'user_ids': [(4, self.env.user.id)]})
             self.role_preset_id.action_apply_to_users()

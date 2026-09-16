@@ -172,7 +172,7 @@ class SgtErpTheme(models.Model):
         return mapping.get(self.font_family, mapping['inter'])
 
     def get_css_variables(self):
-        """Trả về dictionary chứa CSS variables để frontend inject vào DOM root"""
+        """Return dictionary containing CSS variables for frontend DOM root injection"""
         self.ensure_one()
         shadow_map = {
             'none': 'none',
@@ -257,7 +257,7 @@ class SgtErpTheme(models.Model):
         }
 
     def action_preview_theme(self):
-        """Kích hoạt preview giao diện trực quan theo Mục 9 - Áp dụng trực tiếp biến CSS lên giao diện hiện hành"""
+        """Activate live visual theme preview - directly apply CSS variables to active session"""
         self.ensure_one()
         return {
             'type': 'ir.actions.client',
@@ -270,7 +270,7 @@ class SgtErpTheme(models.Model):
         }
 
     def action_reset_preview(self):
-        """Khôi phục lại giao diện theo Theme đang kích hoạt của Công ty hiện hành"""
+        """Revert visual preview to current company active theme"""
         company = self.env.company
         active_theme = company.erp_theme_id or self.search([('style', '=', 'default')], limit=1)
         if not active_theme:
@@ -286,7 +286,7 @@ class SgtErpTheme(models.Model):
         }
 
     def action_create_from_preset(self):
-        """Nhân bản theme mới từ preset theo Mục 10"""
+        """Clone theme preset into a customizable theme"""
         self.ensure_one()
         new_theme = self.copy({'name': f"{self.name} (Custom Copy)"})
         return {

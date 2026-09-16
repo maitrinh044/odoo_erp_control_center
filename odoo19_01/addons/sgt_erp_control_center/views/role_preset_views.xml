@@ -16,7 +16,7 @@
                     <field name="code"/>
                     <field name="data_scope" widget="badge" decoration-success="data_scope == 'all'" decoration-warning="data_scope == 'team'" decoration-info="data_scope == 'own'"/>
                     <field name="user_count" string="Assigned Users" decoration-bf="1"/>
-                    <field name="matrix_count" string="Quyền đối tượng" widget="badge" decoration-primary="1"/>
+                    <field name="matrix_count" string="Matrix Permissions" widget="badge" decoration-primary="1"/>
                     <field name="group_ids" widget="many2many_tags"/>
                     <field name="active" widget="boolean_toggle"/>
                 </list>
@@ -29,7 +29,7 @@
             <field name="arch" type="xml">
                 <form string="User &amp; Permission Preset">
                     <header>
-                        <button name="action_open_add_module_wizard" string="Thêm nhanh theo Module" type="object" class="oe_highlight btn-primary" icon="fa-plus-circle"/>
+                        <button name="action_open_add_module_wizard" string="Quick Add by Module" type="object" class="oe_highlight btn-primary" icon="fa-plus-circle"/>
                         <button name="action_apply_to_users" string="Apply Permissions to Users" type="object" class="btn btn-secondary" icon="fa-users"/>
                         <button name="action_sync_record_rules" string="Sync Record Rules" type="object" class="btn btn-secondary" icon="fa-shield"/>
                         <button name="action_auto_map_standard_groups" string="Auto-Detect Groups" type="object" class="btn btn-secondary" icon="fa-magic"/>
@@ -57,11 +57,11 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Ma trận Phân quyền (Permission Matrix)" name="permission_matrix">
+                            <page string="Permission Matrix" name="permission_matrix">
                                 <field name="permission_matrix_ids">
-                                    <list string="Ma trận Quyền hạn" editable="bottom">
-                                        <field name="module_shortdesc" readonly="1" string="Phân hệ"/>
-                                        <field name="model_id" options="{'no_create': True}" string="Đối tượng (Model)"/>
+                                    <list string="Permission Matrix" editable="bottom">
+                                        <field name="module_shortdesc" readonly="1" string="Module"/>
+                                        <field name="model_id" options="{'no_create': True}" string="Model"/>
                                         <field name="model_name" optional="hide"/>
                                         <field name="model_type" widget="badge" decoration-success="model_type == 'primary'" decoration-muted="model_type == 'config'"/>
                                         <field name="perm_read" widget="boolean_toggle"/>
@@ -117,7 +117,7 @@
             <field name="view_mode">list,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Quản lý các mẫu vai trò (Role Preset: ERP Administrator, Manager, Sales Manager, Sales User, HR Manager, HR User, Viewer) và ánh xạ với nhóm quyền Odoo.
+                    Manage role presets (ERP Administrator, Manager, Sales Manager, Sales User, HR Manager, HR User, Viewer) and map them to Odoo security groups.
                 </p>
             </field>
         </record>

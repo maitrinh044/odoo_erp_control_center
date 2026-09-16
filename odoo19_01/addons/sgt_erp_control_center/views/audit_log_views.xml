@@ -81,7 +81,7 @@
             <field name="search_view_id" ref="view_sgt_erp_audit_log_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Chưa có nhật ký thay đổi cấu hình nào được ghi nhận.
+                    No configuration audit logs recorded yet.
                 </p>
             </field>
         </record>

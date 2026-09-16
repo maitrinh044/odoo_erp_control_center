@@ -12,7 +12,7 @@ class TestSgtErpIntegrationAndWebhook(HttpCase):
         cls.company = cls.env.company
 
     def test_01_google_connection_mock_and_disabled(self):
-        """Kiểm tra xử lý Google Calendar disabled, missing và mock credentials"""
+        """Test Google Calendar disabled, missing, and mock credentials handling"""
         config = self.Config.search([('company_id', '=', self.company.id)], limit=1)
         if not config:
             config = self.Config.create({
@@ -46,7 +46,7 @@ class TestSgtErpIntegrationAndWebhook(HttpCase):
         self.assertEqual(res.get('params', {}).get('type'), 'success')
 
     def test_02_integration_manager_test_connection(self):
-        """Kiểm tra action_test_connection trên sgt.erp.integration"""
+        """Test action_test_connection on sgt.erp.integration"""
         # Test Google Calendar integration with mock
         integration_google = self.Integration.create({
             'name': 'Google Calendar Sync',
@@ -69,9 +69,9 @@ class TestSgtErpIntegrationAndWebhook(HttpCase):
         self.assertEqual(integration_webhook.status, 'connected')
 
     def test_03_webhook_controller_endpoints(self):
-        """Kiểm tra các endpoint Webhook Controller (/sgt_erp/webhook/ping và /sgt_erp/webhook/<token>)"""
-        # 1. Test ping route
-        ping_res = self.url_open('/sgt_erp/webhook/ping')
+        """Test Webhook Controller endpoints (/sgt_erp/webhook/ping and /sgt_erp/webhook/<token>)"""
+        # 1. Test ping route (with generous timeout to allow route mapping compilation)
+        ping_res = self.url_open('/sgt_erp/webhook/ping', timeout=30)
         self.assertEqual(ping_res.status_code, 200)
         ping_data = json.loads(ping_res.text)
         self.assertEqual(ping_data.get('status'), 'active')
@@ -87,7 +87,7 @@ class TestSgtErpIntegrationAndWebhook(HttpCase):
         })
 
         # 3. Test valid webhook invocation
-        res = self.url_open(f'/sgt_erp/webhook/{webhook_token}')
+        res = self.url_open(f'/sgt_erp/webhook/{webhook_token}', timeout=30)
         self.assertEqual(res.status_code, 200)
         res_data = json.loads(res.text)
         self.assertEqual(res_data.get('status'), 'success')
@@ -99,7 +99,7 @@ class TestSgtErpIntegrationAndWebhook(HttpCase):
         self.assertTrue(integration.last_check)
 
         # 4. Test invalid token returns 404
-        res_invalid = self.url_open('/sgt_erp/webhook/non_existent_token_000')
+        res_invalid = self.url_open('/sgt_erp/webhook/non_existent_token_000', timeout=30)
         self.assertEqual(res_invalid.status_code, 404)
         invalid_data = json.loads(res_invalid.text)
         self.assertEqual(invalid_data.get('error'), 'invalid_token')

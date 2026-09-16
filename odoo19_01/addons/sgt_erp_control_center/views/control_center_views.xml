@@ -82,7 +82,7 @@ action = {
 
                         <!-- Module Status Cards Section -->
                         <div class="card p-3 mb-4 shadow-sm border-0 bg-light">
-                            <h5 class="fw-bold mb-3 text-secondary"><i class="fa fa-th-large me-2"></i>Chức Năng &amp; Trạng Thái Vận Hành (Quick Status)</h5>
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="fa fa-th-large me-2"></i>Features &amp; Operational Quick Status</h5>
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <div class="p-3 bg-white rounded border d-flex justify-content-between align-items-center">
@@ -196,7 +196,7 @@ action = {
 
                             <page string="Approval Configuration" name="approvals">
                                 <div class="alert alert-info py-2 mb-3" role="status">
-                                    <i class="fa fa-info-circle me-1" title="Info"/> <strong>Khu vực Quản lý Phê duyệt (Mục 15):</strong> Tổng hợp các quy tắc phê duyệt đa cấp, sự kiện kích hoạt (trigger), nhóm duyệt và hạn mức ngân sách áp dụng cho công ty.
+                                    <i class="fa fa-info-circle me-1" title="Info"/> <strong>Approval Management:</strong> Overview of multi-level approval rules, triggers, approver groups, and monetary thresholds applied to the company.
                                 </div>
                                 <field name="approval_workflow_ids" readonly="1">
                                     <list string="Approval Rules" decoration-muted="not active">
@@ -219,7 +219,7 @@ action = {
                                 <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
                                     <i class="fa fa-users fa-2x me-3" title="Users"/>
                                     <div>
-                                        <strong>User &amp; Permission Presets:</strong> Quản lý các vai trò chuẩn (ERP Administrator, Manager, Sales Manager, Sales User, HR Manager, HR User, Viewer) và phân bổ quyền cho người dùng hệ thống.
+                                        <strong>User &amp; Permission Presets:</strong> Manage standardized roles (ERP Administrator, Manager, Sales Manager, Sales User, HR Manager, HR User, Viewer) and assign group rights to system users.
                                     </div>
                                 </div>
                                 <div class="mb-3">

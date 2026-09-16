@@ -2,10 +2,10 @@
 <odoo>
     <data noupdate="1">
         <record id="default_erp_config_main" model="sgt.erp.config">
-            <field name="name">Cấu Hình ERP Mặc Định</field>
+            <field name="name">Default ERP Configuration</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="product_name">SGT ERP</field>
-            <field name="customer_name">Doanh Nghiệp Tiêu Chuẩn</field>
+            <field name="customer_name">Standard Enterprise</field>
             <field name="customer_code">SGT-MAIN</field>
             <field name="industry">trading</field>
             <field name="package_id" ref="package_business"/>

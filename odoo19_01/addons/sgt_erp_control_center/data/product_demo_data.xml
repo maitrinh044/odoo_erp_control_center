@@ -2,10 +2,10 @@
 <odoo>
     <data noupdate="0">
         <!-- ========================================================= -->
-        <!-- GROUP 1: THIẾT BỊ CÔNG NGHỆ & VĂN PHÒNG (15 SẢN PHẨM)      -->
+        <!-- GROUP 1: IT & OFFICE HARDWARE (15 PRODUCTS)                -->
         <!-- ========================================================= -->
         <record id="product_demo_it_lap_001" model="product.template">
-            <field name="name">Laptop Dell Latitude 5440 (i7-1365U / 16GB / 512GB SSD / 14 inch FHD)</field>
+            <field name="name">Dell Latitude 5440 Laptop (i7-1365U / 16GB / 512GB SSD / 14-inch FHD)</field>
             <field name="default_code">IT-LAP-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -14,11 +14,11 @@
             <field name="standard_price">20500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Laptop doanh nghiệp chuẩn quân đội, bảo mật vân tay và TPM 2.0, bảo hành 3 năm ProSupport.</field>
+            <field name="description_sale">Military-grade enterprise laptop with fingerprint reader, TPM 2.0, and 3-year ProSupport warranty.</field>
         </record>
 
         <record id="product_demo_it_lap_002" model="product.template">
-            <field name="name">Laptop Lenovo ThinkPad T14 Gen 4 (Core i5-1335U / 16GB / 512GB)</field>
+            <field name="name">Lenovo ThinkPad T14 Gen 4 Laptop (Core i5-1335U / 16GB / 512GB)</field>
             <field name="default_code">IT-LAP-002</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -27,7 +27,7 @@
             <field name="standard_price">23200000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Bàn phím chống tràn trứ danh, màn hình IPS 400 nits chống lóa, thời lượng pin 12 giờ.</field>
+            <field name="description_sale">Spill-resistant keyboard, 400 nits anti-glare IPS display, and 12-hour battery life.</field>
         </record>
 
         <record id="product_demo_it_lap_003" model="product.template">
@@ -40,11 +40,11 @@
             <field name="standard_price">38500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Dành cho cấp quản lý và kỹ sư lập trình, màn hình Liquid Retina XDR 120Hz ProMotion.</field>
+            <field name="description_sale">Engineered for executives and software developers with 120Hz Liquid Retina XDR display.</field>
         </record>
 
         <record id="product_demo_it_pc_001" model="product.template">
-            <field name="name">Máy tính để bàn Dell OptiPlex 7010 Tower (i5-13500 / 16GB / 512GB SSD / Win 11 Pro)</field>
+            <field name="name">Dell OptiPlex 7010 Tower Desktop (i5-13500 / 16GB / 512GB SSD / Win 11 Pro)</field>
             <field name="default_code">IT-PC-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -53,11 +53,11 @@
             <field name="standard_price">13800000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Thùng máy đồng bộ văn phòng hoạt động bền bỉ 24/7, kèm chuột và bàn phím quang chính hãng.</field>
+            <field name="description_sale">24/7 business desktop workstation with genuine Dell optical mouse and keyboard.</field>
         </record>
 
         <record id="product_demo_it_mon_001" model="product.template">
-            <field name="name">Màn hình chuyên nghiệp Dell UltraSharp U2724D (27 inch / IPS Black / 2K QHD 120Hz)</field>
+            <field name="name">Dell UltraSharp U2724D Professional Monitor (27 inch / IPS Black / 2K QHD 120Hz)</field>
             <field name="default_code">IT-MON-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -66,11 +66,11 @@
             <field name="standard_price">8500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Độ chuẩn màu 98% DCI-P3, chân đế xoay 90 độ công thái học, cổng kết nối Type-C 90W.</field>
+            <field name="description_sale">98% DCI-P3 color accuracy, 90-degree pivot ergonomic stand, and 90W USB Type-C hub.</field>
         </record>
 
         <record id="product_demo_it_mon_002" model="product.template">
-            <field name="name">Màn hình văn phòng LG 24QP500-B (24 inch / IPS / 2K QHD / 75Hz / HDR10)</field>
+            <field name="name">LG 24QP500-B Office Monitor (24 inch / IPS / 2K QHD / 75Hz / HDR10)</field>
             <field name="default_code">IT-MON-002</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -79,11 +79,11 @@
             <field name="standard_price">3600000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Màn hình viền siêu mỏng hiển thị sắc nét cho nhân viên văn phòng và kế toán.</field>
+            <field name="description_sale">Ultra-thin bezel crisp display for administrative and accounting professionals.</field>
         </record>
 
         <record id="product_demo_it_pri_001" model="product.template">
-            <field name="name">Máy in laser đa chức năng HP LaserJet Pro MFP M428fdw (In 2 mặt / Scan / Copy / Fax / WiFi)</field>
+            <field name="name">HP LaserJet Pro MFP M428fdw Multi-function Laser Printer (Duplex / Scan / Copy / Fax / WiFi)</field>
             <field name="default_code">IT-PRI-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -92,11 +92,11 @@
             <field name="standard_price">9600000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Tốc độ in 38 trang/phút, khay nạp tài liệu tự động ADF 50 tờ, kết nối mạng LAN và WiFi Direct.</field>
+            <field name="description_sale">38 ppm print speed, 50-sheet auto document feeder (ADF), Gigabit LAN, and WiFi Direct.</field>
         </record>
 
         <record id="product_demo_it_pri_002" model="product.template">
-            <field name="name">Máy in phun màu Epson EcoTank L3250 (In / Scan / Copy / WiFi / Bình mực liên tục)</field>
+            <field name="name">Epson EcoTank L3250 Color Inkjet Printer (Print / Scan / Copy / WiFi / Continuous Ink Tank)</field>
             <field name="default_code">IT-PRI-002</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -105,11 +105,11 @@
             <field name="standard_price">4000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Hệ thống bình mực ngoài tiết kiệm chi phí, in màu sắc nét cho báo cáo thuyết trình.</field>
+            <field name="description_sale">Cost-efficient refillable ink tank system with vibrant color output for business reports.</field>
         </record>
 
         <record id="product_demo_it_net_001" model="product.template">
-            <field name="name">Switch mạng Cisco Catalyst 1000 Series 24 Cổng Gigabit Ethernet PoE+ (C1000-24P-4G-L)</field>
+            <field name="name">Cisco Catalyst 1000 Series 24-Port Gigabit Ethernet PoE+ Switch (C1000-24P-4G-L)</field>
             <field name="default_code">IT-NET-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -118,11 +118,11 @@
             <field name="standard_price">15300000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Bộ chuyển mạch doanh nghiệp cấp nguồn PoE cho điện thoại IP và camera an ninh, 4 cổng SFP Uplink.</field>
+            <field name="description_sale">Enterprise PoE+ managed switch for IP telephony and surveillance cameras with 4 SFP uplinks.</field>
         </record>
 
         <record id="product_demo_it_net_002" model="product.template">
-            <field name="name">Bộ phát sóng WiFi 6 Aruba Instant On AP22 (Dual Band AX1800 / Quản lý đám mây)</field>
+            <field name="name">Aruba Instant On AP22 WiFi 6 Access Point (Dual Band AX1800 / Cloud Managed)</field>
             <field name="default_code">IT-NET-002</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -131,11 +131,11 @@
             <field name="standard_price">4100000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Chịu tải 75+ người dùng đồng thời, Mesh thông minh và phân tách mạng Guest bảo mật cao.</field>
+            <field name="description_sale">High-density 75+ client capacity, intelligent mesh routing, and isolated secure guest network.</field>
         </record>
 
         <record id="product_demo_it_srv_001" model="product.template">
-            <field name="name">Máy chủ Dell PowerEdge R750xs (2x Intel Xeon Silver 4310 / 64GB DDR4 ECC / 2x 960GB SSD Enterprise)</field>
+            <field name="name">Dell PowerEdge R750xs Server (2x Intel Xeon Silver 4310 / 64GB DDR4 ECC / 2x 960GB SSD Enterprise)</field>
             <field name="default_code">IT-SRV-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -144,11 +144,11 @@
             <field name="standard_price">76000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Máy chủ dạng Rack 2U chuyên dụng triển khai cơ sở dữ liệu Odoo ERP, nguồn kép Redundant 800W.</field>
+            <field name="description_sale">2U rackmount enterprise server optimized for Odoo ERP databases with dual 800W redundant PSUs.</field>
         </record>
 
         <record id="product_demo_it_acc_001" model="product.template">
-            <field name="name">Bàn phím cơ không dây Logitech MX Mechanical Wireless (Tactile Quiet Switch / Đèn nền thông minh)</field>
+            <field name="name">Logitech MX Mechanical Wireless Keyboard (Tactile Quiet Switch / Smart Backlight)</field>
             <field name="default_code">IT-ACC-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -157,11 +157,11 @@
             <field name="standard_price">2850000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Bàn phím cơ low-profile độ nảy êm ái, kết nối đa thiết bị Easy-Switch qua Bluetooth và Logi Bolt.</field>
+            <field name="description_sale">Low-profile mechanical keys, multi-device Easy-Switch pairing via Bluetooth and Logi Bolt.</field>
         </record>
 
         <record id="product_demo_it_acc_002" model="product.template">
-            <field name="name">Chuột công thái học cao cấp Logitech MX Master 3S (Cảm biến 8000 DPI / Cuộn từ MagSpeed)</field>
+            <field name="name">Logitech MX Master 3S Ergonomic Mouse (8000 DPI Sensor / MagSpeed Scrolling)</field>
             <field name="default_code">IT-ACC-002</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -170,11 +170,11 @@
             <field name="standard_price">1850000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Nút click giảm 90% tiếng ồn Quiet Clicks, cuộn siêu nhanh 1000 dòng/giây.</field>
+            <field name="description_sale">Quiet Clicks acoustic dampening with 1,000 lines/sec ultra-fast electromagnetic scroll wheel.</field>
         </record>
 
         <record id="product_demo_it_acc_003" model="product.template">
-            <field name="name">Tai nghe chống ồn chủ động Sony WH-1000XM5 (Mic AI lọc tạp âm / Pin 30 giờ)</field>
+            <field name="name">Sony WH-1000XM5 Active Noise Cancelling Headphones (AI Beamforming Mic / 30h Battery)</field>
             <field name="default_code">IT-ACC-003</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -183,11 +183,11 @@
             <field name="standard_price">6700000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Phục vụ hội họp online quốc tế và làm việc tập trung cao độ tại văn phòng mở.</field>
+            <field name="description_sale">Premium active noise cancellation for international video conferences and focused deep work.</field>
         </record>
 
         <record id="product_demo_it_prj_001" model="product.template">
-            <field name="name">Máy chiếu văn phòng Epson EB-FH52 (Full HD 1080p / Độ sáng 4.000 Ansi Lumens / Tích hợp Miracast)</field>
+            <field name="name">Epson EB-FH52 Office Projector (Full HD 1080p / 4,000 Ansi Lumens / Built-in Miracast)</field>
             <field name="default_code">IT-PRJ-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -196,14 +196,14 @@
             <field name="standard_price">19800000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Máy chiếu phòng họp lớn hiển thị sắc nét trong môi trường phòng bật sáng, tuổi thọ bóng đèn 12.000 giờ.</field>
+            <field name="description_sale">High-brightness conference room projector with crystal-clear daylight visibility and 12,000h lamp life.</field>
         </record>
 
         <!-- ========================================================= -->
-        <!-- GROUP 2: NỘI THẤT & TIỆN ÍCH VĂN PHÒNG (10 SẢN PHẨM)         -->
+        <!-- GROUP 2: OFFICE FURNITURE & UTILITIES (10 PRODUCTS)       -->
         <!-- ========================================================= -->
         <record id="product_demo_fur_dsk_001" model="product.template">
-            <field name="name">Bàn làm việc nâng hạ thông minh Ergoto Pro 1m6 (2 Động cơ điện / Mặt bàn Gỗ MDF Chống trầy)</field>
+            <field name="name">Ergoto Pro 1.6m Electric Standing Desk (Dual Motor / Anti-scratch MDF Desktop)</field>
             <field name="default_code">FUR-DSK-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -212,11 +212,11 @@
             <field name="standard_price">6800000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Điều chỉnh độ cao từ 62cm đến 127cm, bảng điều khiển cảm ứng nhớ 4 vị trí độ cao.</field>
+            <field name="description_sale">Height adjustable from 62cm to 127cm with 4 programmable memory presets and digital display.</field>
         </record>
 
         <record id="product_demo_fur_chr_001" model="product.template">
-            <field name="name">Ghế công thái học cao cấp Herman Miller Aeron (Size B / Lưới Pellicle 8Z / Khung nhôm Polished)</field>
+            <field name="name">Herman Miller Aeron Premium Ergonomic Chair (Size B / 8Z Pellicle Mesh / Polished Aluminum)</field>
             <field name="default_code">FUR-CHR-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -225,11 +225,11 @@
             <field name="standard_price">26500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Ghế công thái học số 1 thế giới bảo vệ cột sống, hỗ trợ PostureFit SL điều chỉnh độc lập.</field>
+            <field name="description_sale">Gold-standard ergonomic office chair with PostureFit SL adjustable sacral and lumbar support.</field>
         </record>
 
         <record id="product_demo_fur_chr_002" model="product.template">
-            <field name="name">Ghế văn phòng công thái học Sihoo M57 (Khung lưới toàn phần / Đỡ thắt lưng 2 chiều)</field>
+            <field name="name">Sihoo M57 Ergonomic Office Chair (Full Mesh / 2D Lumbar Support)</field>
             <field name="default_code">FUR-CHR-002</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -238,11 +238,11 @@
             <field name="standard_price">3300000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Chống mỏi lưng cho nhân viên ngồi làm việc lâu, tay vịn 3D bọc PU mềm mại.</field>
+            <field name="description_sale">Breathable full mesh support with 3D soft PU armrests for prolonged desk comfort.</field>
         </record>
 
         <record id="product_demo_fur_tb_001" model="product.template">
-            <field name="name">Bàn họp văn phòng 10-12 người cao cấp Gỗ Sồi Tự Nhiên (Kích thước 3m2 x 1m2 / Tích hợp hộp điện âm)</field>
+            <field name="name">Executive Conference Table 10-12 Persons Natural Oak (3.2m x 1.2m / Integrated Power Box)</field>
             <field name="default_code">FUR-TB-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -251,11 +251,11 @@
             <field name="standard_price">14800000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Thiết kế hiện đại sang trọng cho phòng họp ban lãnh đạo, khung thép sơn tĩnh điện chống rung.</field>
+            <field name="description_sale">Modern executive meeting table with scratch-resistant oak veneer and anti-vibration steel frame.</field>
         </record>
 
         <record id="product_demo_fur_cab_001" model="product.template">
-            <field name="name">Tủ tài liệu hồ sơ văn phòng 4 cánh khóa mã số điện tử (Thép sơn tĩnh điện 0.8mm)</field>
+            <field name="name">Electronic Keypad 4-Door Steel Filing Cabinet (0.8mm Powder-Coated Steel)</field>
             <field name="default_code">FUR-CAB-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -264,11 +264,11 @@
             <field name="standard_price">5800000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Chống ẩm mốc, khóa an toàn bảo vệ chứng từ kế toán và hồ sơ nhân sự quan trọng.</field>
+            <field name="description_sale">Fire and moisture resistant digital locking storage for accounting ledgers and confidential HR files.</field>
         </record>
 
         <record id="product_demo_fur_brd_001" model="product.template">
-            <field name="name">Bảng kính từ văn phòng viết bút lông cao cấp (Kích thước 1.2m x 2.0m / Kính cường lực 8mm)</field>
+            <field name="name">Magnetic Glass Whiteboard (1.2m x 2.0m / 8mm Tempered Safety Glass)</field>
             <field name="default_code">FUR-BRD-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -277,11 +277,11 @@
             <field name="standard_price">2100000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Dễ lau sạch không để lại vết ố mực, hít nam châm đính thông báo kế hoạch.</field>
+            <field name="description_sale">Non-staining smooth dry-erase surface with rare-earth magnetic notice mounting.</field>
         </record>
 
         <record id="product_demo_fac_wtr_001" model="product.template">
-            <field name="name">Cây nước nóng lạnh Karofi HC18 (3 Vòi Nóng - Lạnh - Nguội / Block làm lạnh siêu êm)</field>
+            <field name="name">Karofi HC18 Hot &amp; Cold Water Dispenser (Hot - Cold - Room Temp / Ultra-quiet Compressor)</field>
             <field name="default_code">FAC-WTR-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -290,11 +290,11 @@
             <field name="standard_price">4500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Phục vụ nước uống và pha trà, cà phê cho pantry văn phòng 30-50 nhân sự.</field>
+            <field name="description_sale">Clean filtered water dispenser for corporate office pantries serving 30-50 staff members.</field>
         </record>
 
         <record id="product_demo_fac_air_001" model="product.template">
-            <field name="name">Máy lọc không khí Xiaomi Smart Air Purifier 4 Pro (Màng lọc HEPA 3in1 / Diện tích 60m2)</field>
+            <field name="name">Xiaomi Smart Air Purifier 4 Pro (3-in-1 HEPA Filter / 60m2 Coverage)</field>
             <field name="default_code">FAC-AIR-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -303,11 +303,11 @@
             <field name="standard_price">4100000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Lọc sạch bụi mịn PM2.5 và khử mùi thuốc lá, ẩm mốc trong không gian văn phòng kín.</field>
+            <field name="description_sale">High-efficiency PM2.5 and allergen air filtration with smart mobile app monitoring.</field>
         </record>
 
         <record id="product_demo_fac_shr_001" model="product.template">
-            <field name="name">Máy hủy tài liệu bảo mật Bonsaii 4S30 (Hủy vụn Micro-cut 2x10mm / Hủy thẻ và đĩa CD)</field>
+            <field name="name">Bonsaii 4S30 Heavy Duty Cross-cut Paper Shredder (P-5 Micro-cut 2x10mm / CD &amp; Card Slot)</field>
             <field name="default_code">FAC-SHR-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -316,11 +316,11 @@
             <field name="standard_price">3100000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Chuẩn bảo mật cấp độ P-5, hoạt động liên tục 4 giờ không nóng máy.</field>
+            <field name="description_sale">Continuous 4-hour commercial run time destroying confidential documents and CDs.</field>
         </record>
 
         <record id="product_demo_fac_lgt_001" model="product.template">
-            <field name="name">Đèn bàn làm việc LED bảo vệ thị lực Philips Blade 2 (Cảm ứng tăng giảm độ sáng / Cổng sạc USB)</field>
+            <field name="name">Philips Blade 2 EyeCare LED Desk Lamp (Touch Dimming / Built-in USB Charging Port)</field>
             <field name="default_code">FAC-LGT-001</field>
             <field name="categ_id" ref="product.product_category_goods"/>
             <field name="type">consu</field>
@@ -329,14 +329,14 @@
             <field name="standard_price">850000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Công nghệ tán quang tổ ong chống mỏi mắt khi làm việc ca đêm.</field>
+            <field name="description_sale">Honeycomb optics anti-glare illumination reducing eye fatigue during late shifts.</field>
         </record>
 
         <!-- ========================================================= -->
-        <!-- GROUP 3: VĂN PHÒNG PHẨM & VẬT TƯ TIÊU HAO (10 SẢN PHẨM)    -->
+        <!-- GROUP 3: STATIONERY & OFFICE CONSUMABLES (10 PRODUCTS)    -->
         <!-- ========================================================= -->
         <record id="product_demo_sta_ppr_001" model="product.template">
-            <field name="name">Giấy in Double A A4 70gsm (Thùng 5 ram / 2.500 tờ)</field>
+            <field name="name">Double A A4 70gsm Copy Paper (Box of 5 Reams / 2,500 Sheets)</field>
             <field name="default_code">STA-PPR-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -345,11 +345,11 @@
             <field name="standard_price">290000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Giấy trắng sáng tự nhiên, không kẹt giấy trong máy in tốc độ cao.</field>
+            <field name="description_sale">High-whiteness smooth paper designed to prevent jams in high-speed copiers.</field>
         </record>
 
         <record id="product_demo_sta_ppr_002" model="product.template">
-            <field name="name">Giấy in IK Plus A4 80gsm nhập khẩu Indonesia (Thùng 5 ram)</field>
+            <field name="name">IK Plus A4 80gsm Premium Imported Paper (Box of 5 Reams)</field>
             <field name="default_code">STA-PPR-002</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -358,11 +358,11 @@
             <field name="standard_price">325000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Độ dày cao chuyên dùng in hợp đồng khách hàng và chứng từ quan trọng.</field>
+            <field name="description_sale">High-opacity heavy stock ideal for executive contracts, legal documents, and proposals.</field>
         </record>
 
         <record id="product_demo_sta_pen_001" model="product.template">
-            <field name="name">Bút bi Thiên Long 0.5mm TL-027 Mực Xanh (Hộp 20 cây)</field>
+            <field name="name">Thien Long 0.5mm Blue Ballpoint Pens (Box of 20 Pens)</field>
             <field name="default_code">STA-PEN-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -371,11 +371,11 @@
             <field name="standard_price">72000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Ngòi bút viết trơn êm mực ra đều, văn phòng phẩm thiết yếu hàng tháng.</field>
+            <field name="description_sale">Smooth gel-ink flow for daily administrative operations.</field>
         </record>
 
         <record id="product_demo_sta_hlt_001" model="product.template">
-            <field name="name">Bút dạ quang đánh dấu Stabilo Boss Original (Vỉ 6 màu dạ quang pastel)</field>
+            <field name="name">Stabilo Boss Original Pastel Highlighters (Pack of 6 Pastel Shades)</field>
             <field name="default_code">STA-HLT-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -384,11 +384,11 @@
             <field name="standard_price">125000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Mực gốc nước công nghệ Đức chống khô ngòi suốt 4 giờ mở nắp.</field>
+            <field name="description_sale">German anti-dry-out water-based ink technology lasting up to 4 hours uncapped.</field>
         </record>
 
         <record id="product_demo_sta_fil_001" model="product.template">
-            <field name="name">File còng bật KingJim 7cm A4 (Khóa còng kim loại mạ Crom chống gỉ)</field>
+            <field name="name">KingJim 7cm A4 Lever Arch File Binder (Chrome-plated Rust-resistant Mechanism)</field>
             <field name="default_code">STA-FIL-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -397,11 +397,11 @@
             <field name="standard_price">58000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Lưu trữ tới 500 tờ hồ sơ chứng từ, gáy file có lỗ xỏ ngón tay tiện rút tài liệu.</field>
+            <field name="description_sale">Archival storage up to 500 sheets with reinforced metal finger ring.</field>
         </record>
 
         <record id="product_demo_sta_ntb_001" model="product.template">
-            <field name="name">Sổ tay bìa da cao cấp A5 Ruột Kẻ Ngang in ép kim Logo Doanh Nghiệp (200 trang)</field>
+            <field name="name">Executive Leatherbound A5 Lined Notebook with Gold Foil Company Branding (200 Pages)</field>
             <field name="default_code">STA-NTB-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -410,11 +410,11 @@
             <field name="standard_price">85000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Quà tặng sự kiện và sổ ghi chép họp nội bộ cho cán bộ nhân viên.</field>
+            <field name="description_sale">Corporate gift and board meeting notebook for executives and attendees.</field>
         </record>
 
         <record id="product_demo_sta_stp_001" model="product.template">
-            <field name="name">Bộ dập ghim Max HD-10D Nhật Bản &amp; 5 Hộp kim bấm No.10 chính hãng</field>
+            <field name="name">Max HD-10D Heavy-Duty Stapler &amp; 5 Boxes of No.10 Staples</field>
             <field name="default_code">STA-STP-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -423,11 +423,11 @@
             <field name="standard_price">45000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Bấm tối đa 20 tờ giấy nhẹ nhàng, thân máy bọc nhựa cách nhiệt chống đau tay.</field>
+            <field name="description_sale">Smooth single-hand stapling up to 20 sheets with ergonomic cushioned grip.</field>
         </record>
 
         <record id="product_demo_sta_tap_001" model="product.template">
-            <field name="name">Băng keo trong văn phòng đóng hàng 4.8cm x 100 yards (Cây 6 cuộn)</field>
+            <field name="name">Heavy-Duty Transparent Packing Tape 4.8cm x 100 Yards (Pack of 6 Rolls)</field>
             <field name="default_code">STA-TAP-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -436,11 +436,11 @@
             <field name="standard_price">82000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Độ dính 50 mic siêu chắc chuyên dụng đóng gói bưu phẩm và hồ sơ gửi chuyển phát nhanh.</field>
+            <field name="description_sale">50-micron high-adhesion BOPP tape for parcel logistics and express mail shipping.</field>
         </record>
 
         <record id="product_demo_sta_ink_001" model="product.template">
-            <field name="name">Hộp mực in HP LaserJet 76A Black Original Toner (CF276A - Dung lượng 3.000 trang)</field>
+            <field name="name">HP LaserJet 76A Black Original Toner Cartridge (CF276A - 3,000 Page Yield)</field>
             <field name="default_code">STA-INK-001</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -449,11 +449,11 @@
             <field name="standard_price">2400000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Hộp mực chính hãng bảo vệ trống từ và duy trì tuổi thọ máy in M404 / M428.</field>
+            <field name="description_sale">Genuine HP toner protecting optical drum and optimizing print quality on M404/M428.</field>
         </record>
 
         <record id="product_demo_sta_ink_002" model="product.template">
-            <field name="name">Hộp mực máy in Canon 057 Black Cartridge (Dung lượng 3.100 trang tiêu chuẩn)</field>
+            <field name="name">Canon 057 Black Original Toner Cartridge (Standard 3,100 Page Yield)</field>
             <field name="default_code">STA-INK-002</field>
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="type">consu</field>
@@ -462,14 +462,14 @@
             <field name="standard_price">2050000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Tương thích các dòng máy in Canon LBP223dw / LBP226dw / MF445dw.</field>
+            <field name="description_sale">Engineered for high-yield reliability on Canon LBP223dw / LBP226dw / MF445dw printers.</field>
         </record>
 
         <!-- ========================================================= -->
-        <!-- GROUP 4: DỊCH VỤ SỐ & GIẢI PHÁP DOANH NGHIỆP (15 SẢN PHẨM)   -->
+        <!-- GROUP 4: DIGITAL SERVICES & ENTERPRISE SOLUTIONS (15)      -->
         <!-- ========================================================= -->
         <record id="product_demo_srv_erp_001" model="product.template">
-            <field name="name">Gói Phần mềm Quản trị Tổng thể SGT ERP Enterprise (Thuê bao 1 Năm / 50 Người dùng)</field>
+            <field name="name">SGT ERP Enterprise Management Platform (1-Year Subscription / 50 Users)</field>
             <field name="default_code">SRV-ERP-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -478,11 +478,11 @@
             <field name="standard_price">35000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Bao gồm phân hệ Bán hàng, Mua hàng, Kho, Kế toán, CRM, Phê duyệt đa cấp và Dashboard điều hành.</field>
+            <field name="description_sale">Comprehensive suite comprising Sales, Purchase, Inventory, Accounting, CRM, Approvals, and Dashboard.</field>
         </record>
 
         <record id="product_demo_srv_ms365_001" model="product.template">
-            <field name="name">Bản quyền Microsoft 365 Business Standard (Gói 1 Tài khoản / Thuê bao 1 Năm)</field>
+            <field name="name">Microsoft 365 Business Standard License (1 User / 1-Year Subscription)</field>
             <field name="default_code">SRV-MS365-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -491,11 +491,11 @@
             <field name="standard_price">2800000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Email doanh nghiệp 50GB Exchange, 1TB OneDrive, trọn bộ ứng dụng Word, Excel, PowerPoint, Teams.</field>
+            <field name="description_sale">50GB Exchange email, 1TB OneDrive, and full office productivity suite (Teams, Word, Excel, PowerPoint).</field>
         </record>
 
         <record id="product_demo_srv_gw_001" model="product.template">
-            <field name="name">Bản quyền Google Workspace Enterprise Standard (Gói 1 Tài khoản / Thuê bao 1 Tháng)</field>
+            <field name="name">Google Workspace Enterprise Standard License (1 User / Monthly Subscription)</field>
             <field name="default_code">SRV-GW-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -504,11 +504,11 @@
             <field name="standard_price">360000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Dung lượng lưu trữ đám mây không giới hạn, ghi âm cuộc họp Google Meet và mã hóa cấp cao.</field>
+            <field name="description_sale">Unlimited pooled cloud storage, Google Meet meeting recordings, and enterprise security encryption.</field>
         </record>
 
         <record id="product_demo_srv_trn_001" model="product.template">
-            <field name="name">Dịch vụ Đào tạo &amp; Chuyển giao Hệ thống Quản trị ERP (Gói 40 Giờ Chuyên gia Onsite)</field>
+            <field name="name">ERP System Training &amp; Implementation Consulting (40-Hour Onsite Expert Package)</field>
             <field name="default_code">SRV-TRN-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -517,11 +517,11 @@
             <field name="standard_price">15000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Đào tạo thực hành trực tiếp cho các phòng ban, cung cấp tài liệu hướng dẫn và video đào tạo nội bộ.</field>
+            <field name="description_sale">Hands-on departmental coaching, system administrator onboarding, and training documentation.</field>
         </record>
 
         <record id="product_demo_srv_itm_001" model="product.template">
-            <field name="name">Dịch vụ Quản trị &amp; Hỗ trợ Kỹ thuật IT Doanh nghiệp SLA 24/7 (Gói Thuê bao Tháng)</field>
+            <field name="name">24/7 Managed IT Infrastructure &amp; Helpdesk SLA (Monthly Retainer)</field>
             <field name="default_code">SRV-ITM-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -530,11 +530,11 @@
             <field name="standard_price">7500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Hỗ trợ xử lý sự cố máy tính, mạng, máy chủ và phần mềm cam kết phản hồi dưới 15 phút.</field>
+            <field name="description_sale">Full desktop, server, network, and firewall technical support guaranteed under 15-minute response SLA.</field>
         </record>
 
         <record id="product_demo_srv_cld_001" model="product.template">
-            <field name="name">Dịch vụ Thuê Hạ tầng Đám mây AWS Dedicated Cloud (4 vCPU / 16GB RAM / 500GB SSD / Tháng)</field>
+            <field name="name">AWS Dedicated Cloud ERP Infrastructure (4 vCPU / 16GB RAM / 500GB SSD / Month)</field>
             <field name="default_code">SRV-CLD-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -543,11 +543,11 @@
             <field name="standard_price">12000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Hạ tầng đám mây tốc độ cao tại Datacenter Singapore, sao lưu tự động hàng ngày snapshot.</field>
+            <field name="description_sale">High-performance enterprise cloud hosting in Singapore Datacenter with automated daily snapshots.</field>
         </record>
 
         <record id="product_demo_srv_net_001" model="product.template">
-            <field name="name">Dịch vụ Thiết kế &amp; Thi công Hạ tầng Mạng LAN / WiFi / Server Room (Trọn gói Dự án)</field>
+            <field name="name">Enterprise LAN, WiFi &amp; Server Room Infrastructure Engineering (Turnkey Project)</field>
             <field name="default_code">SRV-NET-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -556,11 +556,11 @@
             <field name="standard_price">22000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Khảo sát, kéo cáp mạng Cat6 chống nhiễu, đấu nối patch panel và gắn nhãn cáp chuẩn quốc tế TIA/EIA.</field>
+            <field name="description_sale">Site survey, Cat6 shielded structured cabling, patch panel termination, and TIA/EIA compliant labeling.</field>
         </record>
 
         <record id="product_demo_srv_dsg_001" model="product.template">
-            <field name="name">Dịch vụ Thiết kế Bộ Nhận Diện Thương Hiệu Doanh Nghiệp Toàn Diện (Gói Corporate Pro)</field>
+            <field name="name">Comprehensive Corporate Brand Identity Design (Corporate Pro Package)</field>
             <field name="default_code">SRV-DSG-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -569,11 +569,11 @@
             <field name="standard_price">16000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Thiết kế Logo, Brand Guidelines, Danh thiếp, Tiêu đề thư, Phong bì, Profile và đồng phục công ty.</field>
+            <field name="description_sale">Logo design, brand guidelines, stationery collateral, investor deck template, and uniform design.</field>
         </record>
 
         <record id="product_demo_srv_cns_001" model="product.template">
-            <field name="name">Dịch vụ Tư vấn Chuyển đổi số &amp; Tối ưu Hóa Quy trình Vận hành Doanh nghiệp (Gói)</field>
+            <field name="name">Digital Transformation &amp; Business Process Optimization Consulting (Full Package)</field>
             <field name="default_code">SRV-CNS-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -582,11 +582,11 @@
             <field name="standard_price">28000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Đánh giá hiện trạng, xây dựng lộ trình số hóa, giảm thiểu lãng phí và tự động hóa báo cáo KPI.</field>
+            <field name="description_sale">Operational audit, workflow digitalization roadmap, waste minimization, and executive KPI automation.</field>
         </record>
 
         <record id="product_demo_srv_ca_001" model="product.template">
-            <field name="name">Gói Chữ Ký Số Doanh Nghiệp Token VNPT-CA (Thời hạn 3 Năm kèm USB Token PKI)</field>
+            <field name="name">VNPT-CA Digital Signature Token (3-Year Validity with PKI USB Hardware Token)</field>
             <field name="default_code">SRV-CA-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -595,11 +595,11 @@
             <field name="standard_price">1650000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Ký số khai thuế qua mạng, bảo hiểm xã hội điện tử và ký hóa đơn điện tử hợp pháp.</field>
+            <field name="description_sale">Legally binding digital certificates for online tax filing, social insurance, and electronic invoices.</field>
         </record>
 
         <record id="product_demo_srv_inv_001" model="product.template">
-            <field name="name">Gói Hóa Đơn Điện Tử Viettel S-Invoice (Gói 10.000 Số / Tích hợp trực tiếp Odoo ERP)</field>
+            <field name="name">Viettel S-Invoice Electronic Invoice Solution (10,000 Invoices / Native Odoo ERP Sync)</field>
             <field name="default_code">SRV-INV-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -608,11 +608,11 @@
             <field name="standard_price">2900000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Phát hành hóa đơn có mã cơ quan thuế theo Thông tư 78/2021/TT-BTC, không giới hạn thời gian sử dụng.</field>
+            <field name="description_sale">Tax authority certified e-invoicing complying with national e-tax regulations and XML standards.</field>
         </record>
 
         <record id="product_demo_srv_sec_001" model="product.template">
-            <field name="name">Dịch vụ Kiểm thử Xâm nhập An toàn Thông tin &amp; Pentest Hệ thống (Đợt / Lần Đánh giá)</field>
+            <field name="name">Penetration Testing &amp; Web Application Vulnerability Audit (One-time Assessment)</field>
             <field name="default_code">SRV-SEC-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -621,11 +621,11 @@
             <field name="standard_price">30000000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Dò quét lỗ hổng OWASP Top 10 trên Web Application và API, cấp báo cáo khắc phục theo chuẩn ISO 27001.</field>
+            <field name="description_sale">OWASP Top 10 web &amp; API security assessment with remediation report aligned to ISO 27001.</field>
         </record>
 
         <record id="product_demo_srv_bkp_001" model="product.template">
-            <field name="name">Dịch vụ Sao lưu Đám mây Veeam Cloud Backup (Gói 1TB / Bản quyền 1 Năm)</field>
+            <field name="name">Veeam Cloud Immutable Backup Service (1TB Storage / 1-Year License)</field>
             <field name="default_code">SRV-BKP-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -634,11 +634,11 @@
             <field name="standard_price">13500000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Bảo vệ dữ liệu chống Ransomware tống tiền với công nghệ Immutable Storage lưu trữ không thể xóa.</field>
+            <field name="description_sale">Air-gapped immutable storage defending enterprise data against ransomware encryption.</field>
         </record>
 
         <record id="product_demo_srv_tel_001" model="product.template">
-            <field name="name">Dịch vụ Tổng đài Đám mây Cloud Call Center (Gói Thuê bao 1 Máy lẻ / 1 Tháng)</field>
+            <field name="name">Cloud PBX &amp; VoIP Call Center Extension (1 Extension / Monthly Subscription)</field>
             <field name="default_code">SRV-TEL-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -647,11 +647,11 @@
             <field name="standard_price">90000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Ghi âm cuộc gọi, hiển thị popup tên khách hàng khi có cuộc gọi đến, tích hợp CRM.</field>
+            <field name="description_sale">Call recording, real-time incoming caller ID popup, and seamless Odoo CRM integration.</field>
         </record>
 
         <record id="product_demo_srv_mda_001" model="product.template">
-            <field name="name">Dịch vụ Chụp ảnh Profile &amp; Quay Video Truyền thông Doanh nghiệp (Gói 1 Buổi Ekip Chuyên nghiệp)</field>
+            <field name="name">Corporate Profile Photography &amp; Brand Video Production (Half-day Media Crew)</field>
             <field name="default_code">SRV-MDA-001</field>
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="type">service</field>
@@ -660,7 +660,7 @@
             <field name="standard_price">5200000.0</field>
             <field name="sale_ok" eval="True"/>
             <field name="purchase_ok" eval="True"/>
-            <field name="description_sale">Chụp ảnh chân dung lãnh đạo, không gian văn phòng làm việc và sản xuất video ngắn giới thiệu công ty.</field>
+            <field name="description_sale">Executive portraits, office facility coverage, and social media corporate promotional video.</field>
         </record>
 
     </data>

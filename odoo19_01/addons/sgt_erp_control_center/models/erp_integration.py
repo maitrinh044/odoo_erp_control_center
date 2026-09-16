@@ -32,7 +32,7 @@ class SgtErpIntegration(models.Model):
     last_check = fields.Datetime(string='Last Check')
     last_error = fields.Text(string='Last Error')
 
-    # Thông tin kết nối bảo mật
+    # Secure connection credentials
     client_id = fields.Char(string='Client ID / API Key')
     client_secret = fields.Char(string='Client Secret', groups='sgt_erp_control_center.group_erp_control_center_admin')
     api_endpoint = fields.Char(string='Endpoint URL')

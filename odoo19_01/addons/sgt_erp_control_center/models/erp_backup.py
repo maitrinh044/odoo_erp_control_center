@@ -15,31 +15,30 @@ class SgtErpBackup(models.Model):
     _description = 'SGT ERP Backup Record'
     _order = 'backup_date desc, id desc'
 
-    name = fields.Char(string='Tên File Sao Lưu', required=True, readonly=True)
-    backup_date = fields.Datetime(string='Thời Gian Tạo', default=fields.Datetime.now, readonly=True)
-    db_name = fields.Char(string='Cơ Sở Dữ Liệu', readonly=True)
+    name = fields.Char(string='Backup Archive Name', required=True, readonly=True)
+    backup_date = fields.Datetime(string='Created Date', default=fields.Datetime.now, readonly=True)
+    db_name = fields.Char(string='Database Name', readonly=True)
     backup_type = fields.Selection([
-        ('zip', 'Đầy Đủ (Database + Filestore .zip)'),
-        ('dump', 'Chỉ Database (SQL Dump .dump)'),
-    ], default='zip', string='Định Dạng', required=True)
+        ('zip', 'Full (Database + Filestore .zip)'),
+        ('dump', 'Database Only (SQL Dump .dump)'),
+    ], default='zip', string='Backup Format', required=True)
     backup_mode = fields.Selection([
-        ('manual', 'Thủ Công (1-Chạm)'),
-        ('cron', 'Tự Động (Lịch Định Kỳ)'),
-    ], default='manual', string='Chế Độ', readonly=True)
-    file_size_mb = fields.Float(string='Dung Lượng (MB)', digits=(12, 2), readonly=True)
-    file_path = fields.Char(string='Đường Dẫn Vật Lý', readonly=True)
+        ('manual', 'Manual (1-Click)'),
+        ('cron', 'Automated (Cron)'),
+    ], default='manual', string='Trigger Mode', readonly=True)
+    file_size_mb = fields.Float(string='File Size (MB)', digits=(12, 2), readonly=True)
+    file_path = fields.Char(string='Physical File Path', readonly=True)
     state = fields.Selection([
-        ('running', 'Đang thực hiện...'),
-        ('success', 'Thành công'),
-        ('failed', 'Thất bại'),
-    ], default='running', string='Trạng Thái', readonly=True)
-    error_log = fields.Text(string='Nhật Ký Lỗi', readonly=True)
-    company_id = fields.Many2one('res.company', string='Công Ty', default=lambda self: self.env.company)
+        ('running', 'In Progress'),
+        ('success', 'Successful'),
+        ('failed', 'Failed'),
+    ], default='running', string='Status', readonly=True)
+    error_log = fields.Text(string='Error Diagnostic Log', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
 
     @api.model
     def _get_backup_dir(self):
-        """Lấy hoặc khởi tạo thư mục lưu trữ backup trên hệ thống file bền vững."""
-        # Ưu tiên thư mục /var/lib/odoo/backups (được mount volume Docker)
+        """Get or create persistent backup storage directory."""
         primary_dir = '/var/lib/odoo/backups'
         if not os.path.exists(primary_dir):
             try:
@@ -50,14 +49,13 @@ class SgtErpBackup(models.Model):
         else:
             return primary_dir
 
-        # Fallback về data_dir/backups
         fallback_dir = os.path.join(odoo_config.get('data_dir', '/tmp'), 'backups')
         os.makedirs(fallback_dir, exist_ok=True)
         return fallback_dir
 
     @api.model
     def create_backup(self, backup_type='zip', backup_mode='manual'):
-        """Thực hiện quy trình sao lưu Database và lưu file vào đĩa vật lý."""
+        """Execute database backup process and save physical archive to disk."""
         db_name = self.env.cr.dbname
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         ext = 'zip' if backup_type == 'zip' else 'dump'
@@ -93,7 +91,7 @@ class SgtErpBackup(models.Model):
                 'state': 'success',
             })
 
-            # Cập nhật thông số Backup trên sgt.erp.config và Health Dashboard
+            # Update Backup stats in sgt.erp.config and Health Dashboard
             configs = self.env['sgt.erp.config'].search([])
             if configs:
                 configs.write({
@@ -103,7 +101,7 @@ class SgtErpBackup(models.Model):
 
             _logger.info("SGT ERP Backup successfully created: %s (Size: %.2f MB)", target_path, file_size_mb)
 
-            # Tự động dọn dẹp các bản backup cũ
+            # Automatically cleanup old backups according to retention policy
             self._cleanup_old_backups()
 
         except Exception as e:
@@ -121,7 +119,7 @@ class SgtErpBackup(models.Model):
         return record
 
     def action_trigger_backup_now(self, *args, **kwargs):
-        """Action nút bấm 1-chạm tạo bản sao lưu ngay lập tức."""
+        """Action button to trigger immediate 1-click backup."""
         backup_type = self.env.context.get('backup_type', 'zip')
         record = self.create_backup(backup_type=backup_type, backup_mode='manual')
         if record.state == 'success':
@@ -129,8 +127,8 @@ class SgtErpBackup(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _("Sao lưu hoàn tất!"),
-                    'message': _("Đã tạo thành công bản sao lưu %(name)s (Dung lượng: %(size).2f MB).") % {
+                    'title': _("Backup Completed!"),
+                    'message': _("Successfully created backup archive %(name)s (Size: %(size).2f MB).") % {
                         'name': record.name,
                         'size': record.file_size_mb,
                     },
@@ -140,13 +138,13 @@ class SgtErpBackup(models.Model):
                 }
             }
         else:
-            raise UserError(_("Tiến trình sao lưu thất bại: %s") % (record.error_log or _("Lỗi không xác định.")))
+            raise UserError(_("Backup process failed: %s") % (record.error_log or _("Unknown error occurred.")))
 
     def action_download_backup(self):
-        """Action tải file backup trực tiếp về máy tính."""
+        """Download backup archive directly to computer."""
         self.ensure_one()
         if self.state != 'success' or not self.file_path or not os.path.exists(self.file_path):
-            raise UserError(_("File sao lưu không tồn tại hoặc đã bị xóa khỏi máy chủ."))
+            raise UserError(_("Backup archive does not exist or has been removed from server."))
         return {
             'type': 'ir.actions.act_url',
             'url': f'/sgt_erp/backup/download/{self.id}',
@@ -154,7 +152,7 @@ class SgtErpBackup(models.Model):
         }
 
     def action_delete_backup(self):
-        """Xóa bản ghi và giải phóng file vật lý trên đĩa."""
+        """Delete record and free physical storage on disk."""
         for rec in self:
             if rec.file_path and os.path.exists(rec.file_path):
                 try:
@@ -166,7 +164,7 @@ class SgtErpBackup(models.Model):
 
     @api.model
     def cron_run_automated_backup(self):
-        """Phương thức định kỳ được gọi bởi Cronjob."""
+        """Automated backup routine invoked by scheduled Cronjob."""
         config = self.env['sgt.erp.config'].search([], limit=1)
         if config and not config.backup_auto_enabled:
             _logger.info("SGT ERP Automated Backup is disabled in configuration. Skipping.")
@@ -177,15 +175,15 @@ class SgtErpBackup(models.Model):
         self.create_backup(backup_type=b_type, backup_mode='cron')
 
     def action_scan_existing_backups(self, *args, **kwargs):
-        """Quét thư mục backup và tự động đồng bộ các file vật lý đã có vào danh sách."""
+        """Scan backup directory and synchronize existing disk archives to database."""
         backup_dir = self._get_backup_dir()
         if not os.path.exists(backup_dir):
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _("Thông báo"),
-                    'message': _("Thư mục lưu trữ sao lưu chưa tồn tại trên máy chủ."),
+                    'title': _("Notice"),
+                    'message': _("Backup storage directory does not exist on the server."),
                     'type': 'warning',
                     'sticky': False,
                 }
@@ -231,8 +229,8 @@ class SgtErpBackup(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Đồng Bộ Bản Sao Lưu"),
-                'message': _("Đã tìm thấy và đồng bộ %d bản sao lưu có sẵn trên đĩa cứng.") % created_count,
+                'title': _("Backup Archives Synchronized"),
+                'message': _("Found and synchronized %d existing backup archive(s) from disk.") % created_count,
                 'type': 'success',
                 'sticky': False,
                 'next': {'type': 'ir.actions.client', 'tag': 'reload'},
@@ -240,14 +238,14 @@ class SgtErpBackup(models.Model):
         }
 
     def action_cleanup_old_backups(self, *args, **kwargs):
-        """Action nút bấm dọn dẹp các bản sao lưu cũ quá hạn."""
+        """Action button to cleanup expired backup archives."""
         deleted_count = self._cleanup_old_backups()
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Dọn dẹp hoàn tất!"),
-                'message': _("Đã dọn dẹp %(count)d bản sao lưu cũ quá hạn lưu trữ.") % {'count': deleted_count} if deleted_count else _("Không có bản sao lưu nào quá hạn lưu trữ."),
+                'title': _("Cleanup Completed!"),
+                'message': _("Cleaned up %(count)d expired backup archive(s).") % {'count': deleted_count} if deleted_count else _("No expired backup archives found."),
                 'type': 'info',
                 'sticky': False,
                 'next': {'type': 'ir.actions.client', 'tag': 'reload'},
@@ -255,15 +253,15 @@ class SgtErpBackup(models.Model):
         }
 
     def action_open_backup_schedule(self, *args, **kwargs):
-        """Mở trực tiếp cấu hình Cron Lịch trình sao lưu tự động."""
+        """Directly open automated backup Cronjob configuration."""
         cron = self.env.ref('sgt_erp_control_center.cron_sgt_erp_automated_backup', raise_if_not_found=False)
         if not cron:
             cron = self.env['ir.cron'].search([('code', 'ilike', 'cron_run_automated_backup')], limit=1)
         if not cron:
-            raise UserError(_("Không tìm thấy tiến trình Cron của tính năng Sao lưu tự động."))
+            raise UserError(_("Automated backup cron job not found."))
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Tùy Chỉnh Lịch Sao Lưu Định Kỳ"),
+            'name': _("Configure Automated Backup Schedule"),
             'res_model': 'ir.cron',
             'res_id': cron.id,
             'view_mode': 'form',
@@ -272,7 +270,7 @@ class SgtErpBackup(models.Model):
 
     @api.model
     def _cleanup_old_backups(self, retention_days=None):
-        """Xóa các bản backup cũ vượt quá số ngày lưu trữ cho phép để tiết kiệm đĩa."""
+        """Purge backups older than configured retention days to preserve storage."""
         if retention_days is None:
             config = self.env['sgt.erp.config'].search([], limit=1)
             retention_days = (config and config.backup_retention_days) or 14

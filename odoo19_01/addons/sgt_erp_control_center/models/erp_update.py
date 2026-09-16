@@ -21,7 +21,7 @@ class SgtErpUpdate(models.Model):
 
     @api.model
     def action_check_updates(self):
-        """Kiểm tra phiên bản hiện tại từ manifest"""
+        """Check current version against manifest"""
         mod = self.env['ir.module.module'].search([('name', '=', 'sgt_erp_control_center')], limit=1)
         current_ver = mod.installed_version if mod else '19.0.2.0.0'
         records = self.search([])

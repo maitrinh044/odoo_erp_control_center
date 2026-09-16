@@ -6,36 +6,36 @@ class SgtErpWorkflowLevel(models.Model):
     _description = 'SGT ERP Workflow Approval Level'
     _order = 'workflow_id, sequence asc, id asc'
 
-    name = fields.Char(string='Tên cấp duyệt', required=True)
-    workflow_id = fields.Many2one('sgt.erp.workflow', string='Quy trình', required=True, ondelete='cascade')
-    sequence = fields.Integer(string='Thứ tự cấp', default=10)
+    name = fields.Char(string='Level Name', required=True)
+    workflow_id = fields.Many2one('sgt.erp.workflow', string='Workflow', required=True, ondelete='cascade')
+    sequence = fields.Integer(string='Sequence', default=10)
 
     approver_type = fields.Selection([
-        ('user', 'Người dùng chỉ định'),
-        ('group', 'Nhóm quyền'),
-        ('both', 'Người dùng hoặc Nhóm quyền')
-    ], string='Loại người duyệt', default='user', required=True)
+        ('user', 'Specific Users'),
+        ('group', 'Security Group'),
+        ('both', 'User or Group')
+    ], string='Approver Type', default='user', required=True)
 
     approver_user_ids = fields.Many2many(
         'res.users',
         'sgt_erp_wf_level_user_rel',
         'level_id',
         'user_id',
-        string='Người duyệt chỉ định'
+        string='Designated Approvers'
     )
-    approver_group_id = fields.Many2one('res.groups', string='Nhóm quyền phê duyệt')
+    approver_group_id = fields.Many2one('res.groups', string='Approver Group')
 
-    # Hạn mức kích hoạt cấp này
-    amount_min = fields.Float(string='Hạn mức tối thiểu', default=0.0,
-                              help='Cấp này chỉ được kích hoạt nếu giá trị chứng từ >= hạn mức này. Đặt 0 nếu luôn yêu cầu.')
-    amount_max = fields.Float(string='Hạn mức tối đa', default=0.0,
-                              help='Đặt 0 nếu không giới hạn mức trần.')
+    # Amount triggers for this level
+    amount_min = fields.Float(string='Minimum Amount', default=0.0,
+                              help='This level is only required if document amount >= minimum amount. Set 0 for always required.')
+    amount_max = fields.Float(string='Maximum Amount', default=0.0,
+                              help='Set 0 for no maximum limit.')
 
-    auto_notification = fields.Boolean(string='Gửi thông báo khi đến lượt duyệt', default=True)
-    description = fields.Char(string='Mô tả / Ghi chú')
+    auto_notification = fields.Boolean(string='Notify When Pending', default=True)
+    description = fields.Char(string='Description / Notes')
 
     def check_user_can_approve(self, user=None):
-        """Kiểm tra user có quyền duyệt ở cấp độ này không."""
+        """Check whether user has approval rights for this level."""
         self.ensure_one()
         user = user or self.env.user
         if user.has_group('base.group_system'):

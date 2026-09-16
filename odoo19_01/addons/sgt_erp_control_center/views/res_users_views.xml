@@ -54,7 +54,7 @@
             <field name="view_id" ref="view_sgt_erp_users_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Quản lý người dùng nội bộ, gán vai trò mẫu (Role Preset) và tùy biến giao diện cá nhân.
+                    Manage internal users, assign Role Presets, and customize personal preferences.
                 </p>
             </field>
         </record>

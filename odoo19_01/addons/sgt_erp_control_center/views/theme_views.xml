@@ -59,7 +59,7 @@
                     <header>
                         <button name="action_apply_to_current_company" string="Set as Active Theme for Current Company" type="object" class="oe_highlight btn-primary" icon="fa-check"/>
                         <button name="action_preview_theme" string="Preview Theme" type="object" class="btn-info" icon="fa-eye"/>
-                        <button name="action_reset_preview" string="Exit Preview (Hoàn tác)" type="object" class="btn-outline-secondary" icon="fa-undo"/>
+                        <button name="action_reset_preview" string="Exit Preview (Revert)" type="object" class="btn-outline-secondary" icon="fa-undo"/>
                         <button name="action_create_from_preset" string="Create From Preset" type="object" class="btn-secondary" icon="fa-clone"/>
                         <field name="active" widget="boolean_button" options="{'terminology': 'active'}"/>
                     </header>
@@ -135,9 +135,9 @@
 
                             <page string="Gradient Studio" name="gradient_studio">
                                 <div class="alert alert-info py-2 mb-3" role="status">
-                                    <i class="fa fa-paint-brush me-1" title="Info"/> <strong>Visual Gradient Studio:</strong> Chọn Preset dải màu thịnh hành hoặc tùy biến màu Bắt đầu (Start) + Kết thúc (End) và góc xoay chuyển sắc để áp dụng cho Navbar, Nút bấm (Primary Buttons) và Sidebar.
+                                    <i class="fa fa-paint-brush me-1" title="Info"/> <strong>Visual Gradient Studio:</strong> Choose trending gradient presets or configure custom Start + End colors and angle rotation to apply across Navbar, Primary Buttons, and Sidebar.
                                 </div>
-                                <group string="Quick Preset Library (Thư viện mẫu 1-chạm)">
+                                <group string="Quick Preset Library (1-Click Presets)">
                                     <field name="gradient_preset" widget="selection"/>
                                 </group>
                                 <div class="row g-3 mt-2">
@@ -316,7 +316,7 @@
             <field name="view_mode">kanban,list,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Tạo và tùy biến chủ đề (Theme) giao diện cho ERP.
+                    Create and customize ERP visual themes and branding styles.
                 </p>
             </field>
         </record>

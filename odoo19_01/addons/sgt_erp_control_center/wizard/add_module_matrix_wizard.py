@@ -9,26 +9,26 @@ CONFIG_MODEL_SUFFIXES = (
 
 class SgtErpAddModuleMatrixWizard(models.TransientModel):
     _name = 'sgt.erp.add.module.matrix.wizard'
-    _description = 'Wizard Thêm nhanh Quyền theo Module vào Ma trận'
+    _description = 'Wizard Quick Add Module Permissions to Matrix'
 
-    role_preset_id = fields.Many2one('sgt.erp.role.preset', string='Vai trò (Role Preset)', required=True, ondelete='cascade')
-    module_ids = fields.Many2many('ir.module.module', string='Chọn các Modules', required=True, domain=[('state', '=', 'installed')])
+    role_preset_id = fields.Many2one('sgt.erp.role.preset', string='Role Preset', required=True, ondelete='cascade')
+    module_ids = fields.Many2many('ir.module.module', string='Select Modules', required=True, domain=[('state', '=', 'installed')])
     filter_mode = fields.Selection([
-        ('primary', 'Chỉ đối tượng nghiệp vụ chính (Khuyến nghị)'),
-        ('all', 'Tất cả đối tượng của module'),
-    ], string='Chế độ lọc', default='primary', required=True)
+        ('primary', 'Primary Business Objects Only (Recommended)'),
+        ('all', 'All Module Objects'),
+    ], string='Filter Mode', default='primary', required=True)
 
-    perm_read = fields.Boolean(string='Xem (Read)', default=True)
-    perm_write = fields.Boolean(string='Sửa (Write)', default=True)
-    perm_create = fields.Boolean(string='Tạo (Create)', default=True)
-    perm_unlink = fields.Boolean(string='Xóa (Delete)', default=False)
+    perm_read = fields.Boolean(string='Read', default=True)
+    perm_write = fields.Boolean(string='Write', default=True)
+    perm_create = fields.Boolean(string='Create', default=True)
+    perm_unlink = fields.Boolean(string='Delete', default=False)
     data_scope = fields.Selection([
-        ('all', 'Toàn hệ thống (All)'),
-        ('team', 'Cả nhóm / Chi nhánh (Team)'),
-        ('own', 'Chỉ của mình (Own)'),
-    ], string='Phạm vi dữ liệu', required=True, default='own')
+        ('all', 'All Records (All)'),
+        ('team', 'Team / Branch (Team)'),
+        ('own', 'Own Records Only (Own)'),
+    ], string='Data Scope', required=True, default='own')
 
-    line_ids = fields.One2many('sgt.erp.add.module.matrix.wizard.line', 'wizard_id', string='Danh sách đối tượng xem trước')
+    line_ids = fields.One2many('sgt.erp.add.module.matrix.wizard.line', 'wizard_id', string='Preview Objects List')
 
     @api.onchange('module_ids', 'filter_mode', 'perm_read', 'perm_write', 'perm_create', 'perm_unlink', 'data_scope')
     def _onchange_module_and_settings(self):
@@ -134,8 +134,8 @@ class SgtErpAddModuleMatrixWizard(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Thêm thành công"),
-                'message': _("Đã thêm %d đối tượng từ các module vào Ma trận Phân quyền của vai trò '%s'.") % (len(lines_to_create), role.name),
+                'title': _("Added Successfully"),
+                'message': _("Added %d objects from selected modules into Permission Matrix for role '%s'.") % (len(lines_to_create), role.name),
                 'sticky': False,
                 'type': 'success',
                 'next': {'type': 'ir.actions.act_window_close'},
@@ -145,24 +145,24 @@ class SgtErpAddModuleMatrixWizard(models.TransientModel):
 
 class SgtErpAddModuleMatrixWizardLine(models.TransientModel):
     _name = 'sgt.erp.add.module.matrix.wizard.line'
-    _description = 'Dòng xem trước đối tượng thêm vào Ma trận Phân quyền'
+    _description = 'Preview Object Line for Permission Matrix Wizard'
 
     wizard_id = fields.Many2one('sgt.erp.add.module.matrix.wizard', string='Wizard', ondelete='cascade')
-    selected = fields.Boolean(string='Chọn', default=True)
-    model_id = fields.Many2one('ir.model', string='Đối tượng (Model)', required=True)
-    model_name = fields.Char(related='model_id.model', string='Mã kỹ thuật', readonly=True)
-    module_name = fields.Char(string='Phân hệ / Module')
+    selected = fields.Boolean(string='Select', default=True)
+    model_id = fields.Many2one('ir.model', string='Model', required=True)
+    model_name = fields.Char(related='model_id.model', string='Technical Name', readonly=True)
+    module_name = fields.Char(string='Module')
     model_type = fields.Selection([
-        ('primary', 'Nghiệp vụ chính'),
-        ('config', 'Cấu hình/Danh mục'),
-    ], string='Phân loại', default='primary')
+        ('primary', 'Primary Business'),
+        ('config', 'Configuration / Master Data'),
+    ], string='Object Classification', default='primary')
 
-    perm_read = fields.Boolean(string='Xem', default=True)
-    perm_write = fields.Boolean(string='Sửa', default=True)
-    perm_create = fields.Boolean(string='Tạo', default=True)
-    perm_unlink = fields.Boolean(string='Xóa', default=False)
+    perm_read = fields.Boolean(string='Read', default=True)
+    perm_write = fields.Boolean(string='Write', default=True)
+    perm_create = fields.Boolean(string='Create', default=True)
+    perm_unlink = fields.Boolean(string='Delete', default=False)
     data_scope = fields.Selection([
-        ('all', 'Toàn hệ thống'),
-        ('team', 'Cả nhóm'),
-        ('own', 'Chỉ của mình'),
-    ], string='Phạm vi', default='own')
+        ('all', 'All Records'),
+        ('team', 'Team Records'),
+        ('own', 'Own Records Only'),
+    ], string='Data Scope', default='own')

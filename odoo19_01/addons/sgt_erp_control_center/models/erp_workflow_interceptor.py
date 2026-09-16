@@ -6,30 +6,30 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     sgt_approval_state = fields.Selection([
-        ('not_required', 'Không yêu cầu duyệt'),
-        ('to_approve', 'Chờ phê duyệt'),
-        ('approved', 'Đã phê duyệt'),
-        ('rejected', 'Từ chối'),
-    ], string='Trạng thái phê duyệt', default='not_required', copy=False, tracking=True)
+        ('not_required', 'Not Required'),
+        ('to_approve', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ], string='Approval Status', default='not_required', copy=False, tracking=True)
 
-    sgt_approver_id = fields.Many2one('res.users', string='Người duyệt', copy=False, readonly=True)
-    sgt_approval_date = fields.Datetime(string='Ngày duyệt', copy=False, readonly=True)
-    sgt_approval_workflow_id = fields.Many2one('sgt.erp.workflow', string='Quy trình phê duyệt', copy=False)
+    sgt_approver_id = fields.Many2one('res.users', string='Approver', copy=False, readonly=True)
+    sgt_approval_date = fields.Datetime(string='Approval Date', copy=False, readonly=True)
+    sgt_approval_workflow_id = fields.Many2one('sgt.erp.workflow', string='Approval Workflow', copy=False)
 
     # Multi-level Approval Tracking
     sgt_approval_line_ids = fields.One2many(
         'sgt.erp.approval.line', 'sale_order_id',
-        string='Tiến trình duyệt đa cấp',
+        string='Multi-Level Approval Progress',
         copy=False
     )
     sgt_current_approval_line_id = fields.Many2one(
         'sgt.erp.approval.line',
-        string='Cấp duyệt hiện tại',
+        string='Current Approval Stage',
         compute='_compute_current_approval_line',
         store=True
     )
     sgt_can_current_user_approve = fields.Boolean(
-        string='Tôi có quyền duyệt cấp này',
+        string='Can I Approve Current Stage',
         compute='_compute_can_current_user_approve'
     )
 
@@ -50,9 +50,9 @@ class SaleOrder(models.Model):
                 order.sgt_can_current_user_approve = False
 
     def _generate_approval_lines(self, rule):
-        """Sinh các cấp duyệt tự động theo cấu hình workflow đa cấp."""
+        """Generate approval levels automatically according to multi-level workflow config."""
         self.ensure_one()
-        # Xóa các dòng cũ chưa duyệt nếu có
+        # Remove unapproved previous lines if any
         existing_lines = self.sgt_approval_line_ids.filtered(lambda l: l.state in ('waiting', 'pending'))
         if existing_lines:
             existing_lines.unlink()
@@ -75,9 +75,9 @@ class SaleOrder(models.Model):
                     'approver_group_id': lvl.approver_group_id.id if lvl.approver_group_id else False,
                 })
         else:
-            # Fallback nếu workflow đơn cấp
+            # Fallback for single-level workflow
             lines_vals.append({
-                'name': _("Phê duyệt theo hạn mức [%s]") % rule.name,
+                'name': _("Threshold Approval [%s]") % rule.name,
                 'res_model': 'sale.order',
                 'res_id': self.id,
                 'sale_order_id': self.id,
@@ -91,14 +91,13 @@ class SaleOrder(models.Model):
         return self.env['sgt.erp.approval.line'].create(lines_vals)
 
     def action_open_approve_wizard(self):
-        """Mở dialog nhập ý kiến phê duyệt."""
+        """Open approval modal dialog."""
         self.ensure_one()
         line = self.sgt_current_approval_line_id
         if not line:
-            # Fallback nếu đơn cấp
             return self.action_approve_order()
         return {
-            'name': _("Xác nhận Phê duyệt"),
+            'name': _("Confirm Approval"),
             'type': 'ir.actions.act_window',
             'res_model': 'sgt.erp.approval.wizard',
             'view_mode': 'form',
@@ -110,13 +109,13 @@ class SaleOrder(models.Model):
         }
 
     def action_open_reject_wizard(self):
-        """Mở dialog nhập lý do từ chối."""
+        """Open rejection modal dialog."""
         self.ensure_one()
         line = self.sgt_current_approval_line_id
         if not line:
             return self.action_reject_order()
         return {
-            'name': _("Xác nhận Từ chối"),
+            'name': _("Confirm Rejection"),
             'type': 'ir.actions.act_window',
             'res_model': 'sgt.erp.approval.wizard',
             'view_mode': 'form',
@@ -137,10 +136,10 @@ class SaleOrder(models.Model):
             })
             if rule:
                 order._generate_approval_lines(rule)
-            approver_names = ', '.join(rule.approver_user_ids.mapped('name')) if rule and rule.approver_user_ids else _("Ban Quản lý")
+            approver_names = ', '.join(rule.approver_user_ids.mapped('name')) if rule and rule.approver_user_ids else _("Management")
             order.message_post(
                 body=_(
-                    "Đơn hàng đã được gửi yêu cầu phê duyệt đến %(approvers)s do giá trị đơn hàng vượt hạn mức (%(amount)s %(currency)s)."
+                    "Approval request sent to %(approvers)s because the order total exceeds the threshold limit (%(amount)s %(currency)s)."
                 ) % {
                     'approvers': approver_names,
                     'amount': f"{order.amount_total:,.2f}",
@@ -152,7 +151,6 @@ class SaleOrder(models.Model):
     def action_approve_order(self):
         """Approve the order by an authorized approver and proceed to confirm."""
         for order in self:
-            # Nếu có approval lines, thực thi cấp hiện tại
             line = order.sgt_current_approval_line_id
             if line:
                 line.action_approve(user=self.env.user)
@@ -160,7 +158,7 @@ class SaleOrder(models.Model):
 
             rule = order.sgt_approval_workflow_id or self.env['sgt.erp.workflow'].sudo().get_approval_rule('sale.order', order.company_id, order.amount_total)
             if rule and not rule.check_user_can_approve(self.env.user):
-                raise AccessError(_("Bạn không có thẩm quyền phê duyệt đơn hàng này theo quy định quy trình [%s].") % rule.name)
+                raise AccessError(_("You do not have authorization to approve this sales order according to workflow [%s].") % rule.name)
             
             order.sudo().write({
                 'sgt_approval_state': 'approved',
@@ -169,7 +167,7 @@ class SaleOrder(models.Model):
                 'sgt_approval_workflow_id': rule.id if rule else False,
             })
             order.message_post(
-                body=_("Đơn hàng đã được phê duyệt thành công bởi <b>%s</b>.") % self.env.user.name
+                body=_("Sales order was successfully approved by <b>%s</b>.") % self.env.user.name
             )
             # Proceed to standard confirmation
             order.action_confirm()
@@ -185,7 +183,7 @@ class SaleOrder(models.Model):
 
             rule = order.sgt_approval_workflow_id or self.env['sgt.erp.workflow'].sudo().get_approval_rule('sale.order', order.company_id, order.amount_total)
             if rule and not rule.check_user_can_approve(self.env.user):
-                raise AccessError(_("Bạn không có thẩm quyền từ chối đơn hàng này theo quy tắc [%s].") % rule.name)
+                raise AccessError(_("You do not have authorization to reject this sales order according to workflow [%s].") % rule.name)
 
             order.sudo().write({
                 'sgt_approval_state': 'rejected',
@@ -193,7 +191,7 @@ class SaleOrder(models.Model):
                 'sgt_approval_date': fields.Datetime.now(),
             })
             order.message_post(
-                body=_("Đơn hàng đã bị từ chối phê duyệt bởi <b>%s</b>.") % self.env.user.name
+                body=_("Sales order approval was rejected by <b>%s</b>.") % self.env.user.name
             )
         return True
 
@@ -214,13 +212,12 @@ class SaleOrder(models.Model):
                         if order.sgt_approval_state == 'approved':
                             continue
                         else:
-                            # Vẫn còn cấp tiếp theo chờ duyệt
                             return {
                                 'type': 'ir.actions.client',
                                 'tag': 'display_notification',
                                 'params': {
-                                    'title': _('Đã duyệt cấp hiện tại'),
-                                    'message': _('Đơn hàng đã chuyển tới cấp duyệt tiếp theo.'),
+                                    'title': _('Current Level Approved'),
+                                    'message': _('Order has advanced to the next approval stage.'),
                                     'type': 'info',
                                     'sticky': False,
                                 }
@@ -228,12 +225,12 @@ class SaleOrder(models.Model):
                     else:
                         raise UserError(
                             _(
-                                "Đơn hàng %(name)s đang ở trạng thái 'Chờ phê duyệt' (%(level)s). "
-                                "Vui lòng liên hệ người có thẩm quyền để duyệt trước khi xác nhận đơn."
+                                "Sales order %(name)s is in 'Pending Approval' status (%(level)s). "
+                                "Please contact an authorized approver before confirming."
                             ) % {'name': order.name, 'level': line.name}
                         )
 
-                # Fallback nếu không có lines
+                # Fallback if no lines
                 if rule and rule.check_user_can_approve(self.env.user):
                     order.sudo().write({
                         'sgt_approval_state': 'approved',
@@ -242,14 +239,14 @@ class SaleOrder(models.Model):
                         'sgt_approval_workflow_id': rule.id if rule else False,
                     })
                     order.message_post(
-                        body=_("Đơn hàng được phê duyệt tự động bởi người có thẩm quyền: <b>%s</b>.") % self.env.user.name
+                        body=_("Sales order automatically approved by authorized approver: <b>%s</b>.") % self.env.user.name
                     )
                     continue
                 else:
                     raise UserError(
                         _(
-                            "Đơn hàng %(name)s đang ở trạng thái 'Chờ phê duyệt'. "
-                            "Vui lòng liên hệ người có thẩm quyền để duyệt trước khi xác nhận đơn."
+                            "Sales order %(name)s is in 'Pending Approval' status. "
+                            "Please contact an authorized approver before confirming."
                         ) % {'name': order.name}
                     )
 
@@ -261,18 +258,16 @@ class SaleOrder(models.Model):
                 should_require_approval = True
 
             if should_require_approval and rule:
-                # Tạo approval lines
+                # Create approval lines
                 lines = order._generate_approval_lines(rule)
                 pending_line = lines.filtered(lambda l: l.state == 'pending')[:1]
                 
                 if pending_line and pending_line.check_user_can_approve(self.env.user):
-                    # Tự động duyệt cấp 1
+                    # Automatically approve level 1
                     pending_line.action_approve(user=self.env.user)
                     if order.sgt_approval_state == 'approved':
-                        # Tất cả các cấp đã hoàn thành
                         continue
                     else:
-                        # Còn cấp tiếp theo, dừng xác nhận
                         order.sudo().write({
                             'sgt_approval_state': 'to_approve',
                             'sgt_approval_workflow_id': rule.id,
@@ -281,22 +276,22 @@ class SaleOrder(models.Model):
                             'type': 'ir.actions.client',
                             'tag': 'display_notification',
                             'params': {
-                                'title': _('Đã duyệt cấp 1'),
-                                'message': _('Đơn hàng đã được tự động duyệt cấp 1 và đang chờ các cấp tiếp theo.'),
+                                'title': _('Stage 1 Approved'),
+                                'message': _('Order stage 1 was automatically approved and is waiting for subsequent stages.'),
                                 'type': 'info',
                                 'sticky': False,
                             }
                         }
 
-                # User không có quyền duyệt cấp đầu tiên
+                # User cannot approve first level
                 order.sudo().write({
                     'sgt_approval_state': 'to_approve',
                     'sgt_approval_workflow_id': rule.id,
                 })
                 order.message_post(
                     body=_(
-                        "Đơn hàng có tổng tiền %(amount)s %(currency)s vượt hạn mức phê duyệt (%(threshold)s %(currency)s). "
-                        "Đã chuyển sang trạng thái <b>Chờ phê duyệt</b> theo quy trình [%(rule)s]."
+                        "Order total %(amount)s %(currency)s exceeds approval threshold (%(threshold)s %(currency)s). "
+                        "Moved to <b>Pending Approval</b> under workflow [%(rule)s]."
                     ) % {
                         'amount': f"{order.amount_total:,.2f}",
                         'threshold': f"{rule.amount_threshold:,.2f}",
@@ -308,10 +303,10 @@ class SaleOrder(models.Model):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'title': _('Chờ Phê Duyệt Hạn Mức'),
+                        'title': _('Approval Required'),
                         'message': _(
-                            "Đơn hàng %(name)s vượt hạn mức (%(threshold)s %(currency)s). "
-                            "Đã chuyển sang trạng thái 'Chờ phê duyệt'."
+                            "Order %(name)s exceeds threshold (%(threshold)s %(currency)s). "
+                            "Moved to 'Pending Approval'."
                         ) % {
                             'name': order.name,
                             'threshold': f"{rule.amount_threshold:,.2f}",

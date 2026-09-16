@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
-        <!-- ERP Control Center User (Chỉ xem) -->
+        <!-- ERP Control Center User (Read Only) -->
         <record id="group_erp_control_center_user" model="res.groups">
-            <field name="name">SGT ERP: User (Chỉ xem)</field>
-            <field name="comment">Chỉ xem thông tin cấu hình ERP.</field>
+            <field name="name">SGT ERP: User (Read Only)</field>
+            <field name="comment">Read-only access to ERP configuration.</field>
         </record>
 
-        <!-- ERP Control Center Manager (Được chỉnh cấu hình) -->
+        <!-- ERP Control Center Manager (Configuration) -->
         <record id="group_erp_control_center_manager" model="res.groups">
-            <field name="name">SGT ERP: Manager (Cấu hình)</field>
+            <field name="name">SGT ERP: Manager (Configuration)</field>
             <field name="implied_ids" eval="[(4, ref('group_erp_control_center_user'))]"/>
-            <field name="comment">Được phép thay đổi cấu hình, theme, kích hoạt tính năng.</field>
+            <field name="comment">Allowed to modify configurations, themes, and feature activations.</field>
         </record>
 
-        <!-- ERP Control Center Administrator (Full quyền + xem secret) -->
+        <!-- ERP Control Center Administrator (Full Control) -->
         <record id="group_erp_control_center_admin" model="res.groups">
-            <field name="name">SGT ERP: Administrator (Toàn quyền)</field>
+            <field name="name">SGT ERP: Administrator (Full Control)</field>
             <field name="implied_ids" eval="[(4, ref('group_erp_control_center_manager')), (4, ref('base.group_erp_manager'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
-            <field name="comment">Toàn quyền quản trị Control Center và xem các khóa bảo mật (API Secret, License Key).</field>
+            <field name="comment">Full administrative control over Control Center and security credentials (API Secret, License Key).</field>
         </record>
     </data>
 </odoo>

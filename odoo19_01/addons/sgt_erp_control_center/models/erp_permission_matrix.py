@@ -14,24 +14,24 @@ class SgtErpPermissionMatrix(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
 
     module_id = fields.Many2one('ir.module.module', string='Module', compute='_compute_module_info', store=True)
-    module_shortdesc = fields.Char(string='Phân hệ / Module', compute='_compute_module_info', store=True)
+    module_shortdesc = fields.Char(string='Module', compute='_compute_module_info', store=True)
 
     data_scope = fields.Selection([
-        ('all', 'All Documents (Toàn hệ thống)'),
-        ('team', 'Team Documents (Cả nhóm / Chi nhánh)'),
-        ('own', 'Own Documents Only (Chỉ của mình)'),
+        ('all', 'All Records (All)'),
+        ('team', 'Team Records (Team)'),
+        ('own', 'Own Records Only (Own)'),
     ], string='Data Scope', default='own', required=True,
-       help='Phạm vi dữ liệu áp dụng cho đối tượng này (Toàn hệ thống / Cả nhóm / Chỉ của mình).')
+       help='Data access scope for this business object (All Records / Team Records / Own Records).')
 
     model_type = fields.Selection([
-        ('primary', 'Nghiệp vụ chính'),
-        ('config', 'Cấu hình / Danh mục'),
-    ], string='Loại đối tượng', default='primary', required=True)
+        ('primary', 'Primary Business'),
+        ('config', 'Configuration / Master Data'),
+    ], string='Object Classification', default='primary', required=True)
 
-    perm_read = fields.Boolean(string='Read (Xem)', default=True)
-    perm_write = fields.Boolean(string='Write (Sửa)', default=False)
-    perm_create = fields.Boolean(string='Create (Tạo)', default=False)
-    perm_unlink = fields.Boolean(string='Delete (Xóa)', default=False)
+    perm_read = fields.Boolean(string='Read', default=True)
+    perm_write = fields.Boolean(string='Write', default=False)
+    perm_create = fields.Boolean(string='Create', default=False)
+    perm_unlink = fields.Boolean(string='Delete', default=False)
 
     note = fields.Char(string='Policy Note')
 
@@ -43,7 +43,7 @@ class SgtErpPermissionMatrix(models.Model):
                 ('model_id', '=', rec.model_id.id),
             ])
             if count > 1:
-                raise ValidationError(_("Đối tượng '%s' đã tồn tại trong Ma trận Phân quyền của Vai trò '%s'!") % (
+                raise ValidationError(_("Object '%s' already exists in Permission Matrix for Role '%s'!") % (
                     rec.model_id.name, rec.role_preset_id.name
                 ))
 
@@ -116,7 +116,7 @@ class SgtErpPermissionMatrix(models.Model):
         return res
 
     def action_sync_to_odoo_acls(self):
-        """Đồng bộ ma trận quyền này xuống bảng ir.model.access và ir.rule cho các groups của role"""
+        """Synchronize permission matrix to ir.model.access and ir.rule for role groups."""
         access_obj = self.env['ir.model.access'].sudo()
         synced_count = 0
         roles_to_sync = self.env['sgt.erp.role.preset']
@@ -150,7 +150,7 @@ class SgtErpPermissionMatrix(models.Model):
                     access_obj.create(vals)
                 synced_count += 1
 
-        # Đồng bộ các Record Rules động cho các roles
+        # Synchronize dynamic Record Rules for roles
         for role in roles_to_sync:
             role._sync_record_rules()
 
@@ -158,8 +158,8 @@ class SgtErpPermissionMatrix(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Đồng bộ Ma trận Phân quyền"),
-                'message': _("Đã đồng bộ thành công %d quy tắc truy cập (ACLs & Record Rules) cho %d vai trò.") % (synced_count, len(roles_to_sync)),
+                'title': _("Permission Matrix Synchronized"),
+                'message': _("Successfully synchronized %d access control rules (ACLs & Record Rules) for %d role(s).") % (synced_count, len(roles_to_sync)),
                 'type': 'success',
                 'sticky': False,
             }

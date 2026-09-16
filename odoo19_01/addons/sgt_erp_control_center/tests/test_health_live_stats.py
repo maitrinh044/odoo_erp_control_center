@@ -9,16 +9,16 @@ class TestHealthLiveStats(TransactionCase):
         self.controller = SgtSystemHealthController()
 
     def test_live_stats_structure(self):
-        """Kiểm tra JSON-RPC endpoint trả về đầy đủ các trường dữ liệu đo phần cứng thời gian thực"""
+        """Test JSON-RPC endpoint returns complete real-time hardware telemetry structure"""
         stats = self.controller.get_live_stats(env=self.env)
         
-        # Kiểm tra các khối chỉ số chính
+        # Test core metric blocks
         self.assertIn('cpu', stats)
         self.assertIn('ram', stats)
         self.assertIn('storage', stats)
         self.assertIn('system', stats)
 
-        # Kiểm tra chi tiết CPU
+        # Test CPU details
         cpu = stats['cpu']
         self.assertIn('percentage', cpu)
         self.assertIn('cores', cpu)
@@ -30,7 +30,7 @@ class TestHealthLiveStats(TransactionCase):
         self.assertGreaterEqual(cpu['percentage'], 0.0)
         self.assertLessEqual(cpu['percentage'], 100.0)
 
-        # Kiểm tra chi tiết RAM
+        # Test RAM details
         ram = stats['ram']
         self.assertIn('percentage', ram)
         self.assertIn('used_gb', ram)
@@ -39,13 +39,13 @@ class TestHealthLiveStats(TransactionCase):
         self.assertGreaterEqual(ram['percentage'], 0.0)
         self.assertLessEqual(ram['percentage'], 100.0)
 
-        # Kiểm tra chi tiết Storage
+        # Test Storage details
         storage = stats['storage']
         self.assertIn('os_disk_percentage', storage)
         self.assertIn('data_disk_percentage', storage)
         self.assertIn('database_size_mb', storage)
 
-        # Kiểm tra chi tiết System
+        # Test System details
         system = stats['system']
         self.assertIn('active_connections', system)
         self.assertIn('uptime', system)

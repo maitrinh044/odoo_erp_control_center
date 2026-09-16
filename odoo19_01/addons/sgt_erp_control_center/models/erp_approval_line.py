@@ -7,60 +7,60 @@ class SgtErpApprovalLine(models.Model):
     _description = 'SGT ERP Approval Progress Line'
     _order = 'sequence asc, id asc'
 
-    name = fields.Char(string='Tên cấp duyệt', required=True)
-    res_model = fields.Char(string='Model kỹ thuật', required=True, index=True)
-    res_id = fields.Integer(string='ID Chứng từ', required=True, index=True)
+    name = fields.Char(string='Stage Name', required=True)
+    res_model = fields.Char(string='Target Model', required=True, index=True)
+    res_id = fields.Integer(string='Document ID', required=True, index=True)
 
-    sale_order_id = fields.Many2one('sale.order', string='Đơn bán hàng', ondelete='cascade', index=True)
-    purchase_order_id = fields.Many2one('purchase.order', string='Đơn mua hàng', ondelete='cascade', index=True)
-    account_move_id = fields.Many2one('account.move', string='Hóa đơn', ondelete='cascade', index=True)
+    sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', index=True)
+    purchase_order_id = fields.Many2one('purchase.order', string='Purchase Order', ondelete='cascade', index=True)
+    account_move_id = fields.Many2one('account.move', string='Invoice / Entry', ondelete='cascade', index=True)
 
     sale_order_line_ids = fields.One2many(
         related='sale_order_id.order_line',
-        string='Chi tiết đơn bán',
+        string='Sales Lines',
         readonly=True
     )
     purchase_order_line_ids = fields.One2many(
         related='purchase_order_id.order_line',
-        string='Chi tiết đơn mua',
+        string='Purchase Lines',
         readonly=True
     )
     invoice_line_ids = fields.One2many(
         related='account_move_id.invoice_line_ids',
-        string='Chi tiết hóa đơn',
+        string='Invoice Lines',
         readonly=True
     )
 
-    workflow_id = fields.Many2one('sgt.erp.workflow', string='Quy trình phê duyệt', ondelete='set null')
-    level_id = fields.Many2one('sgt.erp.workflow.level', string='Cấu hình cấp duyệt', ondelete='set null')
-    sequence = fields.Integer(string='Thứ tự', default=10)
+    workflow_id = fields.Many2one('sgt.erp.workflow', string='Approval Workflow', ondelete='set null')
+    level_id = fields.Many2one('sgt.erp.workflow.level', string='Approval Stage Config', ondelete='set null')
+    sequence = fields.Integer(string='Sequence', default=10)
 
     state = fields.Selection([
-        ('waiting', 'Chờ cấp trước duyệt'),
-        ('pending', 'Đang chờ phê duyệt'),
-        ('approved', 'Đã phê duyệt'),
-        ('rejected', 'Từ chối'),
-        ('skipped', 'Bỏ qua'),
-    ], string='Trạng thái', default='waiting', required=True, index=True)
+        ('waiting', 'Waiting'),
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('skipped', 'Skipped'),
+    ], string='Status', default='waiting', required=True, index=True)
 
     approver_user_ids = fields.Many2many(
         'res.users',
         'sgt_erp_approval_line_user_rel',
         'line_id',
         'user_id',
-        string='Người có quyền duyệt'
+        string='Designated Approvers'
     )
-    approver_group_id = fields.Many2one('res.groups', string='Nhóm quyền duyệt')
+    approver_group_id = fields.Many2one('res.groups', string='Approver Group')
 
-    approved_by_id = fields.Many2one('res.users', string='Người thực hiện', readonly=True)
-    approved_date = fields.Datetime(string='Thời gian thực hiện', readonly=True)
-    note = fields.Text(string='Ý kiến / Lý do')
+    approved_by_id = fields.Many2one('res.users', string='Action By', readonly=True)
+    approved_date = fields.Datetime(string='Action Date', readonly=True)
+    note = fields.Text(string='Comment / Reason')
 
-    # Reference tới bản ghi chứng từ để hiển thị trên danh sách hàng đợi duyệt
-    document_reference = fields.Char(string='Mã chứng từ', compute='_compute_document_info', store=True)
-    partner_id = fields.Many2one('res.partner', string='Khách hàng / Đối tác', compute='_compute_document_info', store=True)
-    amount_total = fields.Float(string='Tổng tiền', compute='_compute_document_info', store=True)
-    company_id = fields.Many2one('res.company', string='Công ty', compute='_compute_document_info', store=True)
+    # Reference to original document record for approval queue display
+    document_reference = fields.Char(string='Document Reference', compute='_compute_document_info', store=True)
+    partner_id = fields.Many2one('res.partner', string='Customer / Partner', compute='_compute_document_info', store=True)
+    amount_total = fields.Float(string='Total Amount', compute='_compute_document_info', store=True)
+    company_id = fields.Many2one('res.company', string='Company', compute='_compute_document_info', store=True)
 
     @api.depends('res_model', 'res_id', 'sale_order_id', 'purchase_order_id', 'account_move_id')
     def _compute_document_info(self):
@@ -94,7 +94,7 @@ class SgtErpApprovalLine(models.Model):
                     line.document_reference = f"{line.res_model} #{line.res_id}"
 
     def check_user_can_approve(self, user=None):
-        """Kiểm tra user có quyền duyệt dòng này không."""
+        """Check whether user has permission to approve this line."""
         self.ensure_one()
         user = user or self.env.user
         if user.has_group('base.group_system'):
@@ -109,28 +109,28 @@ class SgtErpApprovalLine(models.Model):
         return False
 
     def action_approve(self, user=None, note=None):
-        """Duyệt cấp hiện tại và luân chuyển tiếp."""
+        """Approve current level and advance to next level."""
         self.ensure_one()
         user = user or self.env.user
         if not self.check_user_can_approve(user):
-            raise AccessError(_("Bạn không có quyền phê duyệt ở cấp [%s].") % self.name)
+            raise AccessError(_("You do not have permission to approve stage [%s].") % self.name)
         if self.state != 'pending':
-            raise UserError(_("Cấp duyệt này hiện không ở trạng thái chờ duyệt."))
+            raise UserError(_("This approval stage is not currently pending."))
 
         self.sudo().write({
-            ('state'): 'approved',
-            ('approved_by_id'): user.id,
-            ('approved_date'): fields.Datetime.now(),
-            ('note'): note or '',
+            'state': 'approved',
+            'approved_by_id': user.id,
+            'approved_date': fields.Datetime.now(),
+            'note': note or '',
         })
 
-        # Ghi log vào chatter của chứng từ
+        # Post log to document Chatter
         doc = self._get_document_record()
-        note_display = f"<br/><i>Ghi chú: {note}</i>" if note else ""
+        note_display = f"<br/><i>Note: {note}</i>" if note else ""
         if doc and hasattr(doc, 'message_post'):
             doc.sudo().message_post(
                 body=_(
-                    "<b>%(level)s</b> đã được phê duyệt bởi <b>%(user)s</b>.%(note)s"
+                    "<b>%(level)s</b> was approved by <b>%(user)s</b>.%(note)s"
                 ) % {
                     'level': self.name,
                     'user': user.name,
@@ -138,7 +138,7 @@ class SgtErpApprovalLine(models.Model):
                 }
             )
 
-        # Tìm cấp tiếp theo cần duyệt của chứng từ này
+        # Look for next pending line for this document
         all_lines = self.search([
             ('res_model', '=', self.res_model),
             ('res_id', '=', self.res_id)
@@ -146,13 +146,13 @@ class SgtErpApprovalLine(models.Model):
 
         next_line = all_lines.filtered(lambda l: l.state == 'waiting')[:1]
         if next_line:
-            # Chuyển cấp tiếp theo sang pending
+            # Advance next level to pending
             next_line.sudo().write({'state': 'pending'})
             if doc and hasattr(doc, 'message_post'):
-                approvers_str = ', '.join(next_line.approver_user_ids.mapped('name')) if next_line.approver_user_ids else (next_line.approver_group_id.name if next_line.approver_group_id else _("Ban Quản lý"))
+                approvers_str = ', '.join(next_line.approver_user_ids.mapped('name')) if next_line.approver_user_ids else (next_line.approver_group_id.name if next_line.approver_group_id else _("Management"))
                 doc.sudo().message_post(
                     body=_(
-                        "Chuyển yêu cầu phê duyệt tiếp theo tới <b>%(next_level)s</b> (Người phụ trách: %(approvers)s)."
+                        "Advance approval stage to <b>%(next_level)s</b> (Assigned to: %(approvers)s)."
                     ) % {
                         'next_level': next_line.name,
                         'approvers': approvers_str,
@@ -161,7 +161,7 @@ class SgtErpApprovalLine(models.Model):
             if hasattr(doc, 'sgt_approval_state'):
                 doc.sudo().write({'sgt_approval_state': 'to_approve'})
         else:
-            # Tất cả các cấp đã duyệt xong!
+            # All approval stages completed!
             if doc and hasattr(doc, 'sgt_approval_state'):
                 doc.sudo().write({
                     'sgt_approval_state': 'approved',
@@ -171,10 +171,10 @@ class SgtErpApprovalLine(models.Model):
             if doc and hasattr(doc, 'message_post'):
                 doc.sudo().message_post(
                     body=_(
-                        "<b>Tất cả các cấp phê duyệt đã hoàn tất thành công!</b> Chứng từ sẵn sàng được xử lý tiếp."
+                        "<b>All approval stages have been successfully completed!</b> Document is ready for processing."
                     )
                 )
-            # Tự động xác nhận chứng từ tương ứng
+            # Automatically confirm document
             if self.res_model == 'sale.order' and doc and doc.state in ('draft', 'sent'):
                 doc.action_confirm()
             elif self.res_model == 'purchase.order' and doc and doc.state in ('draft', 'sent', 'to approve'):
@@ -185,13 +185,13 @@ class SgtErpApprovalLine(models.Model):
         return True
 
     def action_reject(self, user=None, note=None):
-        """Từ chối cấp duyệt này và dừng quy trình."""
+        """Reject current level and stop workflow."""
         self.ensure_one()
         user = user or self.env.user
         if not self.check_user_can_approve(user):
-            raise AccessError(_("Bạn không có quyền từ chối ở cấp [%s].") % self.name)
+            raise AccessError(_("You do not have permission to reject stage [%s].") % self.name)
         if self.state not in ('pending', 'waiting'):
-            raise UserError(_("Không thể từ chối cấp duyệt ở trạng thái hiện tại."))
+            raise UserError(_("Cannot reject stage in its current status."))
 
         self.sudo().write({
             'state': 'rejected',
@@ -200,7 +200,7 @@ class SgtErpApprovalLine(models.Model):
             'note': note or '',
         })
 
-        # Bỏ qua tất cả các cấp chờ phía sau
+        # Skip all subsequent pending/waiting levels
         all_lines = self.search([
             ('res_model', '=', self.res_model),
             ('res_id', '=', self.res_id),
@@ -211,11 +211,11 @@ class SgtErpApprovalLine(models.Model):
             all_lines.sudo().write({'state': 'skipped'})
 
         doc = self._get_document_record()
-        reason_display = f"<br/><b>Lý do từ chối:</b> {note}" if note else ""
+        reason_display = f"<br/><b>Rejection reason:</b> {note}" if note else ""
         if doc and hasattr(doc, 'message_post'):
             doc.sudo().message_post(
                 body=_(
-                    "<b>%(level)s</b> đã bị <b>TỪ CHỐI</b> bởi <b>%(user)s</b>.%(reason)s"
+                    "<b>%(level)s</b> was <b>REJECTED</b> by <b>%(user)s</b>.%(reason)s"
                 ) % {
                     'level': self.name,
                     'user': user.name,
@@ -232,7 +232,7 @@ class SgtErpApprovalLine(models.Model):
         return True
 
     def _get_document_record(self):
-        """Helper lấy record chứng từ gốc."""
+        """Helper to get source document record."""
         self.ensure_one()
         if self.sale_order_id:
             return self.sale_order_id
@@ -246,14 +246,14 @@ class SgtErpApprovalLine(models.Model):
         return False
 
     def action_open_document(self):
-        """Hành động mở xem chứng từ từ danh sách chờ duyệt."""
+        """Action to open source document from pending queue."""
         self.ensure_one()
         doc = self._get_document_record()
         if not doc:
-            raise UserError(_("Không tìm thấy chứng từ liên quan."))
+            raise UserError(_("Related document not found."))
         return {
             'type': 'ir.actions.act_window',
-            'name': self.document_reference or _("Chứng từ"),
+            'name': self.document_reference or _("Document"),
             'res_model': self.res_model,
             'res_id': self.res_id,
             'view_mode': 'form',
@@ -261,10 +261,10 @@ class SgtErpApprovalLine(models.Model):
         }
 
     def action_open_approve_wizard(self):
-        """Mở popup duyệt cấp này trực tiếp từ form cấp duyệt."""
+        """Open approval modal directly from approval line form."""
         self.ensure_one()
         return {
-            'name': _("Phê Duyệt: %s") % self.document_reference,
+            'name': _("Approve: %s") % self.document_reference,
             'type': 'ir.actions.act_window',
             'res_model': 'sgt.erp.approval.wizard',
             'view_mode': 'form',
@@ -276,10 +276,10 @@ class SgtErpApprovalLine(models.Model):
         }
 
     def action_open_reject_wizard(self):
-        """Mở popup từ chối cấp này trực tiếp từ form cấp duyệt."""
+        """Open reject modal directly from approval line form."""
         self.ensure_one()
         return {
-            'name': _("Từ Chối: %s") % self.document_reference,
+            'name': _("Reject: %s") % self.document_reference,
             'type': 'ir.actions.act_window',
             'res_model': 'sgt.erp.approval.wizard',
             'view_mode': 'form',

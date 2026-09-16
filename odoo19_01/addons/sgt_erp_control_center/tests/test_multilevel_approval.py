@@ -42,24 +42,24 @@ class TestMultilevelApproval(TransactionCase):
             'group_ids': [(6, 0, [group_user.id, cls.env.ref('sales_team.group_sale_manager').id])]
         })
 
-        cls.partner = cls.env['res.partner'].create({'name': 'Khách Hàng VIP Đa Cấp'})
+        cls.partner = cls.env['res.partner'].create({'name': 'VIP Multi-level Customer'})
         cls.product = cls.env['product.product'].create({
-            'name': 'Sản Phẩm ERP Cao Cấp',
+            'name': 'Premium ERP Product',
             'list_price': 10000000.0,
             'taxes_id': [(5, 0, 0)],
         })
 
         # Create 3-level workflow
         cls.wf = cls.Workflow.create({
-            'name': 'Quy trình phê duyệt bán hàng 3 cấp',
+            'name': '3-Level Sales Approval Workflow',
             'workflow_type': 'sales',
             'require_approval': True,
             'approval_mode': 'sequential',
-            'amount_threshold': 20000000.0, # >= 20M kích hoạt duyệt
+            'amount_threshold': 20000000.0, # >= 20M triggers approval
         })
 
         cls.lvl1 = cls.Level.create({
-            'name': 'Cấp 1: Trưởng nhóm',
+            'name': 'Level 1: Team Lead',
             'workflow_id': cls.wf.id,
             'sequence': 10,
             'approver_type': 'user',
@@ -67,7 +67,7 @@ class TestMultilevelApproval(TransactionCase):
             'amount_min': 20000000.0,
         })
         cls.lvl2 = cls.Level.create({
-            'name': 'Cấp 2: Trưởng phòng',
+            'name': 'Level 2: Manager',
             'workflow_id': cls.wf.id,
             'sequence': 20,
             'approver_type': 'user',
@@ -75,7 +75,7 @@ class TestMultilevelApproval(TransactionCase):
             'amount_min': 50000000.0,
         })
         cls.lvl3 = cls.Level.create({
-            'name': 'Cấp 3: Giám đốc',
+            'name': 'Level 3: Director',
             'workflow_id': cls.wf.id,
             'sequence': 30,
             'approver_type': 'user',
@@ -95,26 +95,27 @@ class TestMultilevelApproval(TransactionCase):
         })
 
     def test_01_multilevel_workflow_creation(self):
-        """Kiểm tra cấu hình workflow và các cấp duyệt"""
+        """Test workflow configuration and approval levels"""
         self.assertEqual(self.wf.level_count, 3)
         self.assertEqual(self.wf.approval_mode, 'sequential')
+
         levels = self.wf.get_applicable_levels(120000000.0)
-        self.assertEqual(len(levels), 3, "Đơn 120M phải thỏa mãn cả 3 cấp duyệt")
+        self.assertEqual(len(levels), 3, "120M order must satisfy all 3 approval levels")
 
         levels_low = self.wf.get_applicable_levels(30000000.0)
-        self.assertEqual(len(levels_low), 1, "Đơn 30M chỉ thỏa mãn Cấp 1")
+        self.assertEqual(len(levels_low), 1, "30M order only satisfies Level 1")
 
     def test_02_sequential_approval_progression(self):
-        """Kiểm tra tiến trình phê duyệt tuần tự 3 cấp đầy đủ"""
+        """Test complete 3-level sequential approval progression"""
         order = self._create_order(qty=12) # 120M
         self.assertEqual(order.amount_total, 120000000.0)
 
-        # Sales rep bấm xác nhận đơn -> vượt hạn mức -> chuyển sang to_approve
+        # Sales rep confirms order -> over threshold -> changes to to_approve
         order.with_user(self.user_sales).action_confirm()
         self.assertEqual(order.sgt_approval_state, 'to_approve')
         self.assertEqual(len(order.sgt_approval_line_ids), 3)
 
-        # Kiểm tra trạng thái khởi tạo
+        # Test initial states
         line1 = order.sgt_approval_line_ids.filtered(lambda l: l.sequence == 10)
         line2 = order.sgt_approval_line_ids.filtered(lambda l: l.sequence == 20)
         line3 = order.sgt_approval_line_ids.filtered(lambda l: l.sequence == 30)
@@ -124,28 +125,28 @@ class TestMultilevelApproval(TransactionCase):
         self.assertEqual(line3.state, 'waiting')
         self.assertEqual(order.sgt_current_approval_line_id, line1)
 
-        # Cấp 1 (Team Lead) duyệt
-        line1.with_user(self.user_lead).action_approve(note="Đồng ý cấp 1")
+        # Level 1 (Team Lead) approves
+        line1.with_user(self.user_lead).action_approve(note="Approved Level 1")
         self.assertEqual(line1.state, 'approved')
         self.assertEqual(line2.state, 'pending')
         self.assertEqual(line3.state, 'waiting')
         self.assertEqual(order.sgt_approval_state, 'to_approve')
         self.assertEqual(order.sgt_current_approval_line_id, line2)
 
-        # Cấp 2 (Manager) duyệt
-        line2.with_user(self.user_manager).action_approve(note="Đồng ý cấp 2")
+        # Level 2 (Manager) approves
+        line2.with_user(self.user_manager).action_approve(note="Approved Level 2")
         self.assertEqual(line2.state, 'approved')
         self.assertEqual(line3.state, 'pending')
         self.assertEqual(order.sgt_current_approval_line_id, line3)
 
-        # Cấp 3 (Director) duyệt -> Hoàn tất -> Tự động xác nhận đơn hàng!
-        line3.with_user(self.user_director).action_approve(note="Tổng Giám đốc phê duyệt")
+        # Level 3 (Director) approves -> Completed -> Auto confirms order!
+        line3.with_user(self.user_director).action_approve(note="Approved by Director")
         self.assertEqual(line3.state, 'approved')
         self.assertEqual(order.sgt_approval_state, 'approved')
-        self.assertEqual(order.state, 'sale', "Đơn hàng phải tự động chuyển sang trạng thái sale sau khi cấp cuối cùng duyệt")
+        self.assertEqual(order.state, 'sale', "Order must automatically transition to sale state after final approval")
 
     def test_03_rejection_at_intermediate_level(self):
-        """Kiểm tra khi bị từ chối ở cấp giữa -> dừng luân chuyển"""
+        """Test rejection at intermediate level -> stops progression"""
         order = self._create_order(qty=12) # 120M
         order.with_user(self.user_sales).action_confirm()
 
@@ -153,29 +154,29 @@ class TestMultilevelApproval(TransactionCase):
         line2 = order.sgt_approval_line_ids.filtered(lambda l: l.sequence == 20)
         line3 = order.sgt_approval_line_ids.filtered(lambda l: l.sequence == 30)
 
-        # Cấp 1 duyệt OK
+        # Level 1 approves OK
         line1.with_user(self.user_lead).action_approve()
 
-        # Cấp 2 từ chối
-        line2.with_user(self.user_manager).action_reject(note="Chiết khấu chưa phù hợp chính sách công ty")
+        # Level 2 rejects
+        line2.with_user(self.user_manager).action_reject(note="Discount does not comply with policy")
         self.assertEqual(line2.state, 'rejected')
-        self.assertEqual(line3.state, 'skipped', "Cấp sau phải bị skipped khi cấp trước từ chối")
+        self.assertEqual(line3.state, 'skipped', "Subsequent levels must be skipped when previous level is rejected")
         self.assertEqual(order.sgt_approval_state, 'rejected')
-        self.assertEqual(order.state, 'draft', "Đơn hàng bị từ chối không được xác nhận")
+        self.assertEqual(order.state, 'draft', "Rejected order must not be confirmed")
 
     def test_04_direct_mode_approval(self):
-        """Kiểm tra chế độ Direct Mode: Chỉ cấp cao nhất duyệt"""
+        """Test Direct Mode: Only highest level approves"""
         self.wf.approval_mode = 'direct'
         order = self._create_order(qty=12) # 120M
         order.with_user(self.user_sales).action_confirm()
 
-        # Trong direct mode, chỉ cấp cao nhất (Director) được sinh ra
+        # In direct mode, only the highest level (Director) is generated
         self.assertEqual(len(order.sgt_approval_line_ids), 1)
         line = order.sgt_approval_line_ids[0]
         self.assertEqual(line.level_id, self.lvl3)
         self.assertEqual(line.state, 'pending')
 
-        # Director duyệt -> xong ngay
+        # Director approves -> immediately complete
         line.with_user(self.user_director).action_approve()
         self.assertEqual(order.sgt_approval_state, 'approved')
         self.assertEqual(order.state, 'sale')
@@ -184,21 +185,21 @@ class TestMultilevelApproval(TransactionCase):
         self.wf.approval_mode = 'sequential'
 
     def test_05_unauthorized_approver_blocked(self):
-        """Kiểm tra user không có thẩm quyền bị chặn duyệt"""
+        """Test unauthorized approver is blocked with AccessError"""
         order = self._create_order(qty=12)
         order.with_user(self.user_sales).action_confirm()
 
         line1 = order.sgt_approval_line_ids.filtered(lambda l: l.sequence == 10)
-        # Sales rep không thể duyệt Cấp 1
+        # Sales rep cannot approve Level 1
         with self.assertRaises(AccessError):
             line1.with_user(self.user_sales).action_approve()
 
-        # Manager không thể duyệt Cấp 1 (vì Cấp 1 chỉ định Team Lead)
+        # Manager cannot approve Level 1 (assigned to Team Lead)
         with self.assertRaises(AccessError):
             line1.with_user(self.user_manager).action_approve()
 
     def test_06_approval_wizard(self):
-        """Kiểm tra tương tác qua Wizard phê duyệt"""
+        """Test interaction via approval wizard"""
         order = self._create_order(qty=12)
         order.with_user(self.user_sales).action_confirm()
 
@@ -206,8 +207,8 @@ class TestMultilevelApproval(TransactionCase):
         wizard = self.env['sgt.erp.approval.wizard'].with_user(self.user_lead).create({
             'line_id': line1.id,
             'action_type': 'approve',
-            'note': 'Duyệt qua Wizard kiểm tra giao diện',
+            'note': 'Approved via UI wizard',
         })
         wizard.action_confirm()
         self.assertEqual(line1.state, 'approved')
-        self.assertIn('Duyệt qua Wizard', line1.note)
+        self.assertIn('Approved via UI wizard', line1.note)

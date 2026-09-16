@@ -21,7 +21,7 @@ class IrActionsActWindow(models.Model):
 
     def _get_action_dict(self):
         res = super()._get_action_dict()
-        # Không chặn trong chế độ cài đặt module ban đầu hoặc superuser hệ thống (trừ khi test_action_guard)
+        # Do not block in install mode or superuser mode (unless test_action_guard context is set)
         if not self.env.context.get('test_action_guard'):
             if self.env.su or self.env.context.get('install_mode'):
                 return res
@@ -32,7 +32,7 @@ class IrActionsActWindow(models.Model):
             is_on = Feature.sudo().is_enabled(feat_code)
             if not is_on:
                 raise AccessError(
-                    _("Tính năng '%s' (Phân hệ %s) hiện đang bị vô hiệu hóa trong hệ thống SGT ERP theo cấu hình gói dịch vụ.")
+                    _("Feature '%s' (%s module) is currently disabled in SGT ERP according to the active package configuration.")
                     % (self.name or self.res_model, feat_code.upper())
                 )
         return res
@@ -44,14 +44,14 @@ class IrActionsServer(models.Model):
         if not self.env.su and not self.env.context.get('install_mode'):
             if self.model_name in ('crm.lead', 'crm.team') and not self.env['sgt.erp.feature'].sudo().is_enabled('crm'):
                 raise AccessError(
-                    _("Phân hệ CRM hiện đang bị vô hiệu hóa theo cấu hình gói dịch vụ của hệ thống.")
+                    _("The CRM module is currently disabled according to system package configuration.")
                 )
             if self.model_name == 'purchase.order' and not self.env['sgt.erp.feature'].sudo().is_enabled('purchase'):
                 raise AccessError(
-                    _("Phân hệ Mua hàng hiện đang bị vô hiệu hóa theo cấu hình gói dịch vụ của hệ thống.")
+                    _("The Purchase module is currently disabled according to system package configuration.")
                 )
             if self.model_name == 'account.move' and not self.env['sgt.erp.feature'].sudo().is_enabled('account'):
                 raise AccessError(
-                    _("Phân hệ Kế toán & Hóa đơn hiện đang bị vô hiệu hóa theo cấu hình gói dịch vụ của hệ thống.")
+                    _("The Invoicing & Accounting module is currently disabled according to system package configuration.")
                 )
         return super().run()

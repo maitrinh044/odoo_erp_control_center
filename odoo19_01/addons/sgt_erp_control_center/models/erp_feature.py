@@ -10,27 +10,27 @@ class SgtErpFeature(models.Model):
     name = fields.Char(string='Feature Name', required=True)
     code = fields.Char(string='Feature Code', required=True, index=True)
     sequence = fields.Integer(string='Sequence', default=10)
-    icon = fields.Char(string='FontAwesome Icon', default='fa-cube', help="VD: fa-users, fa-shopping-cart, fa-truck, fa-book")
+    icon = fields.Char(string='FontAwesome Icon', default='fa-cube', help="E.g.: fa-users, fa-shopping-cart, fa-truck, fa-book")
     category = fields.Selection([
         ('crm', 'CRM'),
-        ('sales', 'Bán hàng'),
-        ('purchase', 'Mua hàng'),
-        ('account', 'Kế toán & Hóa đơn'),
-        ('stock', 'Kho vận'),
-        ('hr', 'Nhân sự'),
-        ('calendar', 'Lịch làm việc'),
-        ('project', 'Dự án'),
-        ('lms', 'Đào tạo LMS'),
-        ('system', 'Hệ thống'),
-        ('other', 'Khác'),
+        ('sales', 'Sales'),
+        ('purchase', 'Purchase'),
+        ('account', 'Invoicing & Accounting'),
+        ('stock', 'Inventory'),
+        ('hr', 'Human Resources'),
+        ('calendar', 'Calendar'),
+        ('project', 'Project'),
+        ('lms', 'LMS eLearning'),
+        ('system', 'System'),
+        ('other', 'Other'),
     ], string='Category', default='system', required=True)
     
     active = fields.Boolean(string='Enabled', default=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     required_module_names = fields.Char(string='Required Modules (comma-separated)', help='E.g.: crm,sale_management,hr')
-    menu_xml_id = fields.Char(string='Related Menu XML ID', help="Mã XML ID của menu gốc, vd: 'crm.crm_menu_root'. Hỗ trợ nhiều ID phân tách bằng dấu phẩy.")
-    auto_sync_menu = fields.Boolean(string='Auto Sync Menu Visibility', default=True, help="Tự động ẩn/hiện menu tương ứng khi tính năng này Bật/Tắt.")
-    block_direct_access = fields.Boolean(string='Block Direct Access', default=True, help="Chặn truy cập trực tiếp qua URL/Action khi tính năng này bị tắt.")
+    menu_xml_id = fields.Char(string='Related Menu XML ID', help="Root menu XML ID, e.g. 'crm.crm_menu_root'. Supports comma-separated multiple IDs.")
+    auto_sync_menu = fields.Boolean(string='Auto Sync Menu Visibility', default=True, help="Automatically toggle related menu visibility when feature state changes.")
+    block_direct_access = fields.Boolean(string='Block Direct Access', default=True, help="Block direct URL/Action access when this feature is disabled.")
     description = fields.Text(string='Description')
 
     @api.constrains('code', 'company_id')
@@ -47,8 +47,8 @@ class SgtErpFeature(models.Model):
     @api.model
     def is_enabled(self, code, company_id=None):
         """
-        Helper API để các addon khác kiểm tra xem feature có được bật không.
-        Ví dụ: self.env['sgt.erp.feature'].is_enabled('google_calendar')
+        Helper API to check if a feature is enabled.
+        Example: self.env['sgt.erp.feature'].is_enabled('google_calendar')
         """
         if not company_id:
             company_id = self.env.company.id
@@ -64,7 +64,7 @@ class SgtErpFeature(models.Model):
         return bool(feature.active)
 
     def sync_menu_visibility(self):
-        """Đồng bộ trạng thái active của Menu tương ứng theo trạng thái của Feature và xóa menu cache tức thời."""
+        """Synchronize active state of related menus according to feature state and clear menu cache."""
         Menu = self.env['ir.ui.menu'].sudo().with_context(active_test=False)
         changed = False
         for rec in self.with_context(active_test=False):
@@ -97,20 +97,20 @@ class SgtErpFeature(models.Model):
         return res
 
     def action_toggle_feature(self):
-        """Bật/tắt tính năng một chạm và hiển thị thông báo nghiệp vụ."""
+        """Toggle feature state (1-click) and display notification."""
         self.ensure_one()
         new_state = not self.active
         self.write({'active': new_state})
         self.with_context(force_clear_cache=True).sync_menu_visibility()
         
-        status_text = _("BẬT") if new_state else _("TẮT")
+        status_text = _("ENABLED") if new_state else _("DISABLED")
         msg_type = 'success' if new_state else 'warning'
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Cập nhật tính năng ERP"),
-                'message': _("Đã %(status)s phân hệ: %(name)s. Menu hệ thống đã được đồng bộ.") % {
+                'title': _("Feature Status Updated"),
+                'message': _("%(status)s feature: %(name)s. System menus have been synchronized.") % {
                     'status': status_text,
                     'name': self.name,
                 },
@@ -122,7 +122,7 @@ class SgtErpFeature(models.Model):
 
     @api.model
     def action_enable_all_features(self):
-        """Bật tất cả tính năng đang có trong hệ thống."""
+        """Enable all features in the system."""
         features = self.with_context(active_test=False).search([('active', '=', False)])
         if features:
             features.write({'active': True})
@@ -131,8 +131,8 @@ class SgtErpFeature(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Kích hoạt tính năng"),
-                'message': _("Đã bật toàn bộ các tính năng và đồng bộ lại menu."),
+                'title': _("Activate Features"),
+                'message': _("All system features enabled and menus synchronized successfully."),
                 'type': 'success',
                 'sticky': False,
                 'next': {'type': 'ir.actions.client', 'tag': 'reload'},
@@ -141,7 +141,7 @@ class SgtErpFeature(models.Model):
 
     @api.model
     def action_force_sync_all_menus(self):
-        """Ép đồng bộ lại trạng thái menu cho tất cả các tính năng."""
+        """Force resynchronization of menu visibility for all features."""
         all_features = self.with_context(active_test=False).search([])
         all_features.with_context(force_clear_cache=True).sync_menu_visibility()
         self.env.registry.clear_all_caches()
@@ -150,8 +150,8 @@ class SgtErpFeature(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _("Đồng bộ Menu"),
-                'message': _("Đã đồng bộ lại toàn bộ Menu theo cấu hình các tính năng."),
+                'title': _("Menu Synchronization"),
+                'message': _("All system menus synchronized based on current feature configuration."),
                 'type': 'info',
                 'sticky': False,
                 'next': {'type': 'ir.actions.client', 'tag': 'reload'},

@@ -12,16 +12,16 @@
                     <sheet>
                         <!-- STEP 1: BUSINESS & BRAND -->
                         <div invisible="state != 'step1'">
-                            <h4 class="text-primary mb-3"><i class="fa fa-building me-2"/>Bước 1: Thông Tin Doanh Nghiệp &amp; Nhãn Hiệu</h4>
-                            <p class="text-muted">Nhập thông tin cơ bản của khách hàng và nhận diện thương hiệu.</p>
+                            <h4 class="text-primary mb-3"><i class="fa fa-building me-2" title="Business"/>Step 1: Business Profile &amp; Branding</h4>
+                            <p class="text-muted">Enter core enterprise details and brand identity.</p>
                             <group>
                                 <group>
                                     <field name="company_id" options="{'no_create': True}"/>
-                                    <field name="customer_name" placeholder="Tên Doanh nghiệp / Khách hàng"/>
-                                    <field name="customer_code" placeholder="Mã KH (E.g. SGT-MAIN)"/>
+                                    <field name="customer_name" placeholder="Enterprise / Customer Name"/>
+                                    <field name="customer_code" placeholder="Customer Code (E.g. SGT-MAIN)"/>
                                 </group>
                                 <group>
-                                    <field name="product_name" placeholder="Tên hệ thống ERP (E.g. SGT ERP)"/>
+                                    <field name="product_name" placeholder="ERP System Name (E.g. SGT ERP)"/>
                                     <field name="industry"/>
                                     <field name="logo" widget="image" class="oe_avatar" options="{'preview_image': 'logo', 'size': [90, 90]}"/>
                                 </group>
@@ -30,38 +30,38 @@
 
                         <!-- STEP 2: PACKAGE SELECTION -->
                         <div invisible="state != 'step2'">
-                            <h4 class="text-primary mb-3"><i class="fa fa-cubes me-2"/>Bước 2: Lựa Chọn Gói Giải Pháp ERP</h4>
-                            <p class="text-muted">Chọn gói giải pháp phù hợp với quy mô và yêu cầu vận hành của doanh nghiệp.</p>
+                            <h4 class="text-primary mb-3"><i class="fa fa-cubes me-2" title="Package"/>Step 2: Select ERP Solution Package</h4>
+                            <p class="text-muted">Choose the solution package matching your organization scale and requirements.</p>
                             <group>
                                 <field name="package_id" options="{'no_create': True}" required="state == 'step2'"/>
                             </group>
                             <div class="alert alert-info" role="status" invisible="not package_features_summary">
-                                <strong><i class="fa fa-info-circle me-1"/>Tính năng đi kèm gói:</strong>
+                                <strong><i class="fa fa-info-circle me-1" title="Info"/>Included Package Features:</strong>
                                 <p class="mb-0 mt-1"><field name="package_features_summary" readonly="1"/></p>
                             </div>
                         </div>
 
                         <!-- STEP 3: THEME & APPEARANCE -->
                         <div invisible="state != 'step3'">
-                            <h4 class="text-primary mb-3"><i class="fa fa-paint-brush me-2"/>Bước 3: Giao Diện &amp; Theme Trực Quan</h4>
-                            <p class="text-muted">Chọn bộ màu sắc và kiểu dáng hiển thị cho hệ thống ERP.</p>
+                            <h4 class="text-primary mb-3"><i class="fa fa-paint-brush me-2" title="Theme"/>Step 3: Visual Theme &amp; Appearance</h4>
+                            <p class="text-muted">Select corporate color palette and visual styling.</p>
                             <group>
                                 <field name="theme_id" options="{'no_create': True}" required="state == 'step3'"/>
                             </group>
                             <p class="small text-muted mt-2">
-                                <i class="fa fa-magic me-1"/>Hệ thống hỗ trợ 8 bộ phối màu doanh nghiệp chuẩn (Corporate Blue, Modern Green, China Red, Medical Clean, Dark Tech,...).
+                                <i class="fa fa-magic me-1" title="Presets"/>System includes 8 corporate theme presets (Corporate Blue, Modern Green, China Red, Medical Clean, Dark Tech,...).
                             </p>
                         </div>
 
                         <!-- STEP 4: INTEGRATION & SECURITY -->
                         <div invisible="state != 'step4'">
-                            <h4 class="text-primary mb-3"><i class="fa fa-shield me-2"/>Bước 4: Tích Hợp Dịch Vụ &amp; Phân Quyền</h4>
-                            <p class="text-muted">Cấu hình kết nối ngoại vi và vai trò quản trị ban đầu.</p>
+                            <h4 class="text-primary mb-3"><i class="fa fa-shield me-2" title="Security"/>Step 4: Integrations &amp; Security</h4>
+                            <p class="text-muted">Configure external service connectors and initial administrative role.</p>
                             <group>
-                                <group string="Kết Nối Ngoài">
+                                <group string="External Services">
                                     <field name="enable_google_calendar" widget="boolean_toggle"/>
                                 </group>
-                                <group string="Vai Trò Quản Trị Mặc Định">
+                                <group string="Default Administrative Role">
                                     <field name="role_preset_id" options="{'no_create': True}"/>
                                 </group>
                             </group>
@@ -69,18 +69,18 @@
 
                         <!-- STEP 5: SUMMARY & LAUNCH -->
                         <div invisible="state != 'step5'">
-                            <h4 class="text-success mb-3"><i class="fa fa-check-circle me-2"/>Bước 5: Tổng Kết &amp; Kích Hoạt Hệ Thống</h4>
+                            <h4 class="text-success mb-3"><i class="fa fa-check-circle me-2" title="Ready"/>Step 5: Summary &amp; System Launch</h4>
                             <div class="alert alert-success" role="status">
-                                <h5>Sẵn sàng kích hoạt hệ thống ERP!</h5>
-                                <p class="mb-0">Các cấu hình Doanh nghiệp, Gói tính năng, Giao diện và Quyền quản trị đã sẵn sàng. Nhấn nút <strong>"Kích Hoạt &amp; Áp Dụng Ngay"</strong> để hệ thống tự động đồng bộ và mở Bảng điều khiển Control Center.</p>
+                                <h5>Ready to Launch ERP Platform!</h5>
+                                <p class="mb-0">Enterprise profile, feature package, theme, and security setup are complete. Click <strong>"Launch &amp; Apply Setup"</strong> to synchronize the system and access the ERP Control Center.</p>
                             </div>
                             <group>
-                                <group string="Thông Tin Tóm Tắt">
+                                <group string="Profile Summary">
                                     <field name="customer_name" readonly="1"/>
                                     <field name="product_name" readonly="1"/>
                                     <field name="industry" readonly="1"/>
                                 </group>
-                                <group string="Cấu Hình Đã Chọn">
+                                <group string="Selected Configuration">
                                     <field name="package_id" readonly="1"/>
                                     <field name="theme_id" readonly="1"/>
                                 </group>
@@ -89,19 +89,19 @@
                     </sheet>
                     <footer>
                         <!-- Navigation Buttons -->
-                        <button name="action_goto_step1" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step2'"/>
-                        <button name="action_goto_step2" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step3'"/>
-                        <button name="action_goto_step3" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step4'"/>
-                        <button name="action_goto_step4" string="&lt;&lt; Quay Lại" type="object" class="btn-secondary" invisible="state != 'step5'"/>
+                        <button name="action_goto_step1" string="&lt;&lt; Back" type="object" class="btn-secondary" invisible="state != 'step2'"/>
+                        <button name="action_goto_step2" string="&lt;&lt; Back" type="object" class="btn-secondary" invisible="state != 'step3'"/>
+                        <button name="action_goto_step3" string="&lt;&lt; Back" type="object" class="btn-secondary" invisible="state != 'step4'"/>
+                        <button name="action_goto_step4" string="&lt;&lt; Back" type="object" class="btn-secondary" invisible="state != 'step5'"/>
 
-                        <button name="action_goto_step2" string="Tiếp Tục &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step1'"/>
-                        <button name="action_goto_step3" string="Tiếp Tục &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step2'"/>
-                        <button name="action_goto_step4" string="Tiếp Tục &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step3'"/>
-                        <button name="action_goto_step5" string="Xem Tổng Kết &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step4'"/>
+                        <button name="action_goto_step2" string="Continue &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step1'"/>
+                        <button name="action_goto_step3" string="Continue &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step2'"/>
+                        <button name="action_goto_step4" string="Continue &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step3'"/>
+                        <button name="action_goto_step5" string="Review Summary &gt;&gt;" type="object" class="btn-primary" invisible="state != 'step4'"/>
 
                         <!-- Final Action on Step 5 -->
-                        <button name="action_apply_quick_setup" string="Kích Hoạt &amp; Áp Dụng Ngay" type="object" class="oe_highlight btn-success" invisible="state != 'step5'"/>
-                        <button string="Đóng" class="btn-secondary" special="cancel"/>
+                        <button name="action_apply_quick_setup" string="Launch &amp; Apply Setup" type="object" class="oe_highlight btn-success" invisible="state != 'step5'"/>
+                        <button string="Close" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>

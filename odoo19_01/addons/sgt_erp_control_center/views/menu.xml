@@ -61,7 +61,7 @@
                   groups="base.group_user"/>
 
         <menuitem id="menu_sgt_erp_pending_approvals"
-                  name="Chờ tôi phê duyệt"
+                  name="Pending Approvals"
                   parent="menu_sgt_erp_workflow_manager"
                   sequence="5"
                   action="action_sgt_erp_pending_approvals"
@@ -167,29 +167,29 @@
                   action="action_sgt_erp_config"
                   groups="group_erp_control_center_manager"/>
 
-        <!-- Mục Con: Quản Lý Sao Lưu (Backup Management) -->
+        <!-- Submenu: Backup Management -->
         <menuitem id="menu_sgt_erp_backup_root"
-                  name="Quản Lý Sao Lưu"
+                  name="Backup Management"
                   parent="menu_sgt_erp_configuration_wizard"
                   sequence="35"
                   groups="group_erp_control_center_manager"/>
 
         <menuitem id="menu_sgt_erp_backup_list_sub"
-                  name="Danh Sách Bản Sao Lưu"
+                  name="Backup Archives"
                   parent="menu_sgt_erp_backup_root"
                   sequence="10"
                   action="action_sgt_erp_backup"
                   groups="group_erp_control_center_manager"/>
 
         <menuitem id="menu_sgt_erp_backup_config_sub"
-                  name="Cấu Hình Sao Lưu"
+                  name="Backup Settings"
                   parent="menu_sgt_erp_backup_root"
                   sequence="20"
                   action="action_sgt_erp_backup_config"
                   groups="group_erp_control_center_manager"/>
 
         <menuitem id="menu_sgt_erp_backup_schedule_sub"
-                  name="Lịch Trình Cron"
+                  name="Scheduled Cronjob"
                   parent="menu_sgt_erp_backup_root"
                   sequence="30"
                   action="action_server_backup_schedule"

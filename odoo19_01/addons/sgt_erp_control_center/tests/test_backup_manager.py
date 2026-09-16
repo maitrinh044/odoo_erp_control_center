@@ -25,7 +25,7 @@ class TestSgtErpBackupManager(common.TransactionCase):
             })
 
     def test_01_manual_backup_creation(self):
-        """Kiểm tra quy trình tạo bản sao lưu thủ công (1-Chạm)"""
+        """Test manual 1-click backup execution"""
         backup = self.Backup.create_backup(backup_type='zip', backup_mode='manual')
         self.assertEqual(backup.state, 'success', f"Backup failed: {backup.error_log}")
         self.assertTrue(backup.name.endswith('.zip'))
@@ -33,7 +33,7 @@ class TestSgtErpBackupManager(common.TransactionCase):
         self.assertTrue(os.path.exists(backup.file_path))
 
     def test_02_backup_status_and_health_integration(self):
-        """Kiểm tra tích hợp trạng thái Backup với Health Dashboard"""
+        """Test backup status integration with Health Dashboard"""
         backup_dir = self.Backup._get_backup_dir()
         dummy_file = os.path.join(backup_dir, "test_health_backup.zip")
         with open(dummy_file, 'w') as f:
@@ -55,7 +55,7 @@ class TestSgtErpBackupManager(common.TransactionCase):
         self.assertGreaterEqual(self.config_rec.backup_count, 1)
 
     def test_03_automated_backup_cron(self):
-        """Kiểm tra hàm thực thi sao lưu tự động định kỳ qua Cronjob"""
+        """Test scheduled automated backup execution via Cronjob"""
         initial_count = self.Backup.search_count([('backup_mode', '=', 'cron')])
         self.config_rec.write({'backup_default_type': 'dump'})
         self.Backup.cron_run_automated_backup()
@@ -63,7 +63,7 @@ class TestSgtErpBackupManager(common.TransactionCase):
         self.assertGreater(new_count, initial_count)
 
     def test_04_retention_cleanup(self):
-        """Kiểm tra tự động dọn dẹp các bản sao lưu cũ vượt quá số ngày lưu trữ"""
+        """Test automated retention cleanup of expired backup archives"""
         backup_dir = self.Backup._get_backup_dir()
         dummy_file = os.path.join(backup_dir, "test_old_backup_to_clean.zip")
         with open(dummy_file, 'w') as f:
@@ -84,14 +84,14 @@ class TestSgtErpBackupManager(common.TransactionCase):
         self.assertTrue(old_record.exists())
         self.assertTrue(os.path.exists(dummy_file))
 
-        # Kích hoạt cleanup với retention 14 ngày
+        # Trigger cleanup with 14-day retention
         self.Backup._cleanup_old_backups(retention_days=14)
 
         self.assertFalse(old_record.exists())
         self.assertFalse(os.path.exists(dummy_file))
 
     def test_05_download_action_and_deletion(self):
-        """Kiểm tra action tải về và action xóa bản sao lưu"""
+        """Test download action URL generation and archive deletion"""
         backup_dir = self.Backup._get_backup_dir()
         test_file = os.path.join(backup_dir, "test_download_delete.zip")
         with open(test_file, 'w') as f:

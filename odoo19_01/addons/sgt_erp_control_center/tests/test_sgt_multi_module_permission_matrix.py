@@ -20,14 +20,14 @@ class TestSgtMultiModulePermissionMatrix(TransactionCase):
         cls.module_crm = cls.IrModule.search([('name', '=', 'crm')], limit=1)
 
     def test_01_role_preset_can_have_multiple_modules(self):
-        """Kiểm tra 1 Role Preset có thể được gán quyền cho nhiều Module cùng lúc"""
+        """Verify 1 Role Preset can be granted permissions for multiple modules simultaneously."""
         role = self.RolePreset.create({
             'name': 'Multi-Module Manager',
             'code': 'multi_mod_manager',
             'data_scope': 'team',
         })
 
-        # Thêm quyền cho Sales module
+        # Add permissions for Sales module
         line_sale = self.Matrix.create({
             'role_preset_id': role.id,
             'model_id': self.model_sale_order.id,
@@ -38,7 +38,7 @@ class TestSgtMultiModulePermissionMatrix(TransactionCase):
             'data_scope': 'team',
         })
 
-        # Thêm quyền cho CRM module
+        # Add permissions for CRM module
         line_crm = self.Matrix.create({
             'role_preset_id': role.id,
             'model_id': self.model_crm_lead.id,
@@ -49,7 +49,7 @@ class TestSgtMultiModulePermissionMatrix(TransactionCase):
             'data_scope': 'team',
         })
 
-        # Thêm quyền cho Contacts module
+        # Add permissions for Contacts module
         line_partner = self.Matrix.create({
             'role_preset_id': role.id,
             'model_id': self.model_res_partner.id,
@@ -60,26 +60,26 @@ class TestSgtMultiModulePermissionMatrix(TransactionCase):
             'data_scope': 'all',
         })
 
-        # Xác minh Role Preset liên kết đồng thời 3 model từ 3 module khác nhau
-        self.assertEqual(role.matrix_count, 3, "Role phải có đúng 3 dòng quyền trong ma trận")
+        # Verify Role Preset links 3 models from 3 different modules
+        self.assertEqual(role.matrix_count, 3, "Role must have 3 permission lines in matrix")
         self.assertIn(line_sale, role.permission_matrix_ids)
         self.assertIn(line_crm, role.permission_matrix_ids)
         self.assertIn(line_partner, role.permission_matrix_ids)
 
-        # Kiểm tra module info được tính tự động
+        # Check module info computed automatically
         self.assertTrue(line_sale.module_shortdesc)
         self.assertTrue(line_crm.module_shortdesc)
         self.assertTrue(line_partner.module_shortdesc)
 
     def test_02_wizard_add_multi_module_models(self):
-        """Kiểm tra Wizard Thêm nhanh Quyền theo nhiều Module cùng lúc"""
+        """Verify Wizard quickly adds permissions for multiple modules simultaneously."""
         role = self.RolePreset.create({
             'name': 'Universal Director',
             'code': 'universal_director',
             'data_scope': 'all',
         })
 
-        # Mở wizard và chọn cả 2 module: sale và crm
+        # Open wizard and select both modules: sale and crm
         wizard = self.Wizard.create({
             'role_preset_id': role.id,
             'module_ids': [(6, 0, [self.module_sale.id, self.module_crm.id])],
@@ -91,23 +91,23 @@ class TestSgtMultiModulePermissionMatrix(TransactionCase):
             'data_scope': 'all',
         })
 
-        # Kích hoạt preview
+        # Trigger preview
         wizard._onchange_module_and_settings()
         models_in_preview = wizard.line_ids.mapped('model_id.model')
-        self.assertIn('sale.order', models_in_preview, "sale.order phải có trong preview")
-        self.assertIn('crm.lead', models_in_preview, "crm.lead phải có trong preview")
+        self.assertIn('sale.order', models_in_preview, "sale.order must be in preview")
+        self.assertIn('crm.lead', models_in_preview, "crm.lead must be in preview")
 
-        # Áp dụng wizard
+        # Apply wizard
         res = wizard.action_add_to_matrix()
         self.assertEqual(res.get('params', {}).get('type'), 'success')
 
-        # Kiểm tra các dòng đã được tạo trong Role
+        # Verify lines created in Role
         created_models = role.permission_matrix_ids.mapped('model_id.model')
         self.assertIn('sale.order', created_models)
         self.assertIn('crm.lead', created_models)
 
     def test_03_record_rules_generated_for_all_matrix_models(self):
-        """Kiểm tra Record Rules được sinh tự động cho toàn bộ model trong ma trận của Role"""
+        """Verify Record Rules generated automatically for all models in Role matrix."""
         role = self.RolePreset.create({
             'name': 'Branch Officer',
             'code': 'branch_officer',
@@ -138,5 +138,5 @@ class TestSgtMultiModulePermissionMatrix(TransactionCase):
 
         rules = role.rule_ids
         rule_models = rules.mapped('model_id.model')
-        self.assertIn('sale.order', rule_models, "Record Rule cho sale.order phải được sinh")
-        self.assertIn('crm.lead', rule_models, "Record Rule cho crm.lead phải được sinh")
+        self.assertIn('sale.order', rule_models, "Record Rule for sale.order must be generated")
+        self.assertIn('crm.lead', rule_models, "Record Rule for crm.lead must be generated")

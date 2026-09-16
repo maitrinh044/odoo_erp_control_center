@@ -6,7 +6,7 @@
             <field name="name">Starter</field>
             <field name="code">starter</field>
             <field name="sequence">10</field>
-            <field name="description">Gói khởi đầu: Quản lý quan hệ khách hàng (CRM), Danh bạ (Contacts) và Lịch làm việc.</field>
+            <field name="description">Starter package: Customer Relationship Management (CRM), Contacts, and Calendar.</field>
             <field name="feature_ids" eval="[
                 (4, ref('feature_crm')),
                 (4, ref('feature_crm_lead')),
@@ -21,7 +21,7 @@
             <field name="name">Business</field>
             <field name="code">business</field>
             <field name="sequence">20</field>
-            <field name="description">Gói doanh nghiệp: CRM, Bán hàng (Sales), Danh bạ, Lịch, Phê duyệt cơ bản và Dashboard.</field>
+            <field name="description">Business package: CRM, Sales, Contacts, Calendar, basic Approvals, and Dashboard.</field>
             <field name="feature_ids" eval="[
                 (4, ref('feature_crm')),
                 (4, ref('feature_crm_lead')),
@@ -41,7 +41,7 @@
             <field name="name">Professional</field>
             <field name="code">professional</field>
             <field name="sequence">30</field>
-            <field name="description">Gói chuyên nghiệp: CRM, Sales, Contacts, Nhân sự (HR), Dự án (Project), Calendar, Approval và Dashboard nâng cao.</field>
+            <field name="description">Professional package: CRM, Sales, Contacts, Human Resources (HR), Project, Calendar, Approvals, and advanced Dashboard.</field>
             <field name="feature_ids" eval="[
                 (4, ref('feature_crm')),
                 (4, ref('feature_crm_lead')),
@@ -67,7 +67,7 @@
             <field name="name">Enterprise</field>
             <field name="code">enterprise</field>
             <field name="sequence">40</field>
-            <field name="description">Gói doanh nghiệp toàn diện: Toàn bộ các tính năng ERP, Tự động hóa và API tích hợp.</field>
+            <field name="description">Enterprise package: Comprehensive ERP suite including automation and REST APIs.</field>
             <field name="feature_ids" eval="[
                 (4, ref('feature_crm')),
                 (4, ref('feature_crm_lead')),
@@ -102,7 +102,7 @@
             <field name="name">Custom</field>
             <field name="code">custom</field>
             <field name="sequence">50</field>
-            <field name="description">Gói tùy biến: Chọn lọc tính năng linh hoạt theo từng yêu cầu hợp đồng khách hàng.</field>
+            <field name="description">Custom package: Tailored feature selection based on specific client requirements.</field>
         </record>
     </data>
 </odoo>

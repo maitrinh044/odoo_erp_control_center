@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="cron_sgt_erp_automated_backup" model="ir.cron">
-            <field name="name">SGT ERP: Tự Động Sao Lưu Hàng Ngày (Automated Daily Backup)</field>
+            <field name="name">SGT ERP: Daily Automated Database Backup</field>
             <field name="model_id" ref="model_sgt_erp_backup"/>
             <field name="state">code</field>
             <field name="code">model.cron_run_automated_backup()</field>
