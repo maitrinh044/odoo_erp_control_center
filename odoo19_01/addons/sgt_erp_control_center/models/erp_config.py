@@ -253,6 +253,22 @@ class SgtErpConfig(models.Model):
             'target': 'current',
         }
 
+    def action_trigger_backup_zip(self):
+        """Tạo nhanh bản sao lưu toàn diện (ZIP) từ màn hình Cấu hình Sao lưu."""
+        return self.env['sgt.erp.backup'].with_context(backup_type='zip').action_trigger_backup_now()
+
+    def action_trigger_backup_dump(self):
+        """Tạo nhanh bản sao lưu SQL Dump từ màn hình Cấu hình Sao lưu."""
+        return self.env['sgt.erp.backup'].with_context(backup_type='dump').action_trigger_backup_now()
+
+    def action_scan_existing_backups_config(self):
+        """Đồng bộ file sao lưu từ đĩa cứng từ màn hình Cấu hình Sao lưu."""
+        return self.env['sgt.erp.backup'].action_scan_existing_backups()
+
+    def action_cleanup_old_backups_config(self):
+        """Dọn dẹp bản sao lưu quá hạn từ màn hình Cấu hình Sao lưu."""
+        return self.env['sgt.erp.backup'].action_cleanup_old_backups()
+
     def action_check_backup_status(self):
         """Kiểm tra trạng thái sao lưu định kỳ và cập nhật thông số Backup (V2)"""
         self.ensure_one()

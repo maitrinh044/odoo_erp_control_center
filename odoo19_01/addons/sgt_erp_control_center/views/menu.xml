@@ -139,13 +139,6 @@
                   action="action_sgt_erp_system_health_dashboard"
                   groups="group_erp_control_center_user"/>
 
-        <menuitem id="menu_sgt_erp_backup_manager"
-                  name="Backup Manager"
-                  parent="menu_sgt_erp_system_health"
-                  sequence="20"
-                  action="action_sgt_erp_backup"
-                  groups="group_erp_control_center_manager"/>
-
         <!-- 10. Configuration -->
         <menuitem id="menu_sgt_erp_configuration_wizard"
                   name="10. Configuration"
@@ -174,10 +167,31 @@
                   action="action_sgt_erp_config"
                   groups="group_erp_control_center_manager"/>
 
-        <menuitem id="menu_sgt_erp_backup_schedule_menu"
-                  name="Lịch Sao Lưu Tự Động"
+        <!-- Mục Con: Quản Lý Sao Lưu (Backup Management) -->
+        <menuitem id="menu_sgt_erp_backup_root"
+                  name="Quản Lý Sao Lưu"
                   parent="menu_sgt_erp_configuration_wizard"
                   sequence="35"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_backup_list_sub"
+                  name="Danh Sách Bản Sao Lưu"
+                  parent="menu_sgt_erp_backup_root"
+                  sequence="10"
+                  action="action_sgt_erp_backup"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_backup_config_sub"
+                  name="Cấu Hình Sao Lưu"
+                  parent="menu_sgt_erp_backup_root"
+                  sequence="20"
+                  action="action_sgt_erp_backup_config"
+                  groups="group_erp_control_center_manager"/>
+
+        <menuitem id="menu_sgt_erp_backup_schedule_sub"
+                  name="Lịch Trình Cron"
+                  parent="menu_sgt_erp_backup_root"
+                  sequence="30"
                   action="action_server_backup_schedule"
                   groups="group_erp_control_center_manager"/>
 

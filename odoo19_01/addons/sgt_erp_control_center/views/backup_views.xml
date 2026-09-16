@@ -142,5 +142,77 @@
             <field name="state">code</field>
             <field name="code">action = model.action_cleanup_old_backups()</field>
         </record>
+
+        <!-- ============================================================ -->
+        <!-- BACKUP CONFIGURATION FORM VIEW & ACTION                      -->
+        <!-- ============================================================ -->
+        <record id="view_sgt_erp_backup_config_form" model="ir.ui.view">
+            <field name="name">sgt.erp.backup.config.form</field>
+            <field name="model">sgt.erp.config</field>
+            <field name="arch" type="xml">
+                <form string="Cấu Hình Sao Lưu &amp; Khôi Phục Dữ Liệu">
+                    <header>
+                        <button name="action_trigger_backup_zip" string="Sao Lưu Toàn Diện (ZIP)" type="object" class="btn btn-primary" icon="fa-database"/>
+                        <button name="action_trigger_backup_dump" string="Sao Lưu SQL Dump" type="object" class="btn btn-secondary" icon="fa-file-text-o"/>
+                        <button name="action_open_backup_schedule" string="Cấu Hình Lịch Trình (Cron)" type="object" class="btn btn-outline-info" icon="fa-clock-o"/>
+                        <button name="action_open_backup_manager" string="Xem File Sao Lưu" type="object" class="btn btn-outline-primary" icon="fa-list"/>
+                        <button name="action_scan_existing_backups_config" string="Quét File Đĩa" type="object" class="btn btn-outline-dark" icon="fa-search"/>
+                        <button name="action_cleanup_old_backups_config" string="Dọn Bản Cũ" type="object" class="btn btn-outline-danger" icon="fa-recycle"/>
+                    </header>
+                    <sheet>
+                        <div class="alert alert-info d-flex align-items-center mb-3" role="status">
+                            <i class="fa fa-shield fa-2x me-3 text-primary"/>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-1">Thiết Lập Chính Sách Sao Lưu &amp; An Toàn Dữ Liệu (Backup Management)</h5>
+                                <span>Tùy chỉnh lịch sao lưu tự động ban đêm, chính sách dọn dẹp lưu trữ và giám sát các bản sao lưu của hệ thống.</span>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Chính Sách Sao Lưu Tự Động">
+                                <field name="backup_auto_enabled" widget="boolean_toggle" string="Bật Tự Động Sao Lưu Hàng Ngày"/>
+                                <field name="backup_default_type" string="Định Dạng Mặc Định"/>
+                                <field name="backup_retention_days" string="Thời Gian Lưu Trữ (Ngày)"/>
+                            </group>
+                            <group string="Trạng Thái &amp; Thống Kê">
+                                <field name="backup_status" widget="badge" 
+                                       decoration-success="backup_status == 'ok'" 
+                                       decoration-warning="backup_status == 'warning'" 
+                                       decoration-danger="backup_status == 'none'"
+                                       string="Trạng Thái"/>
+                                <field name="backup_last_date" string="Lần Sao Lưu Gần Nhất" readonly="1"/>
+                                <field name="backup_count" string="Tổng Số Bản Đang Lưu" readonly="1"/>
+                                <field name="deployment_docker_container" string="Thư Mục Lưu Trữ Vật Lý" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sgt_erp_backup_config" model="ir.actions.server">
+            <field name="name">Cấu Hình Sao Lưu</field>
+            <field name="model_id" ref="model_sgt_erp_config"/>
+            <field name="state">code</field>
+            <field name="code">
+action = env['sgt.erp.config'].search([('company_id', '=', env.company.id)], limit=1)
+if not action:
+    action = env['sgt.erp.config'].create({
+        'name': f"{env.company.name} ERP Control Center",
+        'company_id': env.company.id,
+        'customer_name': env.company.name,
+        'product_name': 'SGT ERP',
+    })
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Cấu Hình Sao Lưu',
+    'res_model': 'sgt.erp.config',
+    'view_mode': 'form',
+    'res_id': action.id,
+    'views': [(env.ref('sgt_erp_control_center.view_sgt_erp_backup_config_form').id, 'form')],
+    'target': 'current',
+}
+            </field>
+        </record>
     </data>
 </odoo>
