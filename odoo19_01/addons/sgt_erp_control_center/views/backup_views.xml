@@ -10,8 +10,8 @@
             <field name="arch" type="xml">
                 <list string="Danh Sách Bản Sao Lưu" decoration-danger="state == 'failed'" decoration-success="state == 'success'">
                     <header>
-                        <button name="action_trigger_backup_now" string="Sao Lưu Ngay" type="object" class="btn btn-sm btn-primary text-nowrap" icon="fa-database" display="always"/>
-                        <button name="action_open_backup_schedule" string="Lịch Tự Động" type="object" class="btn btn-sm btn-outline-primary text-nowrap" icon="fa-clock-o" display="always"/>
+                        <button name="action_trigger_backup_now" string="Sao Lưu ZIP" type="object" class="btn btn-sm btn-primary text-nowrap" icon="fa-database" display="always"/>
+                        <button name="action_trigger_backup_now" string="Sao Lưu Dump" type="object" class="btn btn-sm btn-outline-secondary text-nowrap" context="{'backup_type': 'dump'}" icon="fa-file-text-o" display="always"/>
                     </header>
                     <field name="name" string="Tên Bản Sao Lưu" class="fw-bold"/>
                     <field name="backup_date" string="Thời Điểm Tạo"/>
