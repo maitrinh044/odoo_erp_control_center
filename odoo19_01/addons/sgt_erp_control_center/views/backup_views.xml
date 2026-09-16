@@ -10,10 +10,10 @@
             <field name="arch" type="xml">
                 <list string="Danh Sách Bản Sao Lưu" decoration-danger="state == 'failed'" decoration-success="state == 'success'">
                     <header>
-                        <button name="action_trigger_backup_now" string="Sao Lưu Đầy Đủ (ZIP)" type="object" class="btn btn-primary" icon="fa-database" display="always"/>
-                        <button name="action_trigger_backup_now" string="Sao Lưu Nhanh (SQL Dump)" type="object" class="btn btn-secondary" context="{'backup_type': 'dump'}" icon="fa-file-text-o" display="always"/>
-                        <button name="action_scan_existing_backups" string="Quét File Đang Có Trên Đĩa" type="object" class="btn btn-outline-info" icon="fa-search" display="always"/>
-                        <button name="action_cleanup_old_backups" string="Dọn Dẹp Bản Cũ Quá Hạn" type="object" class="btn btn-outline-secondary" icon="fa-recycle" display="always"/>
+                        <button name="action_trigger_backup_now" string="Sao Lưu ZIP" type="object" class="btn btn-sm btn-primary text-nowrap" icon="fa-database" display="always"/>
+                        <button name="action_trigger_backup_now" string="Sao Lưu Dump" type="object" class="btn btn-sm btn-outline-secondary text-nowrap" context="{'backup_type': 'dump'}" icon="fa-file-text-o" display="always"/>
+                        <button name="action_scan_existing_backups" string="Quét File" type="object" class="btn btn-sm btn-outline-info text-nowrap" icon="fa-search" display="always"/>
+                        <button name="action_cleanup_old_backups" string="Dọn Dẹp Cũ" type="object" class="btn btn-sm btn-outline-secondary text-nowrap" icon="fa-recycle" display="always"/>
                     </header>
                     <field name="name" string="Tên Bản Sao Lưu" class="fw-bold"/>
                     <field name="backup_date" string="Thời Điểm Tạo"/>
