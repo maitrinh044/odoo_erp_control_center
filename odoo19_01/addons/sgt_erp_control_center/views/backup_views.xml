@@ -12,9 +12,6 @@
                     <header>
                         <button name="action_trigger_backup_now" string="Sao Lưu ZIP" type="object" class="btn btn-sm btn-primary text-nowrap" icon="fa-database" display="always"/>
                         <button name="action_trigger_backup_now" string="Sao Lưu Dump" type="object" class="btn btn-sm btn-outline-secondary text-nowrap" context="{'backup_type': 'dump'}" icon="fa-file-text-o" display="always"/>
-                        <button name="action_open_backup_schedule" string="Lịch Tự Động" type="object" class="btn btn-sm btn-outline-primary text-nowrap" icon="fa-clock-o" display="always"/>
-                        <button name="action_scan_existing_backups" string="Quét File" type="object" class="btn btn-sm btn-outline-info text-nowrap" icon="fa-search" display="always"/>
-                        <button name="action_cleanup_old_backups" string="Dọn Dẹp Cũ" type="object" class="btn btn-sm btn-outline-secondary text-nowrap" icon="fa-recycle" display="always"/>
                     </header>
                     <field name="name" string="Tên Bản Sao Lưu" class="fw-bold"/>
                     <field name="backup_date" string="Thời Điểm Tạo"/>
@@ -111,9 +108,39 @@
                     Chưa có bản sao lưu nào được tạo.
                 </p>
                 <p>
-                    Bấm vào nút <strong>"Sao Lưu Đầy Đủ (ZIP)"</strong> hoặc <strong>"Sao Lưu Nhanh"</strong> để khởi tạo bản snapshot hệ thống ngay lập tức.
+                    Bấm vào nút <strong>"Sao Lưu ZIP"</strong> hoặc <strong>"Sao Lưu Dump"</strong> để khởi tạo bản snapshot hệ thống ngay lập tức.
                 </p>
             </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- SERVER ACTIONS (ACTION ⚙ MENU)                                -->
+        <!-- ============================================================ -->
+        <record id="action_server_backup_schedule" model="ir.actions.server">
+            <field name="name">Cấu Hình Lịch Sao Lưu Tự Động (Cron)</field>
+            <field name="model_id" ref="model_sgt_erp_backup"/>
+            <field name="binding_model_id" ref="model_sgt_erp_backup"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">action = model.action_open_backup_schedule()</field>
+        </record>
+
+        <record id="action_server_scan_backups" model="ir.actions.server">
+            <field name="name">Quét &amp; Đồng Bộ File Sẵn Có Trên Đĩa</field>
+            <field name="model_id" ref="model_sgt_erp_backup"/>
+            <field name="binding_model_id" ref="model_sgt_erp_backup"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">action = model.action_scan_existing_backups()</field>
+        </record>
+
+        <record id="action_server_cleanup_old_backups" model="ir.actions.server">
+            <field name="name">Dọn Dẹp Các Bản Sao Lưu Cũ Quá Hạn</field>
+            <field name="model_id" ref="model_sgt_erp_backup"/>
+            <field name="binding_model_id" ref="model_sgt_erp_backup"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">action = model.action_cleanup_old_backups()</field>
         </record>
     </data>
 </odoo>
